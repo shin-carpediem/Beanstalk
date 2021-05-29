@@ -1,3 +1,46 @@
 from django.db import models
+from django.contrib.auth.models import PermissionsMixin, UserManager
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core.mail import send_mail
+from django.utils import timezone
+
 
 # Create your models here.
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, name, password, **extra_fields):
+        user = self.model(name=name, **extra_fields)
+        user.set_password(password)
+        user.save(using=self.db)
+        return user
+
+    def create_user(self, name, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(name, password, **extra_fields)
+
+    def create_superuser(self, name, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('rootユーザーは、is_staff=Trueである必要があります。')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('rootユーザーは、is_superuser=Trueである必要があります。')
+        return self._create_user(name, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    name = models.CharField("店名", max_length=256, unique=True)
+    is_staff = models.BooleanField("IAM", default=False)
+    is_active = models.BooleanField("有効", default=True)
+    date_joined = models.DateTimeField("登録日", default=timezone.now)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "name"
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = "user"
+        verbose_name_plural = "users"
