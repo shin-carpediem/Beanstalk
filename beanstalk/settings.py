@@ -43,6 +43,9 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'account.User'
+LOGIN_URL = 'restaurant:login'
+LOGIN_REDIRECT_URL = 'restaurant:index'
+LOGOUT_REDIRECT_URL = 'restaurant:index'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
