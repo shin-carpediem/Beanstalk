@@ -4,8 +4,7 @@
 
 Technique:
 
-- AWS Fargate
-- AWS ECS
+- AWS lightsail
 
 To go into virtual environment with Pipfile,
 
