@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 import os
 import sys
 
-sys.path.append('/opt/bitnami/apps/django/Beanstalk')
-os.environ.setdefault("PYTHON_EGG_CACHE", "/opt/bitnami/apps/django/Beanstalk/egg_cache")
+sys.path.append('/opt/bitnami/apps/django/django_projects/Beanstalk')
+os.environ.setdefault("PYTHON_EGG_CACHE", "/opt/bitnami/apps/django/django_projects/Beanstalk/egg_cache")
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Beanstalk.settings')
 
 from django.core.wsgi import get_wsgi_application
