@@ -1,0 +1,30 @@
+{% load static %}
+
+{% block content %}
+<div class="wrapper">
+  <div class="board shadow text-center py-2 px-5">
+    <h4>ログイン画面</h4>
+    <div class="d-flex">
+      <img src="" alt="Restaurant Icon">
+      <h5>
+        <!-- 店の名前 -->
+      </h5>
+    </div>
+    <form action="#" method="POST">{% csrf_token %}
+      <!-- パスワード -->
+      <input type="checkbox">ログイン状態を保持する
+      <a href="#">パスワードを忘れましたか？</a>
+      <button type="submit" class="btn btn__blue shadow">ログイン</button>
+    </form>
+  </div>
+  <div class="admin d-flex justify-content-between">
+    <div>
+      <p>メニューを作成・管理する</p>
+      <p>お客様用ページをチェックする</p>
+    </div>
+    <div>
+      <p>ヘルプセンター</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

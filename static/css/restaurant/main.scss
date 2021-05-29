@@ -1,0 +1,48 @@
+$blue: #257cff;
+$red: #ff5b51;
+$orange: #ff9900;
+$light-orange: #ffd79a;
+$yellow: #ffe5be;
+$black: #565454;
+$grey: #9c9c9c;
+$light-grey: #f1f1f1;
+$white: #fff;
+
+@mixin btn {
+  border-radius: 100px;
+  color: $white;
+  text-align: center;
+  padding: 5px;
+  &:hover {
+    transform: scale(0.9);
+  }
+}
+@mixin btn__blue {
+  background-color: $blue;
+}
+@mixin btn__orange {
+  background-color: $orange;
+}
+@mixin btn__grey {
+  background-color: $grey;
+}
+@mixin icon {
+  border-radius: 100px;
+  text-align: center;
+}
+@mixin icon__yellow {
+  background-color: $yellow;
+  color: $black;
+}
+@mixin icon__red {
+  background-color: $red;
+  color: $white;
+}
+@mixin shadow {
+  box-shadow: 0 0 2px 3px $black;
+}
+
+.wrapper {
+  max-width: 900px;
+  min-width: 440px;
+}

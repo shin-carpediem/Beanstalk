@@ -1,0 +1,39 @@
+ul,
+li {
+  list-style: none;
+}
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+p,
+a,
+label,
+form,
+input {
+  font-size: 14px;
+}
+/* Make images easier to work with */
+img,
+picture,
+video {
+  max-width: 100%;
+  display: block;
+}
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+html {
+  &:focus-within {
+    scroll-behavior: smooth;
+  }
+  body {
+    text-rendering: optimizeSpeed;
+  }
+  @media screen and (max-width: 600px) {
+    font-size: 0.7rem;
+  }
+}

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,8 +45,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'account.User'
 LOGIN_URL = 'restaurant:login'
-LOGIN_REDIRECT_URL = 'restaurant:index'
-LOGOUT_REDIRECT_URL = 'restaurant:index'
+LOGIN_REDIRECT_URL = 'restaurant:order_manage'
+LOGOUT_REDIRECT_URL = 'restaurant:login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,21 +60,39 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'beanstalk.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [Path.resolve(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+if DEBUG:
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [os.path.join(BASE_DIR, 'templates')],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
         },
-    },
-]
+    ]
+else:
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [Path.resolve(BASE_DIR, 'templates')],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
+
 
 WSGI_APPLICATION = 'beanstalk.wsgi.application'
 
