@@ -20,3 +20,8 @@ Django = "==3.1.6"
 
 [requires]
 python_version = "3.9"
+
+[scripts]
+start = "python manage.py runserver"
+migration = "python manage.py makemigrations"
+migrate = "python manage.py migrate"

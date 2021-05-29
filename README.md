@@ -29,3 +29,9 @@ To exit from virtual environment,
 ```
 $ exit
 ```
+
+To restart apache,
+
+```
+$ sudo /opt/bitnami/ctlscript.sh restart apache
+```
