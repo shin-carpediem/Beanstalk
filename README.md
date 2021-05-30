@@ -31,6 +31,12 @@ To exit from virtual environment,
 $ exit
 ```
 
+To optimize pip for lightsail,
+
+```
+pipenv lock -r > requirements.txt
+```
+
 To restart apache,
 
 ```
