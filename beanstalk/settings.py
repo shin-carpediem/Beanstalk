@@ -101,13 +101,23 @@ WSGI_APPLICATION = 'beanstalk.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'Database-1',
+            'USER': '',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -159,4 +169,7 @@ else:
 STATIC_ROOT = 'assets'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+else:
+    MEDIA_ROOT = Path.resolve(BASE_DIR, 'media')
