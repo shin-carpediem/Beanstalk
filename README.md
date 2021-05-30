@@ -6,6 +6,7 @@ Technique:
 
 - AWS lightsail
 - Pipenv
+- MySQL
 
 To go into virtual environment with Pipfile,
 
@@ -41,4 +42,10 @@ To restart apache,
 
 ```
 $ sudo /opt/bitnami/ctlscript.sh restart apache
+```
+
+To enter MySQL on Lightsail,
+
+```
+$ mysql -u username -p -h endpoint
 ```

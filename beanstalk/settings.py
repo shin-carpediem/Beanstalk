@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,6 +24,9 @@ SECRET_KEY = '8w*r09*2c2(3#yoxhh4zdebzcu&hh=$%+7c3)xc^o5j*n&l)^b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
+if DEBUG:
+    import os
 
 ALLOWED_HOSTS = ['13.113.86.28', '172.26.3.196', '127.0.0.1']
 
@@ -113,9 +115,9 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'Database-1',
-            'USER': '',
+            'USER': 'dbmasteruser',
             'HOST': '',
-            'PORT': '',
+            'PORT': '3306',
         }
     }
 
