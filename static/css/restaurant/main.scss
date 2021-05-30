@@ -123,6 +123,8 @@ a {
 
 
 .wrapper {
+  position: relative;
+  min-height: 100vh;
   background-color: $light-grey;
   .inner__wrapper {
     width: 600px;

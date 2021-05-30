@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block content %}
-<div class="wrapper pb-5">
+<div class="wrapper w-100 pb-5">
   <div class="inner__wrapper mx-auto py-5">
-    <div class="board shadow text-center py-4 px-5">
+    <div class="board shadow text-center my-5 py-4 px-5">
       <h4 class="text__bold">ログイン画面</h4>
-      <div class="d-flex">
+      <div class="d-flex py-5">
         <div>
-          <img src="" alt="Restaurant Icon">
+          <img src="#" alt="Restaurant Icon">
         </div>
         <h5>
           <!-- 店の名前 -->
         </h5>
       </div>
-      <form action="#" method="POST">{% csrf_token %}
+      <form action="{% url 'restaurant:order_manage' %}" method="POST">{% csrf_token %}
         <!-- パスワード -->
         <div>
           <input type="checkbox">ログイン状態を保持する
