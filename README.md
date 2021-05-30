@@ -5,6 +5,7 @@
 Technique:
 
 - AWS lightsail
+- Pipenv
 
 To go into virtual environment with Pipfile,
 

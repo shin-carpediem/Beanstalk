@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'imagekit',
     'account',
     'customer',
     'restaurant',
@@ -146,10 +147,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    Path.resolve(BASE_DIR, 'static')
-]
-
 if DEBUG:
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static')
@@ -160,3 +157,6 @@ else:
     ]
 
 STATIC_ROOT = 'assets'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

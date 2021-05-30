@@ -35,6 +35,16 @@ select {
   font: inherit;
 }
 
+.text__bold {
+  font-weight: bold;
+}
+
+input,
+textarea {
+  padding: 5px 0 5px 0;
+  border-radius: 4px;
+}
+
 html:focus-within {
   scroll-behavior: smooth;
 }
@@ -53,13 +63,22 @@ a {
   color: #565454;
 }
 
+input,
+textarea {
+  outline: none;
+  border-color: #f1f1f1;
+  -webkit-box-shadow: 0.4px inset;
+          box-shadow: 0.4px inset;
+}
+
 .shadow {
   -webkit-box-shadow: 0 0 2px 3px #565454;
           box-shadow: 0 0 2px 3px #565454;
 }
 
-.text__bold {
-  font-weight: bold;
+.beautify:hover {
+  -webkit-box-shadow: 0 0 4px 6px #9c9c9c;
+          box-shadow: 0 0 4px 6px #9c9c9c;
 }
 
 .btn {
@@ -118,5 +137,11 @@ a {
 .wrapper .board {
   background-color: #fff;
   border-radius: 10px;
+}
+
+.wrapper .board .logo {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
 }
 /*# sourceMappingURL=main.css.map */

@@ -3,6 +3,8 @@ from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
 from django.utils import timezone
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 # Create your models here.
@@ -32,6 +34,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField("店名", max_length=256, unique=True)
+    logo = models.ImageField("ロゴ", upload_to="logo",
+                             max_length=50, blank=True, null=True)
+    formatted_logo = ImageSpecField(source="logo",
+                                    processors=[ResizeToFill(30, 30)],
+                                    format="JPEG",
+                                    options={"quality": 40}
+                                    )
     is_staff = models.BooleanField("IAM", default=False)
     is_active = models.BooleanField("有効", default=True)
     date_joined = models.DateTimeField("登録日", default=timezone.now)

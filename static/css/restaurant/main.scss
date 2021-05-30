@@ -1,3 +1,4 @@
+// default
 ul,
 li {
   list-style: none;
@@ -29,6 +30,20 @@ textarea,
 select {
   font: inherit;
 }
+
+@mixin text__bold {
+  font-weight: bold;
+}
+.text__bold {
+  @include text__bold;
+}
+
+input,
+textarea {
+  padding: 5px 0 5px 0;
+  border-radius: 4px;
+}
+
 html {
   &:focus-within {
     scroll-behavior: smooth;
@@ -41,6 +56,7 @@ html {
   }
 }
 
+// unique default
 $blue: #257cff;
 $red: #ff5b51;
 $orange: #ff9900;
@@ -54,18 +70,29 @@ $white: #fff;
 a {
   color: $black;
 }
+input,
+textarea {
+  outline: none;
+  border-color: $light-grey;
+  box-shadow: 0.4px inset;
+}
+
 @mixin shadow {
   box-shadow: 0 0 2px 3px $black;
 }
 .shadow {
   @include shadow;
 }
-@mixin text__bold {
-  font-weight: bold;
+
+@mixin beautify {
+  &:hover {
+    box-shadow: 0 0 4px 6px $grey;
+  }
 }
-.text__bold {
-  @include text__bold;
+.beautify {
+  @include beautify;
 }
+
 @mixin btn {
   border-radius: 100px;
   color: $white;
@@ -81,24 +108,28 @@ a {
 .btn {
   @include btn;
 }
+
 @mixin btn__blue {
   background-color: $blue;
 }
 .btn__blue {
   @include btn__blue;
 }
+
 @mixin btn__orange {
   background-color: $orange;
 }
 .btn__orange {
   @include btn__orange;
 }
+
 @mixin btn__grey {
   background-color: $grey;
 }
 .btn__grey {
   @include btn__grey;
 }
+
 @mixin icon {
   border-radius: 100px;
   text-align: center;
@@ -106,6 +137,7 @@ a {
 .icon {
   @include icon;
 }
+
 @mixin icon__yellow {
   background-color: $yellow;
   color: $black;
@@ -113,6 +145,7 @@ a {
 .icon_yellow {
   @include icon__yellow;
 }
+
 @mixin icon__red {
   background-color: $red;
   color: $white;
@@ -121,7 +154,7 @@ a {
   @include icon__red;
 }
 
-
+// components
 .wrapper {
   position: relative;
   min-height: 100vh;
@@ -132,5 +165,10 @@ a {
   .board {
     background-color: $white;
     border-radius: 10px;
+    .logo {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+    }
   }
 }
