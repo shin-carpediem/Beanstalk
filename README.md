@@ -44,8 +44,15 @@ To restart apache,
 $ sudo /opt/bitnami/ctlscript.sh restart apache
 ```
 
+https://qiita.com/CyberMergina/items/f889519e6be19c46f5f4
 To enter MySQL on Lightsail,
 
 ```
 $ mysql -u username -p -h endpoint
+```
+
+To exit from MySQL,
+
+```
+> exit
 ```

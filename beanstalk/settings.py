@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '8w*r09*2c2(3#yoxhh4zdebzcu&hh=$%+7c3)xc^o5j*n&l)^b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     import os
@@ -63,38 +63,38 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'beanstalk.urls'
 
-if DEBUG:
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [os.path.join(BASE_DIR, 'templates')],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
+# if DEBUG:
+#     TEMPLATES = [
+#         {
+#             'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#             'DIRS': [os.path.join(BASE_DIR, 'templates')],
+#             'APP_DIRS': True,
+#             'OPTIONS': {
+#                 'context_processors': [
+#                     'django.template.context_processors.debug',
+#                     'django.template.context_processors.request',
+#                     'django.contrib.auth.context_processors.auth',
+#                     'django.contrib.messages.context_processors.messages',
+#                 ],
+#             },
+#         },
+#     ]
+# else:
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [Path.resolve(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
         },
-    ]
-else:
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [Path.resolve(BASE_DIR, 'templates')],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
-        },
-    ]
+    },
+]
 
 
 WSGI_APPLICATION = 'beanstalk.wsgi.application'
@@ -103,23 +103,23 @@ WSGI_APPLICATION = 'beanstalk.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# if DEBUG:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Database-1',
-            'USER': 'dbmasteruser',
-            'HOST': '',
-            'PORT': '3306',
-        }
-    }
+}
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'Database-1',
+#             'USER': 'dbmasteruser',
+#             'HOST': '',
+#             'PORT': '3306',
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -159,19 +159,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
-    ]
-else:
-    STATICFILES_DIRS = [
-        Path.resolve(BASE_DIR, 'static')
-    ]
+# if DEBUG:
+#     STATICFILES_DIRS = [
+#         os.path.join(BASE_DIR, 'static')
+#     ]
+# else:
+STATICFILES_DIRS = [
+    Path.resolve(BASE_DIR, 'static')
+]
 
 STATIC_ROOT = 'assets'
 
 MEDIA_URL = '/media/'
-if DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-else:
-    MEDIA_ROOT = Path.resolve(BASE_DIR, 'media')
+# if DEBUG:
+#     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# else:
+MEDIA_ROOT = Path.resolve(BASE_DIR, 'media')
