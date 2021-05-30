@@ -10,12 +10,15 @@
         <div>
           <img src="{{ formatted_logo.url }}" alt="Restaurant Logo" class="logo shadow">
         </div>
-        <h5 class="m-auto">{{ name }}</h5>
+        <h5 class="m-auto">
+          テスト店
+        </h5>
       </div>
-      <form action="{% url 'restaurant:order_manage' %}" method="POST">{% csrf_token %}
-        <div>
-          {{ form.as_p }}
-        </div>
+      <form method="POST">{% csrf_token %}
+        <label>店名</label><br>
+        <input name="username" class="px-3 mb-3"><br>
+        <label>パスワード</label><br>
+        <input type="password" name="password" class="px-3 mb-3">
         <div>
           <input type="checkbox">ログイン状態を保持する
         </div>
@@ -27,7 +30,7 @@
         </div>
       </form>
     </div>
-    <div class="pt-5 admin d-flex justify-content-between">
+    <div class="pt-3 admin d-flex justify-content-between">
       <div>
         <div>
           <a href="#">メニューを作成・管理する</a>

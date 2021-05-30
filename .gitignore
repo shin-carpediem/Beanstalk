@@ -185,3 +185,7 @@ tempCodeRunnerFile.py
 
 # imagekit_cache
 .imagekit_cache/
+
+.sqlite3
+
+media
