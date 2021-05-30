@@ -1,0 +1,45 @@
+{% extends 'restaurant/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper pb-5">
+  <div class="inner__wrapper mx-auto py-5">
+    <div class="board shadow text-center py-4 px-5">
+      <h4 class="text__bold">ログイン画面</h4>
+      <div class="d-flex">
+        <div>
+          <img src="" alt="Restaurant Icon">
+        </div>
+        <h5>
+          <!-- 店の名前 -->
+        </h5>
+      </div>
+      <form action="#" method="POST">{% csrf_token %}
+        <!-- パスワード -->
+        <div>
+          <input type="checkbox">ログイン状態を保持する
+        </div>
+        <div class="pt-3">
+          <a href="#">パスワードを忘れましたか？</a>
+        </div>
+        <div class="pt-5">
+          <button type="submit" class="px-4 btn btn__blue shadow">ログイン</button>
+        </div>
+      </form>
+    </div>
+    <div class="pt-5 admin d-flex justify-content-between">
+      <div>
+        <div>
+          <a href="#">メニューを作成・管理する</a>
+        </div>
+        <div class="pt-2">
+          <a href="#">お客様用ページをチェックする</a>
+        </div>
+      </div>
+      <div>
+        <a href="#">ヘルプセンター</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
