@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.sessions.models import Session
 from django.core.mail import send_mail
 from django.utils import timezone
 from imagekit.models import ImageSpecField, ProcessedImageField
@@ -53,3 +54,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "user"
         verbose_name_plural = "users"
+
+
+# for customer
+class nonLoginUser(models.Model):
+    table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
+    session = models.ForeignKey(
+        Session, blank=True, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField("日付", auto_now=True)
+
+    def __str__(self):
+        return str(self.table)

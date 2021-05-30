@@ -208,8 +208,18 @@ section.header {
 }
 
 // customer
-section.header__customer {
-  .clipboard {
-    transform: scale(2);
+.board__customer {
+  section.header__customer {
+    .clipboard {
+      transform: scale(2);
+    }
+  }
+  .choose-table {
+    input {
+      font-size: 28px;
+      text-align: center;
+      background-color: $light-orange;
+      border-radius: 10px;
+    }
   }
 }

@@ -180,8 +180,15 @@ section.header .clipboard {
           transform: scale(2);
 }
 
-section.header__customer .clipboard {
+.board__customer section.header__customer .clipboard {
   -webkit-transform: scale(2);
           transform: scale(2);
+}
+
+.board__customer .choose-table input {
+  font-size: 28px;
+  text-align: center;
+  background-color: #ffd79a;
+  border-radius: 10px;
 }
 /*# sourceMappingURL=main.css.map */
