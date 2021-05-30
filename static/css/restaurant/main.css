@@ -81,6 +81,10 @@ textarea {
           box-shadow: 0.4px inset;
 }
 
+a:hover {
+  color: #257cff;
+}
+
 .shadow {
   -webkit-box-shadow: 0 0 2px 3px #565454;
           box-shadow: 0 0 2px 3px #565454;
@@ -149,9 +153,31 @@ textarea {
   border-radius: 10px;
 }
 
-.wrapper .board .logo {
+.logo {
+  background-color: #fff;
   border-radius: 50%;
   width: 50px;
   height: 50px;
+}
+
+section.header {
+  min-width: 400px;
+  background-color: #257cff;
+}
+
+section.header .back {
+  color: #565454;
+  -webkit-transform: scale(2);
+          transform: scale(2);
+}
+
+section.header div {
+  color: #fff;
+}
+
+section.header .clipboard {
+  color: #fff;
+  -webkit-transform: scale(2);
+          transform: scale(2);
 }
 /*# sourceMappingURL=main.css.map */

@@ -6,33 +6,28 @@ from account.models import User
 
 
 # Create your views here.
+@login_required
 def order_manage(request):
-    return render(request, 'restaurant/order_manage.html')
-
-# def login(request):
-#     form = LoginForm(request.POST or None)
-#     user = User.objects.get(id=2)
-#     formatted_logo = user.formatted_logo
-#     name = user.name
-
-#     if request.method == 'POST':
-#         password = form.cleaned_data['password']
-#         print(password)
-#         request_password = request.POST.get('password')
-#         if password == request_password:
-#             login(request, user)
-#             return render(request, 'restaurant/order_manage.html')
-#         else:
-#             messages.warning(request, f"パスワードが違います。")
-#             return redirect('restaurant:login')
-
-#     ctx = {
-#         'form': form,
-#         'formatted_logo': formatted_logo,
-#         'name': name,
-#     }
-#     return render(request, 'restaurant/login.html', ctx)
+    user = User.objects.get(id=request.user.id)
+    formatted_logo = user.formatted_logo
+    name = user.name
+    ctx = {
+        'formatted_logo': formatted_logo,
+        'name': name,
+    }
+    return render(request, 'restaurant/order_manage.html', ctx)
 
 
+@login_required
+def history(request):
+    return render(request, 'restaurant/history.html')
+
+
+# for manageing menu
 def manage_login(request):
     return render(request, 'restaurant/login.html')
+
+
+@login_required
+def manage_menu(request):
+    return render(request, 'restaurant/manage/menu.html')

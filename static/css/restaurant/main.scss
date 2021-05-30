@@ -88,6 +88,12 @@ textarea {
   box-shadow: 0.4px inset;
 }
 
+a {
+  &:hover {
+    color: $blue;
+  }
+}
+
 @mixin shadow {
   box-shadow: 0 0 2px 3px $black;
 }
@@ -176,10 +182,28 @@ textarea {
   .board {
     background-color: $white;
     border-radius: 10px;
-    .logo {
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-    }
+  }
+}
+
+.logo {
+  background-color: $white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+section.header {
+  min-width: 400px;
+  background-color: $blue;
+  .back {
+    color: $black;
+    transform: scale(2);
+  }
+  div {
+    color: $white;
+  }
+  .clipboard {
+    color: $white;
+    transform: scale(2);
   }
 }
