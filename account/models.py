@@ -39,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     formatted_logo = ImageSpecField(source="logo",
                                     processors=[ResizeToFill(30, 30)],
                                     format="JPEG",
-                                    options={"quality": 40}
+                                    options={"quality": 70}
                                     )
     is_staff = models.BooleanField("IAM", default=False)
     is_active = models.BooleanField("有効", default=True)

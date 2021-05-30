@@ -32,3 +32,7 @@ def order_manage(request):
 #         'name': name,
 #     }
 #     return render(request, 'restaurant/login.html', ctx)
+
+
+def manage_login(request):
+    return render(request, 'restaurant/login.html')

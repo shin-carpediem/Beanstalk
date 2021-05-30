@@ -13,7 +13,7 @@ class Menu(models.Model):
     formatted_img = ImageSpecField(source="img",
                                    processors=[ResizeToFill(100, 100)],
                                    format="JPEG",
-                                   options={"quality": 70}
+                                   options={"quality": 100}
                                    )
     allergies = models.CharField(
         "アレルギー", max_length=256, blank=True, null=True)

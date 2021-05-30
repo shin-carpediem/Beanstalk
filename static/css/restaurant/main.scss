@@ -67,9 +67,20 @@ $grey: #9c9c9c;
 $light-grey: #f1f1f1;
 $white: #fff;
 
-a {
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+a,
+label,
+button,
+input,
+div {
   color: $black;
 }
+
 input,
 textarea {
   outline: none;

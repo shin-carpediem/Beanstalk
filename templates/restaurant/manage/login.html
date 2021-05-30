@@ -8,7 +8,7 @@
       <h4 class="text__bold">
         {% if request.path == '/login/' %}
           ログイン画面
-        {% elif request.path == '/manage/login/' %}
+        {% elif request.path == '/admin/login/' %}
           メニュー管理
         {% endif %}
       </h4>
@@ -40,9 +40,9 @@
       <div>
         <div>
           {% if request.path == '/login/' %}
-            <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する</a>
-          {% elif request.path == '/manage/login/' %}
-            <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+            <a href="#">メニューを作成・管理する</a>
+          {% elif request.path == '/admin/login/' %}
+            <a href="#">オーダー管理画面に戻る</a>
           {% endif %}
         </div>
         <div class="pt-2">
