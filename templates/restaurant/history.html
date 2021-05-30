@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block custom__header %}
+  <title>オーダー管理</title>
+{% endblock %}
+
 {% block content %}
 <div class="w-100">
-  {% block header %}
-    {% include 'restaurant/components/header.html' %}
+  {% block header__restaurant %}
+    {% include 'components/header__restaurant.html' %}
   {% endblock %}
   <div></div>
 </div>

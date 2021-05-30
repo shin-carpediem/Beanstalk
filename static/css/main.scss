@@ -171,13 +171,12 @@ a {
   @include icon__red;
 }
 
-// components
+// restaurant
 .wrapper {
-  position: relative;
   min-height: 100vh;
   background-color: $light-grey;
   .inner__wrapper {
-    width: 600px;
+    max-width: 600px;
   }
   .board {
     background-color: $white;
@@ -204,6 +203,13 @@ section.header {
   }
   .clipboard {
     color: $white;
+    transform: scale(2);
+  }
+}
+
+// customer
+section.header__customer {
+  .clipboard {
     transform: scale(2);
   }
 }

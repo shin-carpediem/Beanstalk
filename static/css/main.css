@@ -139,13 +139,12 @@ a:hover {
 }
 
 .wrapper {
-  position: relative;
   min-height: 100vh;
   background-color: #f1f1f1;
 }
 
 .wrapper .inner__wrapper {
-  width: 600px;
+  max-width: 600px;
 }
 
 .wrapper .board {
@@ -177,6 +176,11 @@ section.header div {
 
 section.header .clipboard {
   color: #fff;
+  -webkit-transform: scale(2);
+          transform: scale(2);
+}
+
+section.header__customer .clipboard {
   -webkit-transform: scale(2);
           transform: scale(2);
 }

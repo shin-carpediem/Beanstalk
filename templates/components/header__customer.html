@@ -1,0 +1,12 @@
+<section class="p-2 header__customer d-flex justify-content-between">
+  <div class="pl-2 d-flex">
+    <img src="#" alt="Restaurant Logo" class="logo shadow">
+    <h5 class="pl-4 m-auto text__bold">
+      {{ user.name }}
+    </h5>
+  </div>
+  <div class="pr-3 my-auto">
+    <a href="{% url 'customer:history' %}"><i class="clipboard fas fa-clipboard-list"></i></a>
+  </div>
+</section>
+<hr class="mb-5" />
