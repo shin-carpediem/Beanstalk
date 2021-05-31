@@ -4,9 +4,25 @@ from imagekit.processors import ResizeToFill
 
 
 # Create your models here.
+class Category(models.Model):
+    name = models.CharField("カテゴリ", max_length=256, blank=True, null=True)
+    created_at = models.DateTimeField("作成日", auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Allergy(models.Model):
+    ingredient = models.CharField("アレルギー食品", max_length=256, blank=True, null=True)
+    created_at = models.DateTimeField("作成日", auto_now=True)
+
+    def __str__(self):
+        return str(self.ingredient)
+
+
 class Menu(models.Model):
     name = models.CharField("表示名", max_length=256, blank=True, null=True)
-    type = models.CharField("カテゴリ", max_length=256, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     price = models.PositiveIntegerField("価格", blank=True, null=True)
     img = models.ImageField("イメージ画像", upload_to="img",
                             max_length=50, blank=True, null=True)
@@ -15,17 +31,7 @@ class Menu(models.Model):
                                    format="JPEG",
                                    options={"quality": 100}
                                    )
-    allergies = models.CharField(
-        "アレルギー", max_length=256, blank=True, null=True)
-    created_at = models.DateTimeField("作成日", auto_now=True)
-
-    def __str__(self):
-        return str(self.name)
-
-
-class Category(models.Model):
-    name = models.CharField("カテゴリ", max_length=256, blank=True, null=True)
-    which = models.ForeignKey(Menu, on_delete=models.PROTECT)
+    allergies = models.ManyToManyField(Allergy, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):
