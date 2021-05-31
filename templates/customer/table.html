@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block inner__content %}
-<h4 class="text__bold">テーブル番号を教えてください</h4>
+<h4 class="text__bold">お名前 と テーブル番号 を教えてください</h4>
 <img class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Table">
-<form method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
-  <div class="text__bold choose-table">
-    {{ choose_table_form }}
+<form class="px-auto" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
+  <div class="text__bold text-right mr-5 pr-5 choose-table">
+    {{ choose_table_form.as_p }}
   </div>
   <div class="pt-5">
     <button type="submit" class="w-50 px-4 btn btn__orange shadow">登録</button>

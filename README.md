@@ -4,7 +4,7 @@
 
 Technique:
 
-- AWS lightsail
+- AWS lightsail(Ubuntu + Apache + gunicorn + Django)
 - Pipenv
 - MySQL
 
@@ -55,4 +55,11 @@ To exit from MySQL,
 
 ```
 > exit
+```
+
+To check the Apache log
+
+```
+$ /opt/bitnami/apache2/logs/access_log
+$ /opt/bitnami/apache2/logs/error_log
 ```

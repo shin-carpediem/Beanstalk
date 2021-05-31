@@ -14,13 +14,13 @@ def table(request):
         restaurant_name = User.objects.get(id=1)
 
     if request.method == 'POST':
+        name = request.POST.get('name')
         table = request.POST.get('table')
-        print(table)
         try:
             session = Session.objects.get(pk=request.session.session_key)
         except Session.DoesNotExist:
             session = request.session.create()
-        newuser = nonLoginUser(table=table, session=session,)
+        newuser = nonLoginUser(name=name, table=table, session=session,)
         newuser.save()
         return render(request, 'customer/menu.html')
 
