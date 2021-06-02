@@ -1,12 +1,27 @@
-<section class="p-2 header__customer d-flex justify-content-between">
-  <div class="pl-2 d-flex">
-    <img src="#" alt="Restaurant Logo" class="logo shadow">
-    <h5 class="pl-4 m-auto text__bold">
+<section class="p-2 header__customer row">
+  {% if request.path == '/' or '/menu/' %}
+    <div class="col-2">
+      <img src="#" alt="Restaurant Logo" class="m-3 logo shadow">
+    </div>
+  {% else %}
+    <div class="logo">
+      <i class="pt-2 pl-2 back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+    </div>
+  {% endif %}
+  <h5 class="col-5 my-auto text__bold">
+    {% if request.path == '/menu/' %}
       {{ restaurant_name }}
-    </h5>
-  </div>
-  <div class="pr-3 my-auto">
-    <a href="{% url 'customer:history' %}"><i class="clipboard fas fa-clipboard-list"></i></a>
-  </div>
+    {% elif request.path == '/cart' %}
+      カート
+    {% elif request.path == '/order_history/' %}
+      オーダー履歴
+    {% endif %}
+  </h5>
+  {% if request.path != '/' %}
+    <p class="col-3 my-auto text__bold">テーブル番号 {{ table }}</p>
+  <a href="{% url 'customer:history' %}" class="col-2 my-auto">
+    <i class="clipboard fas fa-clipboard-list"></i>
+  </a>
+  {% endif %}
 </section>
 <hr class="mb-5" />

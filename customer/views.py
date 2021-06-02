@@ -1,19 +1,22 @@
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import render
-from django.views.decorators.http import require_POST
 from account.models import User, nonLoginUser
 from .forms import ChooseTableForm
+
+
+def restaurant_name():
+    try:
+        restaurant_name = User.objects.get(id=2)
+    except:
+        restaurant_name = User.objects.get(id=1)
+    return restaurant_name
 
 
 # Create your views here.
 def table(request):
     choose_table_form = ChooseTableForm(request.POST or None)
-    try:
-        restaurant_name = User.objects.get(id=2)
-    except:
-        restaurant_name = User.objects.get(id=1)
-
+    restaurant_name()
     ctx = {
         'choose_table_form': choose_table_form,
         'restaurant_name': restaurant_name,
@@ -21,7 +24,6 @@ def table(request):
     return render(request, 'customer/table.html', ctx)
 
 
-@require_POST
 def menu(request):
     name = request.POST.get('name')
     table = request.POST.get('table')
@@ -33,7 +35,14 @@ def menu(request):
 
     newuser = nonLoginUser(name=name, table=table, session=session,)
     newuser.save()
-    return render(request, 'customer/menu.html')
+
+    restaurant_name()
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table': table,
+    }
+
+    return render(request, 'customer/menu.html', ctx)
 
 
 def history(request):
