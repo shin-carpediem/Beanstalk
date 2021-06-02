@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import render
+from django.views.decorators.http import require_POST
 from account.models import User, nonLoginUser
 from .forms import ChooseTableForm
 
@@ -13,22 +14,26 @@ def table(request):
     except:
         restaurant_name = User.objects.get(id=1)
 
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        table = request.POST.get('table')
-        try:
-            session = Session.objects.get(pk=request.session.session_key)
-        except Session.DoesNotExist:
-            session = request.session.create()
-        newuser = nonLoginUser(name=name, table=table, session=session,)
-        newuser.save()
-        return render(request, 'customer/menu.html')
-
     ctx = {
         'choose_table_form': choose_table_form,
         'restaurant_name': restaurant_name,
     }
     return render(request, 'customer/table.html', ctx)
+
+
+@require_POST
+def menu(request):
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+
+    try:
+        session = Session.objects.get(pk=request.session.session_key)
+    except Session.DoesNotExist:
+        session = request.session.create()
+
+    newuser = nonLoginUser(name=name, table=table, session=session,)
+    newuser.save()
+    return render(request, 'customer/menu.html')
 
 
 def history(request):
