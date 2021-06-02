@@ -45,5 +45,17 @@ def menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+def menu_detail(request, pk):
+    return render(request, 'customer/detail.html')
+
+
+def cart(request):
+    return render(request, 'customer/cart.html')
+
+
+def cart_detail(request, pk):
+    return render(request, 'customer/detail.html')
+
+
 def history(request):
     return render(request, 'customer/history.html')
