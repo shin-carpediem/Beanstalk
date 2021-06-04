@@ -1,11 +1,33 @@
 {% extends 'customer/base__next.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block inner__content %}
-<div>
-  <div></div>
-  <hr>
-  <div></div>
-  <button class="btn btn__orange shadow w-50">カートを見る</button>
+<div class="menu-list">
+  <div class="category mb-3">
+    <div class="d-flex ml-3">
+      {% for category in categories %}
+      <form action="{% url 'customer:category_filter' %}" name="{{ category.name }}" method="POST">{% csrf_token %}
+        <button class="category-btn p-2 text__bold">
+          {{ category.name }}
+        </button>
+      </form>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="mx-auto row">
+    {% for menu in menus %}
+      <a class="col-6 my-2 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
+        <img src="{{ menu.img.url }}" alt="Menu">
+        <div class="text-box w-100">
+          <p class="text-left pl-2">{{ menu.name }}</p>
+          <p class="text-right pr-2">¥ {{ menu.price }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+    <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
+  </form>
 </div>
 {% endblock %}

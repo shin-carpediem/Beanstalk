@@ -1,11 +1,38 @@
-// default
-ul,
-li {
-  list-style: none;
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"],
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
+
 p,
 a,
 label,
@@ -13,6 +40,7 @@ form,
 input {
   font-size: 14px;
 }
+
 /* Make images easier to work with */
 img,
 picture,
@@ -20,15 +48,34 @@ video {
   max-width: 100%;
   display: block;
 }
+
+img {
+  width: 100%;
+  object-fit: cover;
+}
+
 button {
   display: block;
 }
+
 /* Inherit fonts for inputs and buttons */
 input,
 button,
 textarea,
 select {
   font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @mixin text__bold {
@@ -171,6 +218,13 @@ a {
   @include icon__red;
 }
 
+.btn__fixed {
+  width: 183px;
+  position: fixed;
+  left: 15vh;
+  bottom: 10px;
+}
+
 // restaurant
 .wrapper {
   min-height: 100vh;
@@ -220,6 +274,41 @@ section.header {
       text-align: center;
       background-color: $light-orange;
       border-radius: 10px;
+    }
+  }
+  .menu-list {
+    .category {
+      border-bottom: 1px solid $grey;
+      .category-btn {
+        border-top: 1px solid $grey;
+        border-left: 1px solid $grey;
+        border-right: 1px solid $grey;
+        border-bottom: 0;
+        border-radius: 4px 4px 0 0;
+        background-color: $white;
+        p {
+          color: $grey;
+        }
+      }
+    }
+    .menu-item {
+      border-radius: 4px;
+      img {
+        position: relative;
+        transform: scale(1.1);
+      }
+      .text-box {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-color: #9b9999;
+        opacity: 0.6;
+        border-radius: 0 0 4px 4px;
+        p {
+          color: $white;
+          font-size: 16px;
+        }
+      }
     }
   }
 }

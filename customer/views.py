@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.sessions.models import Session
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from account.models import User, nonLoginUser
+from restaurant.models import Category, Menu
 from .forms import ChooseTableForm
 
 
+# Create your views here.
 def restaurant_name():
     try:
         restaurant_name = User.objects.get(id=2)
@@ -13,7 +15,6 @@ def restaurant_name():
     return restaurant_name
 
 
-# Create your views here.
 def table(request):
     choose_table_form = ChooseTableForm(request.POST or None)
     restaurant_name()
@@ -37,24 +38,57 @@ def menu(request):
     newuser.save()
 
     restaurant_name()
+
+    categories = Category.objects.all().order_by('id')
+    menus = Menu.objects.all().order_by('-id')
+
     ctx = {
         'restaurant_name': restaurant_name,
         'table': table,
+        'categories': categories,
+        'menus': menus,
     }
 
     return render(request, 'customer/menu.html', ctx)
 
 
-def menu_detail(request, pk):
-    return render(request, 'customer/detail.html')
+def category_filter(requset):
+    category_name = requset.POST.get('category.name')
+    print(category_name)
+
+    restaurant_name()
+
+    categories = Category.objects.all().order_by('id')
+    menus = Menu.objects.filter(category=category_name).order_by('-id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        # 'table': table,
+        'categories': categories,
+        'menus': menus,
+    }
+
+    return render(requset, 'customer/menu.html', ctx)
+
+
+def menu_detail(request, menu_id):
+    menu = get_object_or_404(Menu, pk=menu_id)
+    ctx = {
+        'menu': menu,
+    }
+    return render(request, 'customer/detail.html', ctx)
 
 
 def cart(request):
     return render(request, 'customer/cart.html')
 
 
-def cart_detail(request, pk):
-    return render(request, 'customer/detail.html')
+def cart_detail(request, menu_id):
+    menu = get_object_or_404(Menu, pk=menu_id)
+    ctx = {
+        'menu': menu,
+    }
+    return render(request, 'customer/detail.html', ctx)
 
 
 def history(request):

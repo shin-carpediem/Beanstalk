@@ -40,11 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'imagekit',
     'account',
     'customer',
     'restaurant',
 ]
+
+NUMBER_GROUPING = 3
 
 AUTH_USER_MODEL = 'account.User'
 LOGIN_URL = 'restaurant:login'
@@ -170,8 +173,9 @@ else:
 
 STATIC_ROOT = 'assets'
 
-MEDIA_URL = '/media/'
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     MEDIA_ROOT = Path.resolve(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'

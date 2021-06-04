@@ -1,8 +1,35 @@
-ul,
-li {
-  list-style: none;
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"],
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
@@ -23,6 +50,12 @@ video {
   display: block;
 }
 
+img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 button {
   display: block;
 }
@@ -33,6 +66,21 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    -webkit-animation-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+            animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .text__bold {
@@ -138,6 +186,13 @@ a:hover {
   color: #fff;
 }
 
+.btn__fixed {
+  width: 183px;
+  position: fixed;
+  left: 15vh;
+  bottom: 10px;
+}
+
 .wrapper {
   min-height: 100vh;
   background-color: #f1f1f1;
@@ -190,5 +245,46 @@ section.header .clipboard {
   text-align: center;
   background-color: #ffd79a;
   border-radius: 10px;
+}
+
+.board__customer .menu-list .category {
+  border-bottom: 1px solid #9c9c9c;
+}
+
+.board__customer .menu-list .category .category-btn {
+  border-top: 1px solid #9c9c9c;
+  border-left: 1px solid #9c9c9c;
+  border-right: 1px solid #9c9c9c;
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  background-color: #fff;
+}
+
+.board__customer .menu-list .category .category-btn p {
+  color: #9c9c9c;
+}
+
+.board__customer .menu-list .menu-item {
+  border-radius: 4px;
+}
+
+.board__customer .menu-list .menu-item img {
+  position: relative;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+.board__customer .menu-list .menu-item .text-box {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: #9b9999;
+  opacity: 0.6;
+  border-radius: 0 0 4px 4px;
+}
+
+.board__customer .menu-list .menu-item .text-box p {
+  color: #fff;
+  font-size: 16px;
 }
 /*# sourceMappingURL=main.css.map */
