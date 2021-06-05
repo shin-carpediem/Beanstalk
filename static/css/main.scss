@@ -123,6 +123,7 @@ html {
 
 // unique default
 $blue: #257cff;
+$turquoise: #AAE2D1;
 $red: #ff5b51;
 $orange: #ff9900;
 $light-orange: #ffd79a;
@@ -214,6 +215,31 @@ a {
 .icon__red {
   background-color: $red;
   color: $white;
+}
+
+.badge {
+  text-align: center;
+  align-items: center;
+  border-radius: 100px;
+  font-weight: bold;
+}
+
+.badge__orange {
+  background-color: $orange;
+  color: $white;
+}
+
+.badge__turquoise {
+  background-color: $turquoise;
+}
+
+.badge__grey {
+  background-color: $grey;
+  color: $white;
+}
+
+.badge__yellow {
+  background-color: $yellow;
 }
 
 // restaurant

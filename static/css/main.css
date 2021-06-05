@@ -216,6 +216,33 @@ a:hover {
   color: #fff;
 }
 
+.badge {
+  text-align: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 100px;
+  font-weight: bold;
+}
+
+.badge__orange {
+  background-color: #ff9900;
+  color: #fff;
+}
+
+.badge__turquoise {
+  background-color: #AAE2D1;
+}
+
+.badge__grey {
+  background-color: #9c9c9c;
+  color: #fff;
+}
+
+.badge__yellow {
+  background-color: #ffe5be;
+}
+
 .wrapper {
   min-height: 100vh;
   background-color: #f1f1f1;

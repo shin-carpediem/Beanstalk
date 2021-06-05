@@ -1,5 +1,6 @@
 {% extends 'customer/base__next.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block inner__content %}
 <section class="menu-list">
@@ -11,16 +12,34 @@
           <p class="text-left pl-2">{{ menu_instance.name }}</p>
           <p class="text-right pr-2">¥ {{ menu_instance.price }}</p>
         </div>
-        <p class="cart-num icon icon__red text__bold">{{ cart_num }}</p>
+        <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
+        <p class="badge badge__orange">カート</p>
+        <p class="badge badge__turquoise">調理中</p>
+        <p class="badge badge__grey">済</p>
       </a>
     {% endfor %}
   </div>
 
-  <!-- お会計機能はnew feature -->
-  <!-- <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %} -->
-    <!-- hidden -->
-    <!-- <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
-    <button class="btn btn__orange btn__fixed shadow">お会計</button>
-  </form> -->
+  <hr/>
+  <div class="row">
+    <div class="col-4">
+      <p class="py-2 px-3 badge badge__orange">カート</p>
+      <p>¥ </p>
+    </div>
+    <div class="col-4">
+      <p class="py-2 px-3 badge badge__grey">注文済</p>
+      <p>¥ </p>
+    </div>
+    <div class="col-4">
+      <p class="py-2 px-3 badge badge__yellow">合計</p>
+      <p class="text__bold text_large">¥ </p>
+    </div>
+    <!-- お会計機能はnew feature -->
+    <!-- <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %} -->
+      <!-- hidden -->
+      <!-- <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}"> -->
+    <!-- <button class="col-3 btn btn__orange btn__fixed shadow">お会計</button> -->
+    <!-- </form> -->
+  </div>
 </section>
 {% endblock %}

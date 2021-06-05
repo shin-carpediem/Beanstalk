@@ -17,19 +17,22 @@
     </div>
   </div>
 
-  <div class="d-flex flex-wrap">
-    {% for menu in menus %}
-      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
-        <img src="{{ menu.img.url }}" alt="Menu">
-        <div class="text-box">
-          <p class="text-left pl-2">{{ menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ menu.price }}</p>
-        </div>
-      </a>
-    {% endfor %}
-  </div>
+  <form action="{% url 'customer:cart' %}" method="GET">{% csrf_token %}
 
-  <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+    <div class="d-flex flex-wrap">
+      {% for menu in menus %}
+        <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
+          <img src="{{ menu.img.url }}" alt="Menu">
+          <div class="text-box">
+            <p class="text-left pl-2">{{ menu.name }}</p>
+            <p class="text-right pr-2">¥ {{ menu.price }}</p>
+          </div>
+        </a>
+        <!-- hidden -->
+        <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
+      {% endfor %}
+    </div>
+
     <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
   </form>
 </section>

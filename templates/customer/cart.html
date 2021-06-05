@@ -1,17 +1,18 @@
 {% extends 'customer/base__next.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block inner__content %}
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_id %}">
+      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_instance.id %}">
         <img src="{{ menu_instance.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ menu_instance.name }}</p>
           <p class="text-right pr-2">¥ {{ menu_instance.price }}</p>
         </div>
-        <p class="cart-num icon icon__red text__bold">{{ cart_num }}</p>
+        <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
       </a>
     {% endfor %}
   </div>

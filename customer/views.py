@@ -102,22 +102,35 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
+    from .models import Cart
+
+    # try:
     cart_num = request.POST.get('cart_num')
     menu_id = request.POST.get('menu_id')
     menu_instance = Menu.objects.get(id=menu_id)
     user = nonLoginUser.objects.get(id=request.user.id)
-
-    from .models import Cart
     cart = Cart(menu=menu_instance, num=cart_num, customer=user)
     cart.save()
+
     carts = Cart.objects.all().order_by('-id')
 
     ctx = {
         'carts': carts,
-        'cart_num': cart_num,
-        'menu_id': menu_id,
         'menu_instance': menu_instance,
     }
+
+    # メニュー画面から見るルート
+    # except:
+    #     carts = Cart.objects.all().order_by('-id')
+    #     # carts_menu = Cart.objects.menu
+    #     # menu_id = Menu.objects.get(id=1)
+    #     menu_instance = Menu.objects.get(id=1)
+
+    #     ctx = {
+    #         'carts': carts,
+    #         'menu_instance': menu_instance,
+    #     }
+
     return render(request, 'customer/cart.html', ctx)
 
 
