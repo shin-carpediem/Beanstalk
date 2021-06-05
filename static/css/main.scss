@@ -165,20 +165,17 @@ a {
   }
 }
 
-@mixin btn {
+.btn {
   border-radius: 100px;
   color: $white;
   text-align: center;
   padding: 10px;
-  transition: 0.5s;
   font-weight: bold;
+  transition: 0.5s;
   &:hover {
     color: $white;
     transform: scale(0.9);
   }
-}
-.btn {
-  @include btn;
 }
 
 .btn__blue {
@@ -193,26 +190,22 @@ a {
   background-color: $grey;
 }
 
-@mixin icon {
+.icon {
   border-radius: 100px;
   text-align: center;
-}
-.icon {
-  @include icon;
+  align-items: center;
+  width: 29px;
+  height: 29px;
 }
 
 .icon_yellow {
   background-color: $yellow;
   color: $black;
-  width: 29px;
-  height: 29px;
 }
 
 .icon__red {
   background-color: $red;
   color: $white;
-  width: 29px;
-  height: 29px;
 }
 
 // restaurant
@@ -267,7 +260,7 @@ section.header {
       border-radius: 10px;
     }
   }
-  .menu-list {
+  section.menu-list {
     .category {
       border-bottom: 1px solid $grey;
       .category-btn {
@@ -287,15 +280,19 @@ section.header {
       height: 195px;
       border-radius: 4px;
       text-decoration: none;
+      position: relative;
       &:hover {
         opacity: 0.6;
       }
       img {
-        // border-radius: 4px 4px 0 0;
         border-radius: 4px;
         height: 100%;
       }
       .text-box {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 10000;
         background-color: #9b9999;
         opacity: 0.7;
         border-radius: 0 0 4px 4px;
@@ -306,9 +303,38 @@ section.header {
           font-size: 16px;
         }
       }
+      .cart-num {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index: 10000;
+      }
     }
   }
-  .menu-detail {
+  section.menu-detail {
+    .menu-top-view {
+      position: relative;
+      .text-box {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 10000;
+        background-color: #9b9999;
+        opacity: 0.7;
+        width: 100%;
+        height: 20%;
+        p {
+          color: $white;
+          font-size: 28px;
+        }
+        @media screen and (max-width: 600px) {
+          height: 25%;
+          p {
+            font-size: 22px;
+          }
+        }
+      }
+    }
     .allergy-box-brighten {
       background-color: $light-orange;
       color: $white;

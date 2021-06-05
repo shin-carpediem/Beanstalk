@@ -16,7 +16,7 @@ class ChooseTableForm(forms.Form):
 
 
 class AddToCartForm(forms.Form):
-    num = forms.IntegerField(
+    cart_num = forms.IntegerField(
         label='',
         min_value=1,
         required=True

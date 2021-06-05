@@ -102,22 +102,19 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
-    order_num = request.POST.get('num')
+    cart_num = request.POST.get('cart_num')
     menu_id = request.POST.get('menu_id')
     menu_instance = Menu.objects.get(id=menu_id)
     user = nonLoginUser.objects.get(id=request.user.id)
 
-    from .models import Order
-    order_list = Order.objects.all()
+    from .models import Cart
+    cart = Cart(menu=menu_instance, num=cart_num, customer=user)
+    cart.save()
+    carts = Cart.objects.all().order_by('-id')
 
-    Order(status='カート', menu=menu_instance,
-          num=order_num, customer=user)
-    print(order_list)
-
-    orders = Order.objects.all().order_by('-id')
     ctx = {
-        'orders': orders,
-        'order_num': order_num,
+        'carts': carts,
+        'cart_num': cart_num,
         'menu_id': menu_id,
         'menu_instance': menu_instance,
     }
@@ -139,6 +136,13 @@ def cart_detail(request, menu_id):
 
 # TODO:
 def order(request):
+    user = nonLoginUser.objects.get(id=request.user.id)
+    from .models import Cart, Order
+    users_cart = Cart.objects.filter(customer=user).order_by('-id')
+    # for each in users_cart:
+
+    # Order(menu=menu_instance, num=order_num, customer=user)
+
     return redirect('customer:menu')
 
 

@@ -4,10 +4,12 @@
 
 {% block inner__content %}
 <section class="menu-detail">
-  <img src="{{ menu.img.url }}" alt="Menu">
-  <div class="text-box px-5 py-4">
-    <div class="text-left text__bold pl-2">{{ menu.name }}</div>
-    <div class="text-right text__bold pr-2">¥ {{ menu.price }}</div>
+  <div class="menu-top-view">
+    <img src="{{ menu.img.url }}" alt="Menu">
+    <div class="text-box px-sm-5 px-2 py-1">
+      <p class="text-left">{{ menu.name }}</p>
+      <p class="text-right">¥ {{ menu.price }}</p>
+    </div>
   </div>
 
   <div class="px-2">

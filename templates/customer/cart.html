@@ -4,16 +4,14 @@
 {% block inner__content %}
 <section class="menu-list">
   <div class="d-flex flex-wrap">
-    {% for order in orders %}
+    {% for cart in carts %}
       <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_id %}">
         <img src="{{ menu_instance.img.url }}" alt="Menu">
-        <p class="icon icon__red">
-          {{ order_num }}
-        </p>
-        <!-- <div class="text-box">
-          <p class="text-left pl-2">{{ menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ menu.price }}</p>
-        </div> -->
+        <div class="text-box">
+          <p class="text-left pl-2">{{ menu_instance.name }}</p>
+          <p class="text-right pr-2">¥ {{ menu_instance.price }}</p>
+        </div>
+        <p class="cart-num icon icon__red text__bold">{{ cart_num }}</p>
       </a>
     {% endfor %}
   </div>
