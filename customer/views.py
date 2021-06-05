@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
@@ -54,9 +55,8 @@ def menu(request):
 
     return render(request, 'customer/menu.html', ctx)
 
+
 # TODO: 要更新
-
-
 def table_num(request):
     user = request.non_login_user
     table_num = user.table
@@ -104,32 +104,22 @@ def menu_detail(request, menu_id):
 def cart(request):
     from .models import Cart
 
-    # try:
-    cart_num = request.POST.get('cart_num')
-    menu_id = request.POST.get('menu_id')
-    menu_instance = Menu.objects.get(id=menu_id)
-    user = nonLoginUser.objects.get(id=request.user.id)
-    cart = Cart(menu=menu_instance, num=cart_num, customer=user)
-    cart.save()
-
-    carts = Cart.objects.all().order_by('-id')
-
-    ctx = {
-        'carts': carts,
-        'menu_instance': menu_instance,
-    }
+    try:
+        cart_num = request.POST.get('cart_num')
+        menu_id = request.POST.get('menu_id')
+        menu_instance = Menu.objects.get(id=menu_id)
+        user = nonLoginUser.objects.get(id=request.user.id)
+        cart = Cart(menu=menu_instance, num=cart_num, customer=user)
+        cart.save()
 
     # メニュー画面から見るルート
-    # except:
-    #     carts = Cart.objects.all().order_by('-id')
-    #     # carts_menu = Cart.objects.menu
-    #     # menu_id = Menu.objects.get(id=1)
-    #     menu_instance = Menu.objects.get(id=1)
+    except:
+        None
 
-    #     ctx = {
-    #         'carts': carts,
-    #         'menu_instance': menu_instance,
-    #     }
+    carts = Cart.objects.all().order_by('-id')
+    ctx = {
+        'carts': carts,
+    }
 
     return render(request, 'customer/cart.html', ctx)
 
@@ -147,33 +137,50 @@ def cart_detail(request, menu_id):
     return render(request, 'customer/detail.html', ctx)
 
 
-# TODO:
 def order(request):
     user = nonLoginUser.objects.get(id=request.user.id)
     from .models import Cart, Order
     users_cart = Cart.objects.filter(customer=user).order_by('-id')
-    # for each in users_cart:
+    print(users_cart)
 
-    # Order(menu=menu_instance, num=order_num, customer=user)
+    # cartからorderにコピー
+    for each in users_cart:
+        order = Order(status='調理中', menu=each.menu,
+                      num=each.num, customer=user)
+        order.save()
+
+    # コピーし終わったcartは削除
+    users_cart.delete()
 
     return redirect('customer:menu')
 
 
 def history(request):
-    # cart_num = request.POST.get('cart_num')
-    # menu_id = request.POST.get('menu_id')
-    # menu_instance = Menu.objects.get(id=menu_id)
-    # user = nonLoginUser.objects.get(id=request.user.id)
+    user = nonLoginUser.objects.get(id=request.user.id)
+    from .models import Cart, Order
+    orders = Order.objects.all().order_by('-id')
 
-    # from .models import Cart
-    # cart = Cart(menu=menu_instance, num=cart_num, customer=user)
-    # cart.save()
-    # carts = Cart.objects.all().order_by('-id')
+    orders_in_cart = Cart.objects.filter(customer=user)
+    orders_in_order = Order.objects.filter(status='調理中', customer=user)
 
-    # ctx = {
-    #     'carts': carts,
-    #     'cart_num': cart_num,
-    #     'menu_id': menu_id,
-    #     'menu_instance': menu_instance,
-    # }
-    return render(request, 'customer/history.html')
+    in_cart_each_price = 0
+    in_order_each_price = 0
+
+    # for i in orders_in_cart:
+    #     in_cart_each_price += 700 * int(orders_in_cart[i].num)
+
+    # for i in orders_in_order:
+    #     in_order_each_price += 700 * int(orders_in_order[i].num)
+
+    print(in_cart_each_price)
+    print(in_order_each_price)
+
+    total_price = in_cart_each_price + in_order_each_price
+
+    ctx = {
+        'orders': orders,
+        'orders_in_cart': orders_in_cart,
+        'orders_in_order': orders_in_order,
+        'total_price': total_price,
+    }
+    return render(request, 'customer/history.html', ctx)

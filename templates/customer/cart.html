@@ -6,18 +6,18 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_instance.id %}">
-        <img src="{{ menu_instance.img.url }}" alt="Menu">
+      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}">
+        <img src="{{ cart.menu.img.url }}" alt="Menu">
         <div class="text-box">
-          <p class="text-left pl-2">{{ menu_instance.name }}</p>
-          <p class="text-right pr-2">¥ {{ menu_instance.price }}</p>
+          <p class="text-left pl-2">{{ cart.menu.name }}</p>
+          <p class="text-right pr-2">¥ {{ cart.menu.price }}</p>
         </div>
         <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
       </a>
     {% endfor %}
   </div>
 
-  <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
+  <form action="{% url 'customer:menu' %}" method="POST">{% csrf_token %}
     <!-- hidden -->
     <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
     <button class="btn btn__orange btn__fixed shadow">注文</button>
