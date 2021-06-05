@@ -164,6 +164,10 @@ a:hover {
           box-shadow: 0 0 4px 6px #9c9c9c;
 }
 
+.el__pointer {
+  cursor: pointer;
+}
+
 .btn {
   border-radius: 100px;
   color: #fff;
@@ -242,7 +246,6 @@ section.header .back {
   color: #565454;
   -webkit-transform: scale(2);
           transform: scale(2);
-  cursor: pointer;
 }
 
 section.header div {
@@ -350,9 +353,6 @@ section.header .clipboard {
 }
 
 @media screen and (max-width: 600px) {
-  .board__customer section.menu-detail .menu-top-view .text-box {
-    height: 25%;
-  }
   .board__customer section.menu-detail .menu-top-view .text-box p {
     font-size: 22px;
   }

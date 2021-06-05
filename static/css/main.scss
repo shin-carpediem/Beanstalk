@@ -169,6 +169,10 @@ a {
   }
 }
 
+.el__pointer {
+  cursor: pointer;
+}
+
 .btn {
   border-radius: 100px;
   color: $white;
@@ -238,7 +242,6 @@ section.header {
   .back {
     color: $black;
     transform: scale(2);
-    cursor: pointer;
   }
   div {
     color: $white;
@@ -333,10 +336,7 @@ section.header {
         p {
           color: $white;
           font-size: 28px;
-        }
-        @media screen and (max-width: 600px) {
-          height: 25%;
-          p {
+          @media screen and (max-width: 600px) {
             font-size: 22px;
           }
         }

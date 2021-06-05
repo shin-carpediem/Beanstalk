@@ -2,8 +2,25 @@
 {% load static %}
 
 {% block inner__content %}
-<div>
-  <div></div>
-  <button class="btn btn__orange shadow">注文</button>
-</div>
+<section class="menu-list">
+  <div class="d-flex flex-wrap">
+    {% for order in orders %}
+      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_id %}">
+        <img src="{{ menu_instance.img.url }}" alt="Menu">
+        <div class="text-box">
+          <p class="text-left pl-2">{{ menu_instance.name }}</p>
+          <p class="text-right pr-2">¥ {{ menu_instance.price }}</p>
+        </div>
+        <p class="cart-num icon icon__red text__bold">{{ cart_num }}</p>
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- お会計機能はnew feature -->
+  <!-- <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %} -->
+    <!-- hidden -->
+    <!-- <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
+    <button class="btn btn__orange btn__fixed shadow">お会計</button>
+  </form> -->
+</section>
 {% endblock %}

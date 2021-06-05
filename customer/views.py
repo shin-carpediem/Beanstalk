@@ -147,4 +147,20 @@ def order(request):
 
 
 def history(request):
+    # cart_num = request.POST.get('cart_num')
+    # menu_id = request.POST.get('menu_id')
+    # menu_instance = Menu.objects.get(id=menu_id)
+    # user = nonLoginUser.objects.get(id=request.user.id)
+
+    # from .models import Cart
+    # cart = Cart(menu=menu_instance, num=cart_num, customer=user)
+    # cart.save()
+    # carts = Cart.objects.all().order_by('-id')
+
+    # ctx = {
+    #     'carts': carts,
+    #     'cart_num': cart_num,
+    #     'menu_id': menu_id,
+    #     'menu_instance': menu_instance,
+    # }
     return render(request, 'customer/history.html')
