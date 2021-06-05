@@ -54,6 +54,8 @@ def menu(request):
 
     return render(request, 'customer/menu.html', ctx)
 
+# TODO: 要更新
+
 
 def table_num(request):
     user = request.non_login_user
@@ -64,16 +66,14 @@ def table_num(request):
     return render(request, '*', ctx)
 
 
-# TODO: フォームを使う
 def category_filter(requset):
     category_name = requset.POST.get('category')
-    print(category_name)
+    category_id = Category.objects.get(name=category_name)
 
     restaurant_name()
-    table_num()
 
     categories = Category.objects.all().order_by('id')
-    menus = Menu.objects.filter(category=category_name).order_by('-id')
+    menus = Menu.objects.filter(category=category_id).order_by('-id')
 
     ctx = {
         'restaurant_name': restaurant_name,

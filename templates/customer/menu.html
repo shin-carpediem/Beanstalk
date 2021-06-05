@@ -7,11 +7,12 @@
   <div class="category mb-3">
     <div class="d-flex ml-3">
       {% for category in categories %}
-      <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
-        <button type="submit" class="category-btn p-2 text__bold" name="{{ category }}">
-          {{ category.name }}
-        </button>
-      </form>
+        <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
+            <!-- <button type="submit" class="category-btn blighten p-2 text__bold" name="category" value="{{ category }}"> -->
+            <button type="submit" class="category-btn p-2 text__bold" name="category" value="{{ category }}">
+              {{ category.name }}
+            </button>
+        </form>
       {% endfor %}
     </div>
   </div>
