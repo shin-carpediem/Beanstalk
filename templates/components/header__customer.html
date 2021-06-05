@@ -1,27 +1,34 @@
-<section class="p-2 header__customer row">
-  {% if request.path == '/' or '/menu/' %}
-    <div class="col-2">
-      <img src="#" alt="Restaurant Logo" class="m-3 logo shadow">
+<section class="pt-3 header__customer row">
+  <div class="col-2">
+    <div class="m-auto logo shadow d-flex align-items-center">
+      {% if request.path == '/' %}
+        <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3 logo shadow">
+      {% elif request.path == '/menu/' %}
+        <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3 logo shadow">
+      {% else %}
+        <i class="m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+      {% endif %}
     </div>
-  {% else %}
-    <div class="logo">
-      <i class="pt-2 pl-2 back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
-    </div>
-  {% endif %}
-  <h5 class="col-5 my-auto text__bold">
-    {% if request.path == '/menu/' %}
+  </div>
+
+  <h5 class="col-4 my-auto text__bold">
+    {% if request.path == '/' %}
+    　　{{ restaurant_name }}
+    {% elif request.path == '/menu/' %}
       {{ restaurant_name }}
-    {% elif request.path == '/cart' %}
+    {% elif request.path == '/cart/' %}
       カート
     {% elif request.path == '/history/' %}
       オーダー履歴
     {% endif %}
   </h5>
+
   {% if request.path != '/' %}
-    <p class="col-3 my-auto text__bold">テーブル番号 {{ table }}</p>
-  <a href="{% url 'customer:history' %}" class="col-2 my-auto">
-    <i class="clipboard fas fa-clipboard-list"></i>
-  </a>
+    <p class="col-4 my-auto text__bold">テーブル番号 {{ table }}</p>
+
+    <a href="{% url 'customer:history' %}" class="col-2 my-auto">
+      <i class="clipboard fas fa-clipboard-list"></i>
+    </a>
   {% endif %}
 </section>
-<hr class="mb-3" />
+<hr class="mb-2" />

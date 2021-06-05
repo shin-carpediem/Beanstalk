@@ -9,6 +9,7 @@ from restaurant.models import Menu
 class Order(models.Model):
     status = models.CharField("ステータス", max_length=256, blank=True, null=True)
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
+    num = models.PositiveIntegerField("個数", blank=True, null=True)
     customer = models.ForeignKey(nonLoginUser, on_delete=models.PROTECT)
     created_at = models.DateTimeField("オーダー発生時刻", auto_now=True)
 

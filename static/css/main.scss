@@ -78,11 +78,25 @@ select {
   }
 }
 
-@mixin text__bold {
+.text__bold {
   font-weight: bold;
 }
-.text__bold {
-  @include text__bold;
+
+.text__large {
+  font-size: large;
+}
+
+.input__fixed {
+  position: fixed;
+  left: 5vh;
+  bottom: 10px;
+}
+
+.btn__fixed {
+  width: 183px;
+  position: fixed;
+  left: 15vh;
+  bottom: 10px;
 }
 
 input,
@@ -141,20 +155,14 @@ a {
   }
 }
 
-@mixin shadow {
+.shadow {
   box-shadow: 0 0 2px 3px $black;
 }
-.shadow {
-  @include shadow;
-}
 
-@mixin beautify {
+.beautify {
   &:hover {
     box-shadow: 0 0 4px 6px $grey;
   }
-}
-.beautify {
-  @include beautify;
 }
 
 @mixin btn {
@@ -163,7 +171,7 @@ a {
   text-align: center;
   padding: 10px;
   transition: 0.5s;
-  @include text__bold;
+  font-weight: bold;
   &:hover {
     color: $white;
     transform: scale(0.9);
@@ -173,25 +181,16 @@ a {
   @include btn;
 }
 
-@mixin btn__blue {
+.btn__blue {
   background-color: $blue;
 }
-.btn__blue {
-  @include btn__blue;
-}
 
-@mixin btn__orange {
+.btn__orange {
   background-color: $orange;
 }
-.btn__orange {
-  @include btn__orange;
-}
 
-@mixin btn__grey {
-  background-color: $grey;
-}
 .btn__grey {
-  @include btn__grey;
+  background-color: $grey;
 }
 
 @mixin icon {
@@ -202,27 +201,18 @@ a {
   @include icon;
 }
 
-@mixin icon__yellow {
+.icon_yellow {
   background-color: $yellow;
   color: $black;
-}
-.icon_yellow {
-  @include icon__yellow;
+  width: 29px;
+  height: 29px;
 }
 
-@mixin icon__red {
+.icon__red {
   background-color: $red;
   color: $white;
-}
-.icon__red {
-  @include icon__red;
-}
-
-.btn__fixed {
-  width: 183px;
-  position: fixed;
-  left: 15vh;
-  bottom: 10px;
+  width: 29px;
+  height: 29px;
 }
 
 // restaurant
@@ -251,6 +241,7 @@ section.header {
   .back {
     color: $black;
     transform: scale(2);
+    cursor: pointer;
   }
   div {
     color: $white;
@@ -292,23 +283,46 @@ section.header {
       }
     }
     .menu-item {
+      width: 174px;
+      height: 195px;
       border-radius: 4px;
+      text-decoration: none;
+      &:hover {
+        opacity: 0.6;
+      }
       img {
-        position: relative;
-        transform: scale(1.1);
+        // border-radius: 4px 4px 0 0;
+        border-radius: 4px;
+        height: 100%;
       }
       .text-box {
-        position: absolute;
-        left: 0;
-        bottom: 0;
         background-color: #9b9999;
-        opacity: 0.6;
+        opacity: 0.7;
         border-radius: 0 0 4px 4px;
+        width: 174px;
+        height: 44px;
         p {
           color: $white;
           font-size: 16px;
         }
       }
+    }
+  }
+  .menu-detail {
+    .allergy-box-brighten {
+      background-color: $light-orange;
+      color: $white;
+    }
+    .allergy-box {
+      background-color: $grey;
+      color: $white;
+    }
+    input {
+      width: 39px;
+      height: 39px;
+      border-radius: 1000px;
+      text-align: center;
+      font-size: large;
     }
   }
 }

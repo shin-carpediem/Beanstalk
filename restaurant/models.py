@@ -25,7 +25,7 @@ class Menu(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     price = models.PositiveIntegerField("価格", blank=True, null=True)
     img = models.ImageField("イメージ画像", upload_to="img",
-                            max_length=50, blank=True, null=True)
+                            max_length=100, blank=True, null=True)
     formatted_img = ImageSpecField(source="img",
                                    processors=[ResizeToFill(100, 100)],
                                    format="JPEG",

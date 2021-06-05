@@ -3,31 +3,33 @@
 {% load humanize %}
 
 {% block inner__content %}
-<div class="menu-list">
+<section class="menu-list">
   <div class="category mb-3">
     <div class="d-flex ml-3">
       {% for category in categories %}
-      <form action="{% url 'customer:category_filter' %}" name="{{ category.name }}" method="POST">{% csrf_token %}
-        <button class="category-btn p-2 text__bold">
+      <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
+        <button type="submit" class="category-btn p-2 text__bold" name="{{ category }}">
           {{ category.name }}
         </button>
       </form>
       {% endfor %}
     </div>
   </div>
-  <div class="mx-auto row">
+
+  <div class="d-flex flex-wrap">
     {% for menu in menus %}
-      <a class="col-6 my-2 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
+      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
         <img src="{{ menu.img.url }}" alt="Menu">
-        <div class="text-box w-100">
+        <!-- <div class="text-box">
           <p class="text-left pl-2">{{ menu.name }}</p>
           <p class="text-right pr-2">¥ {{ menu.price }}</p>
-        </div>
+        </div> -->
       </a>
     {% endfor %}
   </div>
+
   <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
     <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
   </form>
-</div>
+</section>
 {% endblock %}

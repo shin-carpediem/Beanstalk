@@ -64,5 +64,9 @@ class nonLoginUser(models.Model):
         Session, blank=True, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField("日付", auto_now=True)
 
+    class Meta:
+        verbose_name = "non_login_user"
+        verbose_name_plural = "non_login_users"
+
     def __str__(self):
         return str(self.table)

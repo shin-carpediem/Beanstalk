@@ -2,8 +2,26 @@
 {% load static %}
 
 {% block inner__content %}
-<div>
-  <div></div>
-  <button class="btn btn__orange shadow">注文</button>
-</div>
+<section class="menu-list">
+  <div class="d-flex flex-wrap">
+    {% for order in orders %}
+      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' menu_id %}">
+        <img src="{{ menu_instance.img.url }}" alt="Menu">
+        <p class="icon icon__red">
+          {{ order_num }}
+        </p>
+        <!-- <div class="text-box">
+          <p class="text-left pl-2">{{ menu.name }}</p>
+          <p class="text-right pr-2">¥ {{ menu.price }}</p>
+        </div> -->
+      </a>
+    {% endfor %}
+  </div>
+
+  <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
+    <!-- hidden -->
+    <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
+    <button class="btn btn__orange btn__fixed shadow">注文</button>
+  </form>
+</section>
 {% endblock %}
