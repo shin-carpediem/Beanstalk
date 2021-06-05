@@ -8,18 +8,14 @@ from .forms import ChooseTableForm, AddToCartForm
 
 
 # Create your views here.
-def restaurant_name():
+def table(request):
+    choose_table_form = ChooseTableForm(request.POST or None)
+
     try:
         restaurant = User.objects.get(id=2)
     except:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
-    return restaurant_name
-
-
-def table(request):
-    choose_table_form = ChooseTableForm(request.POST or None)
-    restaurant_name()
 
     ctx = {
         'choose_table_form': choose_table_form,
@@ -29,6 +25,12 @@ def table(request):
 
 
 def menu(request):
+    try:
+        restaurant = User.objects.get(id=2)
+    except:
+        restaurant = User.objects.get(id=1)
+    restaurant_name = restaurant.name
+
     name = request.POST.get('name')
     table = request.POST.get('table')
 
@@ -39,8 +41,6 @@ def menu(request):
 
     newuser = nonLoginUser(name=name, table=table, session=session,)
     newuser.save()
-
-    restaurant_name()
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=2)
@@ -56,36 +56,40 @@ def menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-# TODO: 要更新
-def table_num(request):
-    user = request.non_login_user
-    table_num = user.table
-    ctx = {
-        'table_num': table_num
-    }
-    return render(request, '*', ctx)
+def category_filter(request):
+    try:
+        restaurant = User.objects.get(id=2)
+    except:
+        restaurant = User.objects.get(id=1)
+    restaurant_name = restaurant.name
 
-
-def category_filter(requset):
-    category_name = requset.POST.get('category')
+    category_name = request.POST.get('category')
     category_id = Category.objects.get(name=category_name)
 
-    restaurant_name()
+    # TODO: request.user.idは常に2になる
+    user = nonLoginUser.objects.get(id=request.user.id)
+    table_num = user.table
 
     categories = Category.objects.all().order_by('id')
     menus = Menu.objects.filter(category=category_id).order_by('-id')
 
     ctx = {
         'restaurant_name': restaurant_name,
+        'table_num': table_num,
         'table': table_num,
         'categories': categories,
         'menus': menus,
     }
 
-    return render(requset, 'customer/menu.html', ctx)
+    return render(request, 'customer/menu.html', ctx)
 
 
 def menu_detail(request, menu_id):
+    user = nonLoginUser.objects.get(id=request.user.id)
+    print(user)
+    table_num = user.table
+    print(table_num)
+
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
     has_allergies = menu.allergies.all().order_by('id')
@@ -94,6 +98,7 @@ def menu_detail(request, menu_id):
 
     ctx = {
         'menu': menu,
+        'table_num': table_num,
         'allergies': allergies,
         'has_allergies': has_allergies,
         'add_to_cart_form': add_to_cart_form,
@@ -102,6 +107,11 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
+    user = nonLoginUser.objects.get(id=request.user.id)
+    print(user)
+    table_num = user.table
+    print(table_num)
+
     from .models import Cart
 
     try:
@@ -118,6 +128,7 @@ def cart(request):
 
     carts = Cart.objects.all().order_by('-id')
     ctx = {
+        'table_num': table_num,
         'carts': carts,
     }
 
@@ -125,11 +136,17 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
+    user = nonLoginUser.objects.get(id=request.user.id)
+    print(user)
+    table_num = user.table
+    print(table_num)
+
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
     has_allergies = menu.allergies.all().order_by('id')
 
     ctx = {
+        'table_num': table_num,
         'menu': menu,
         'allergies': allergies,
         'has_allergies': has_allergies,
@@ -152,13 +169,20 @@ def order(request):
     # コピーし終わったcartは削除
     users_cart.delete()
 
+    messages.success(
+        request, f"注文を承りました。今しばらくお待ちください"
+    )
+
     return redirect('customer:menu')
 
 
 def history(request):
     user = nonLoginUser.objects.get(id=request.user.id)
+    table_num = user.table
+
     from .models import Cart, Order
-    orders = Order.objects.all().order_by('-id')
+    carts = Cart.objects.filter(customer=user).order_by('-id')
+    orders = Order.objects.filter(customer=user).order_by('-id')
 
     orders_in_cart = Cart.objects.filter(customer=user)
     orders_in_order = Order.objects.filter(status='調理中', customer=user)
@@ -178,6 +202,8 @@ def history(request):
     total_price = in_cart_each_price + in_order_each_price
 
     ctx = {
+        'table_num': table_num,
+        'carts': carts,
         'orders': orders,
         'orders_in_cart': orders_in_cart,
         'orders_in_order': orders_in_order,

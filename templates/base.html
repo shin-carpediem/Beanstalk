@@ -26,7 +26,10 @@
   <div class="w-100">
     <!-- messages -->
     {% for message in messages %}
-      <p class="message-{{ message.tags }} text-center py-2">{{ message }}</p>
+      <div class="message-{{ message.tags }} text-center py-2">
+        {{ message }}
+        <img class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Table">
+      </div>
     {% endfor %}
 
     {% block content %}

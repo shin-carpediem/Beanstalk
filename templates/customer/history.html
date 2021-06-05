@@ -5,6 +5,18 @@
 {% block inner__content %}
 <section class="menu-list">
   <div class="d-flex flex-wrap">
+    {% for cart in carts %}
+    <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}">
+      <img src="{{ cart.menu.img.url }}" alt="Menu">
+      <div class="text-box">
+        <p class="text-left pl-2">{{ cart.menu.name }}</p>
+        <p class="text-right pr-2">¥ {{ cart.menu.price }}</p>
+      </div>
+      <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
+      <p class="py-2 px-3 badge badge__orange">カート</p>
+    </a>
+    {% endfor %}
+
     {% for order in orders %}
       <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' order.menu.id %}">
         <img src="{{ order.menu.img.url }}" alt="Menu">
@@ -13,9 +25,7 @@
           <p class="text-right pr-2">¥ {{ order.menu.price }}</p>
         </div>
         <p class="pt-1 cart-num icon icon__red text__bold">{{ order.num }}</p>
-        {% if order.status == 'カート' %}
-          <p class="py-2 px-3 badge badge__orange">カート</p>
-        {% elif order.status == '調理中' %}
+        {% if order.status == '調理中' %}
           <p class="py-2 px-3 badge badge__turquoise">調理中</p>
         {% elif order.status == '済' %}
           <p class="py-2 px-3 badge badge__grey">済</p>
