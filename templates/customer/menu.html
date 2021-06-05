@@ -11,6 +11,10 @@
             <button type="submit" class="category-btn p-2 text__bold" name="category" value="{{ category }}">
               {{ category.name }}
             </button>
+
+            {% block hidden_info %}
+              {% include 'components/hidden_info.html' %}
+            {% endblock %}
         </form>
       {% endfor %}
     </div>
@@ -33,6 +37,10 @@
     </div>
 
     <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
+
+    {% block hidden_info %}
+      {% include 'components/hidden_info.html' %}
+    {% endblock %}
   </form>
 </section>
 {% endblock %}

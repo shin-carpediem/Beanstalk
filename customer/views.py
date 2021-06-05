@@ -31,6 +31,7 @@ def menu(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
+    # session = request.POST.get('session')
     name = request.POST.get('name')
     table = request.POST.get('table')
 
@@ -47,6 +48,9 @@ def menu(request):
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
     ctx = {
+        'session': session,
+        'name': name,
+        'table': table,
         'restaurant_name': restaurant_name,
         'table': table,
         'categories': categories,
@@ -63,20 +67,27 @@ def category_filter(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
+    table_num = user.table
+
     category_name = request.POST.get('category')
     category_id = Category.objects.get(name=category_name)
-
-    # TODO: request.user.idは常に2になる
-    user = nonLoginUser.objects.get(id=request.user.id)
-    table_num = user.table
 
     categories = Category.objects.all().order_by('id')
     menus = Menu.objects.filter(category=category_id).order_by('-id')
 
     ctx = {
+        'name': name,
+        'table': table,
+        'session': session,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
-        'table': table_num,
         'categories': categories,
         'menus': menus,
     }
@@ -85,10 +96,14 @@ def category_filter(request):
 
 
 def menu_detail(request, menu_id):
-    user = nonLoginUser.objects.get(id=request.user.id)
-    print(user)
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
     table_num = user.table
-    print(table_num)
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
@@ -97,6 +112,9 @@ def menu_detail(request, menu_id):
     add_to_cart_form = AddToCartForm()
 
     ctx = {
+        'name': name,
+        'table': table,
+        'session': session,
         'menu': menu,
         'table_num': table_num,
         'allergies': allergies,
@@ -107,10 +125,14 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
-    user = nonLoginUser.objects.get(id=request.user.id)
-    print(user)
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
     table_num = user.table
-    print(table_num)
 
     from .models import Cart
 
@@ -128,6 +150,9 @@ def cart(request):
 
     carts = Cart.objects.all().order_by('-id')
     ctx = {
+        'name': name,
+        'table': table,
+        'session': session,
         'table_num': table_num,
         'carts': carts,
     }
@@ -136,16 +161,23 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
-    user = nonLoginUser.objects.get(id=request.user.id)
-    print(user)
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
     table_num = user.table
-    print(table_num)
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
     has_allergies = menu.allergies.all().order_by('id')
 
     ctx = {
+        'name': name,
+        'table': table,
+        'session': session,
         'table_num': table_num,
         'menu': menu,
         'allergies': allergies,
@@ -155,10 +187,16 @@ def cart_detail(request, menu_id):
 
 
 def order(request):
-    user = nonLoginUser.objects.get(id=request.user.id)
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
+
     from .models import Cart, Order
     users_cart = Cart.objects.filter(customer=user).order_by('-id')
-    print(users_cart)
 
     # cartからorderにコピー
     for each in users_cart:
@@ -177,7 +215,13 @@ def order(request):
 
 
 def history(request):
-    user = nonLoginUser.objects.get(id=request.user.id)
+    name = request.POST.get('name')
+    table = request.POST.get('table')
+    session = request.POST.get('session')
+    try:
+        user = nonLoginUser.objects.get(name=name, table=table)
+    except:
+         user = nonLoginUser.objects.get(session=session)
     table_num = user.table
 
     from .models import Cart, Order
@@ -202,6 +246,9 @@ def history(request):
     total_price = in_cart_each_price + in_order_each_price
 
     ctx = {
+        'name': name,
+        'table': table,
+        'session': session,
         'table_num': table_num,
         'carts': carts,
         'orders': orders,

@@ -21,6 +21,10 @@
     <!-- hidden -->
     <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
     <button class="btn btn__orange btn__fixed shadow">注文</button>
+
+    {% block hidden_info %}
+      {% include 'components/hidden_info.html' %}
+    {% endblock %}
   </form>
 </section>
 {% endblock %}
