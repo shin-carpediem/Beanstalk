@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 app_name = 'customer'
 urlpatterns = [
     path('', views.table, name='table'),
+    path('make_session/', views.make_session, name='make_session'),
     path('menu/', views.menu, name='menu'),
     path('category_filter/', views.category_filter, name='category_filter'),
     path('<int:menu_id>/detail/', views.menu_detail, name='menu_detail'),

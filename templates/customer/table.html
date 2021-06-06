@@ -5,7 +5,7 @@
 <h4 class="pt-3 text__bold">お名前 と テーブル番号 を教えてください</h4>
 <img class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Table">
 
-<form class="px-auto" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
+<form class="px-auto" method="POST" action="{% url 'customer:make_session' %}">{% csrf_token %}
   <div class="text__bold text-sm-right mr-sm-5 pr-sm-5 pr-3 choose-table">
     {{ choose_table_form.as_p }}
   </div>

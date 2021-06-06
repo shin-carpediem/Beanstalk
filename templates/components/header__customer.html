@@ -33,9 +33,11 @@
   {% if request.path == '/' %}
   {% elif request.path == '/history/' %}
   {% else %}
-    <a href="{% url 'customer:history' %}" class="col-2 my-auto">
-      <i class="clipboard fas fa-clipboard-list"></i>
-    </a>
+    <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="POST">{% csrf_token %}
+      <button type="submit">
+        <i class="clipboard fas fa-clipboard-list"></i>
+      </button>
+    </form>
   {% endif %}
 </section>
 <hr class="mb-2" />

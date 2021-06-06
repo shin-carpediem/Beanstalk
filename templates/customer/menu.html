@@ -12,9 +12,10 @@
               {{ category.name }}
             </button>
 
-            {% block hidden_info %}
-              {% include 'components/hidden_info.html' %}
-            {% endblock %}
+            <!-- hidden -->
+            <input style="display: none;" type="text" name="name" value="{{ name }}">
+            <input style="display: none;" type="text" name="table" value="{{ table }}">
+            <input style="display: none;" type="text" name="session" value="{{ session }}">
         </form>
       {% endfor %}
     </div>
@@ -37,10 +38,6 @@
     </div>
 
     <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
-
-    {% block hidden_info %}
-      {% include 'components/hidden_info.html' %}
-    {% endblock %}
   </form>
 </section>
 {% endblock %}
