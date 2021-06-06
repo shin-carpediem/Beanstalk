@@ -18,8 +18,29 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          {{ add_menu_form }}
+        <div class="modal-body mx-auto">
+          <table class="text-center">
+            <tr>
+              <th>表示名</th>
+              <th><input type="text" name="name"></th>
+            </tr>
+            <tr>
+              <td>カテゴリ</td>
+              <th><input type="checkbox"></th>
+            </tr>
+            <tr>
+              <td>価格</td>
+              <th><input type="text" name="price"></th>
+            </tr>
+            <tr>
+              <td>イメージ画像</td>
+              <th><input type="file" name="img"></th>
+            </tr>
+            <tr>
+              <td>アレルギー</td>
+              <th><input type="checkbox"></th>
+            </tr>
+          </table>
         </div>
         <div class="modal-footer">
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
