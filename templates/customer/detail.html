@@ -57,7 +57,7 @@
     </div> -->
 
     {% if not user.is_authenticated %}
-      <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+      <form class="cart-form" action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
         <div class="d-flex input__fixed">
           <div class="text__bold">
             {{ add_to_cart_form }}

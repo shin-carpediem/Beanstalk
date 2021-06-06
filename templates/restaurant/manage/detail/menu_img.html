@@ -7,7 +7,7 @@
 
   <div class="modal fade" id="menu-img-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <form class="modal-content" action="{% url 'restaurant:menu_img_manage' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">写真を変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,13 +15,15 @@
           </button>
         </div>
         <div class="modal-body">
-          ...
+          <input class="text-center" type="file" name="menu_img" value="{{ menu.name }}">
+          <!-- hidden -->
+          <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
         </div>
         <div class="modal-footer">
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
           <button type="button" class="px-4 py-2 btn btn__blue">保存</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 {% endif %}

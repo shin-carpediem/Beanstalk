@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from account.models import User
 from .models import Allergy, Category, Menu
+from .forms import AddCategoryForm, AddMenuForm
 
 
 # Create your views here.
@@ -31,6 +32,9 @@ def manage_login(request):
 
 @login_required
 def manage_menu(request):
+    add_category_form = AddCategoryForm()
+    add_menu_form = AddMenuForm()
+
     user = request.user
     restaurant_name = user.name
 
@@ -39,6 +43,8 @@ def manage_menu(request):
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
     ctx = {
+        'add_category_form': add_category_form,
+        'add_menu_form': add_menu_form,
         'restaurant_name': restaurant_name,
         'categories': categories,
         'menus': menus,
@@ -46,3 +52,47 @@ def manage_menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+@login_required
+@require_POST
+def category_manage(request):
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
+def menu_img_manage(request):
+    menu_img = request.FILES.get('menu_img')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+
+    # 以前のファイルは削除
+    menu.img.delete(False)
+
+    menu.img = menu_img
+    menu.save()
+
+    return redirect('customer:detail')
+
+
+@login_required
+@require_POST
+def menu_name_manage(request):
+    menu_name = request.POST.get('menu_name')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+    menu.name = menu_name
+    menu.save()
+
+    return redirect('customer:detail')
+
+
+@login_required
+@require_POST
+def menu_price_manage(request):
+    menu_price = request.POST.get('menu_price')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+    menu.price = menu_price
+    menu.save()
+
+    return redirect('customer:detail')

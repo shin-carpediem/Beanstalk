@@ -470,12 +470,14 @@ section.header {
       background-color: $grey;
       color: $white;
     }
-    input {
-      width: 39px;
-      height: 39px;
-      border-radius: 1000px;
-      text-align: center;
-      font-size: large;
+    .cart-form {
+      input {
+        width: 39px;
+        height: 39px;
+        border-radius: 1000px;
+        text-align: center;
+        font-size: large;
+      }
     }
   }
 }

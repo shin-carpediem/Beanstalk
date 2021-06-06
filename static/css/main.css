@@ -492,7 +492,7 @@ section.header .clipboard {
   color: #fff;
 }
 
-.board__customer section.menu-detail input {
+.board__customer section.menu-detail .cart-form input {
   width: 39px;
   height: 39px;
   border-radius: 1000px;
