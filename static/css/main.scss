@@ -258,6 +258,15 @@ a {
     background-color: $white;
   }
 }
+.full__wrapper {
+  position: relative;
+  .logout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+  }
+}
 
 // restaurant
 .wrapper {
@@ -313,6 +322,7 @@ section.header {
   section.menu-list {
     .category {
       border-bottom: 1px solid $grey;
+      position: relative;
       .category-btn {
         border-top: 1px solid $grey;
         border-left: 1px solid $grey;
@@ -326,6 +336,15 @@ section.header {
       }
       .blighten {
         background-color: $light-orange;
+      }
+      .category-manage-btn {
+        position: absolute;
+        top: -30px;
+        left: 50px;
+        z-index: 9999;
+        // @media screen and (max-width: 600px) {
+        //   left: 180px;
+        // }
       }
     }
     .menu-item {
@@ -345,7 +364,7 @@ section.header {
         position: absolute;
         bottom: 0;
         left: 0;
-        z-index: 10000;
+        z-index: 1;
         background-color: #9b9999;
         opacity: 0.7;
         border-radius: 0 0 4px 4px;
@@ -377,7 +396,7 @@ section.header {
         position: absolute;
         bottom: 0;
         left: 0;
-        z-index: 10000;
+        z-index: 1;
         background-color: #9b9999;
         opacity: 0.7;
         width: 100%;
@@ -389,6 +408,42 @@ section.header {
             font-size: 22px;
           }
         }
+      }
+    }
+    .menu-top-view {
+      position: relative;
+      .menu-img-manage-btn {
+        position: absolute;
+        z-index: 9999;
+        top: 10px;
+        left: 10px;
+      }
+    }
+    .text-box {
+      position: relative;
+      .menu-name-manage-btn {
+        position: absolute;
+        z-index: 9999;
+        top: 10px;
+        left: 10px;
+      }
+    }
+    .text-box {
+      position: relative;
+      .menu-price-manage-btn {
+        position: absolute;
+        z-index: 9999;
+        top: 10px;
+        right: 10px;
+      }
+    }
+    .menu-allergy {
+      position: relative;
+      .menu-allergy-manage-btn {
+        position: absolute;
+        z-index: 9999;
+        top: 5px;
+        left: 120px;
       }
     }
     .allergy-box-brighten {

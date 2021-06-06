@@ -8,17 +8,16 @@
     <div class="d-flex ml-3">
       {% for category in categories %}
         <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
-            <button type="submit" class="category-btn p-2 text__bold" name="category" value="{{ category }}">
-              {{ category.name }}
-            </button>
-
-            <!-- hidden -->
-            <input style="display: none;" type="text" name="name" value="{{ name }}">
-            <input style="display: none;" type="text" name="table" value="{{ table }}">
-            <input style="display: none;" type="text" name="session" value="{{ session }}">
+          <button type="submit" class="category-btn p-2 text__bold" name="category" value="{{ category }}">
+            {{ category.name }}
+          </button>
         </form>
       {% endfor %}
     </div>
+
+    {% block category %}
+      {% include 'restaurant/manage/category.html' %}
+    {% endblock %}
   </div>
 
   <form action="{% url 'customer:cart' %}" method="GET">{% csrf_token %}
@@ -37,7 +36,9 @@
       {% endfor %}
     </div>
 
-    <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
+    {% if not user.is_authenticated %}
+      <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
+    {% endif %}
   </form>
 </section>
 {% endblock %}

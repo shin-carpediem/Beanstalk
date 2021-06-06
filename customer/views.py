@@ -69,10 +69,16 @@ def menu(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+    # 店側かどうか判断する
+    try:
+        user = request.user
+        table_num = '管理者'
 
-    table_num = user.table
+    except:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
+
+        table_num = user.table
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=2)
@@ -95,10 +101,15 @@ def category_filter(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+    try:
+        user = request.user
+        table_num = "管理者"
 
-    table_num = user.table
+    except:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
+
+        table_num = user.table
 
     category_name = request.POST.get('category')
     category_id = Category.objects.get(name=category_name)
@@ -117,10 +128,16 @@ def category_filter(request):
 
 
 def menu_detail(request, menu_id):
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
 
-    table_num = user.table
+    try:
+        user = request.user
+        table_num = "管理者"
+
+    except:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
+
+        table_num = user.table
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')

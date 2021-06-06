@@ -17,10 +17,12 @@
     {% endfor %}
   </div>
 
+  {% if not user.is_authenticated %}
   <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
     <!-- hidden -->
     <!-- <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}"> -->
     <button class="btn btn__orange btn__fixed shadow">注文</button>
   </form>
+  {% endif %}
 </section>
 {% endblock %}
