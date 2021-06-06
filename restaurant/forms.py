@@ -4,20 +4,24 @@ from django.forms import fields
 from .models import Category, Allergy, Menu
 
 
-class AddCategoryForm(forms.Form):
+class AddCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         label = '追加'
         fields = ('name',)
 
 
-class AddAllergyForm(forms.Form):
+class AddAllergyForm(forms.ModelForm):
     class Meta:
         model = Allergy
         fields = ('ingredient',)
 
 
-class AddMenuForm(forms.Form):
+class AddMenuForm(forms.ModelForm):
     class Meta:
         model = Menu
         fields = ('name', 'category', 'price', 'img', 'allergies',)
+
+
+class DelMenuForm(forms.Form):
+    name = forms.ModelChoiceField(queryset=Menu.objects.all(), empty_label='選択してください')

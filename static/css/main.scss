@@ -258,9 +258,9 @@ a {
     z-index: 100000;
     top: 50%;
     left: 50%;
-    -ms-transform: translate(-50%,-50%);
-    -webkit-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     border-radius: 10px;
     background-color: $white;
   }
@@ -430,34 +430,16 @@ section.header {
       position: relative;
       .menu-img-manage-btn {
         position: absolute;
-        z-index: 9999;
+        z-index: 2;
         top: 10px;
         left: 10px;
-      }
-    }
-    .text-box {
-      position: relative;
-      .menu-name-manage-btn {
-        position: absolute;
-        z-index: 9999;
-        top: 10px;
-        left: 10px;
-      }
-    }
-    .text-box {
-      position: relative;
-      .menu-price-manage-btn {
-        position: absolute;
-        z-index: 9999;
-        top: 10px;
-        right: 10px;
       }
     }
     .menu-allergy {
       position: relative;
       .menu-allergy-manage-btn {
         position: absolute;
-        z-index: 9999;
+        z-index: 2;
         top: 5px;
         left: 120px;
       }
@@ -478,6 +460,24 @@ section.header {
         text-align: center;
         font-size: large;
       }
+    }
+  }
+  .menu-detail {
+    position: relative;
+    .menu-name-manage-btn {
+      position: absolute;
+      z-index: 2;
+      bottom: 10px;
+      left: 10px;
+    }
+  }
+  .menu-detail {
+    position: relative;
+    .menu-price-manage-btn {
+      position: absolute;
+      z-index: 2;
+      bottom: 20px;
+      right: 10px;
     }
   }
 }

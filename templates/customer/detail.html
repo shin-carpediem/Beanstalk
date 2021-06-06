@@ -13,12 +13,11 @@
 
     <div class="text-box px-sm-5 px-2 py-1">
       <p class="text-left">{{ menu.name }}</p>
-      <p class="text-right">¥ {{ menu.price }}</p>
-
-      {% block menu_text %}
-        {% include 'restaurant/manage/detail/menu_text.html' %}
-      {% endblock %}
+      <p class="text-right">¥ {{ menu.price | intcomma }}</p>
     </div>
+    {% block menu_text %}
+      {% include 'restaurant/manage/detail/menu_text.html' %}
+    {% endblock %}
   </div>
 
   <div class="px-2 py-3 menu-allergy">

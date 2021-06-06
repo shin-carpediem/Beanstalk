@@ -444,31 +444,9 @@ section.header .clipboard {
 
 .board__customer section.menu-detail .menu-top-view .menu-img-manage-btn {
   position: absolute;
-  z-index: 9999;
+  z-index: 2;
   top: 10px;
   left: 10px;
-}
-
-.board__customer section.menu-detail .text-box {
-  position: relative;
-}
-
-.board__customer section.menu-detail .text-box .menu-name-manage-btn {
-  position: absolute;
-  z-index: 9999;
-  top: 10px;
-  left: 10px;
-}
-
-.board__customer section.menu-detail .text-box {
-  position: relative;
-}
-
-.board__customer section.menu-detail .text-box .menu-price-manage-btn {
-  position: absolute;
-  z-index: 9999;
-  top: 10px;
-  right: 10px;
 }
 
 .board__customer section.menu-detail .menu-allergy {
@@ -477,7 +455,7 @@ section.header .clipboard {
 
 .board__customer section.menu-detail .menu-allergy .menu-allergy-manage-btn {
   position: absolute;
-  z-index: 9999;
+  z-index: 2;
   top: 5px;
   left: 120px;
 }
@@ -498,5 +476,27 @@ section.header .clipboard {
   border-radius: 1000px;
   text-align: center;
   font-size: large;
+}
+
+.board__customer .menu-detail {
+  position: relative;
+}
+
+.board__customer .menu-detail .menu-name-manage-btn {
+  position: absolute;
+  z-index: 2;
+  bottom: 10px;
+  left: 10px;
+}
+
+.board__customer .menu-detail {
+  position: relative;
+}
+
+.board__customer .menu-detail .menu-price-manage-btn {
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  right: 10px;
 }
 /*# sourceMappingURL=main.css.map */

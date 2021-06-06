@@ -22,7 +22,7 @@
         <img src="{{ order.menu.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ order.menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ order.menu.price }}</p>
+          <p class="text-right pr-2">¥ {{ order.menu.price | intcomma }}</p>
         </div>
         <p class="pt-1 cart-num icon icon__red text__bold">{{ order.num }}</p>
         {% if order.status == '調理中' %}
