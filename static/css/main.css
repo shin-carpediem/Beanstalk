@@ -108,6 +108,13 @@ select {
   bottom: 10px;
 }
 
+.btn__fixed_bit_upper {
+  width: 183px;
+  position: fixed;
+  left: 15vh;
+  bottom: 70px;
+}
+
 input,
 textarea {
   padding: 5px 0 5px 0;
@@ -194,6 +201,10 @@ a:hover {
 
 .btn__grey {
   background-color: #9c9c9c;
+}
+
+.btn__red {
+  background-color: #ff5b51;
 }
 
 .icon {

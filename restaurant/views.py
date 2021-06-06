@@ -44,3 +44,5 @@ def manage_menu(request):
         'menus': menus,
     }
     return render(request, 'customer/menu.html', ctx)
+
+

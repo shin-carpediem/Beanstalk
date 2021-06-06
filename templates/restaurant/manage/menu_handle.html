@@ -1,0 +1,53 @@
+{% block menu_handle %}
+
+{% if user.is_authenticated %}
+  <button type="button" class="menu-add-btn btn btn__orange btn__fixed_bit_upper shadow" data-toggle="modal" data-target="#menu-add-btn__ModalCenter">
+    メニューを追加する
+  </button>
+
+  <button type="button" class="menu-del-btn btn btn__grey btn__fixed shadow" data-toggle="modal" data-target="#menu-del-btn__ModalCenter">
+    メニューを削除する
+  </button>
+
+  <div class="modal fade" id="menu-add-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-add-btn__ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="menu-add-btn__ModalCenterTitle">メニューを追加する</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <button type="button" class="px-4 py-2 btn btn__orange">追加</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="menu-del-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-del-btn__ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="menu-del-btn__ModalCenterTitle">メニューを削除する</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <button type="button" class="px-4 py-2 btn btn__red">削除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

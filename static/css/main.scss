@@ -102,6 +102,12 @@ select {
   left: 15vh;
   bottom: 10px;
 }
+.btn__fixed_bit_upper {
+  width: 183px;
+  position: fixed;
+  left: 15vh;
+  bottom: 70px;
+}
 
 input,
 textarea {
@@ -190,13 +196,14 @@ a {
 .btn__blue {
   background-color: $blue;
 }
-
 .btn__orange {
   background-color: $orange;
 }
-
 .btn__grey {
   background-color: $grey;
+}
+.btn__red {
+  background-color: $red;
 }
 
 .icon {

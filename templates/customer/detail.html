@@ -8,7 +8,7 @@
     <img height=420 src="{{ menu.img.url }}" alt="Menu">
 
     {% block menu_img %}
-      {% include 'restaurant/manage/menu_img.html' %}
+      {% include 'restaurant/manage/detail/menu_img.html' %}
     {% endblock %}
 
     <div class="text-box px-sm-5 px-2 py-1">
@@ -16,7 +16,7 @@
       <p class="text-right">¥ {{ menu.price }}</p>
 
       {% block menu_text %}
-        {% include 'restaurant/manage/menu_text.html' %}
+        {% include 'restaurant/manage/detail/menu_text.html' %}
       {% endblock %}
     </div>
   </div>
@@ -38,7 +38,7 @@
       {% endfor %}
 
       {% block menu_allergy %}
-        {% include 'restaurant/manage/menu_allergy.html' %}
+        {% include 'restaurant/manage/detail/menu_allergy.html' %}
       {% endblock %}
     </div>
 
