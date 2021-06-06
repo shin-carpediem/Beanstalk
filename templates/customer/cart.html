@@ -17,9 +17,9 @@
     {% endfor %}
   </div>
 
-  <form action="{% url 'customer:menu' %}" method="POST">{% csrf_token %}
+  <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
     <!-- hidden -->
-    <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
+    <!-- <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}"> -->
     <button class="btn btn__orange btn__fixed shadow">注文</button>
   </form>
 </section>

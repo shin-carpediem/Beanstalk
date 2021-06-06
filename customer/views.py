@@ -69,9 +69,6 @@ def menu(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
-    name = request.POST.get('name')
-    table = request.POST.get('table')
-
     session = Session.objects.get(pk=request.session.session_key)
     user = nonLoginUser.objects.get(session=session)
 
@@ -82,8 +79,6 @@ def menu(request):
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
     ctx = {
-        'name': name,
-        'table': table,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
@@ -197,10 +192,23 @@ def cart_detail(request, menu_id):
 
 
 def order(request):
-    try:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
 
+    try:
+        restaurant = User.objects.get(id=2)
+    except:
+        restaurant = User.objects.get(id=1)
+    restaurant_name = restaurant.name
+
+    session = Session.objects.get(pk=request.session.session_key)
+    user = nonLoginUser.objects.get(session=session)
+
+    table_num = user.table
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    try:
         from .models import Cart, Order
         users_cart = Cart.objects.filter(customer=user).order_by('-id')
 
@@ -213,14 +221,20 @@ def order(request):
         # コピーし終わったcartは削除
         users_cart.delete()
 
-        messages.success(
-            request, f"注文を承りました。今しばらくお待ちください"
-        )
-
     except:
-        None
+        # None
+        print("None")
 
-        return redirect('customer:menu')
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+    }
+
+    messages.success(request, f"注文を承りました。今しばらくお待ちください")
+
+    return render(request, 'customer/menu.html', ctx)
 
 
 def history(request):
