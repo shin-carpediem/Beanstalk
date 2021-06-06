@@ -73,20 +73,6 @@ select {
 }
 
 /* Remove all animations and transitions for people that prefer not to see them */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    -webkit-animation-duration: 0.01ms !important;
-            animation-duration: 0.01ms !important;
-    -webkit-animation-iteration-count: 1 !important;
-            animation-iteration-count: 1 !important;
-    -webkit-transition-duration: 0.01ms !important;
-            transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 .text__bold {
   font-weight: bold;
 }
@@ -371,15 +357,24 @@ section.header .clipboard {
   border-radius: 4px;
   text-decoration: none;
   position: relative;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .board__customer section.menu-list .menu-item:hover {
   opacity: 0.6;
+  border-radius: 6px;
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
 }
 
 .board__customer section.menu-list .menu-item img {
   border-radius: 4px;
   height: 100%;
+}
+
+.board__customer section.menu-list .menu-item img:hover {
+  border-radius: 6px;
 }
 
 .board__customer section.menu-list .menu-item .text-box {
@@ -389,9 +384,13 @@ section.header .clipboard {
   z-index: 1;
   background-color: #9b9999;
   opacity: 0.7;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 px 4px;
   width: 174px;
   height: 44px;
+}
+
+.board__customer section.menu-list .menu-item .text-box:hover {
+  border-radius: 0 0 6px 6px;
 }
 
 .board__customer section.menu-list .menu-item .text-box p {
