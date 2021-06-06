@@ -9,6 +9,9 @@
       {% elif request.path == '/menu/' %}
         <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
         <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+      {% elif request.path == '/manage/menu/' %}
+        <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
+        <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
       {% else %}
         <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
       {% endif %}
@@ -19,6 +22,8 @@
     {% if request.path == '/' %}
     　　{{ restaurant_name }}
     {% elif request.path == '/menu/' %}
+      {{ restaurant_name }}
+    {% elif request.path == '/manage/menu/' %}
       {{ restaurant_name }}
     {% elif request.path == '/cart/' %}
       カート
