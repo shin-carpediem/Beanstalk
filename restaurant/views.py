@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from account.models import User
 from customer.forms import AddToCartForm
 from .models import Category, Allergy, Menu
-from .forms import AddCategoryForm, AddAllergyForm, AddMenuForm, DelMenuForm
+from .forms import AddCategoryForm, AddAllergyForm, AddMenuForm, ChooseCategoryForm, ChooseAllergyForm, ChooseMenuForm
 
 
 # Create your views here.
@@ -35,7 +35,9 @@ def manage_login(request):
 def manage_menu(request):
     add_category_form = AddCategoryForm()
     add_menu_form = AddMenuForm()
-    del_menu_form = DelMenuForm()
+    ch_category_form = ChooseCategoryForm()
+    del_category_form = ChooseCategoryForm()
+    del_menu_form = ChooseMenuForm()
 
     user = request.user
     restaurant_name = user.name
@@ -47,6 +49,8 @@ def manage_menu(request):
     ctx = {
         'add_category_form': add_category_form,
         'add_menu_form': add_menu_form,
+        'ch_category_form': ch_category_form,
+        'del_category_form': del_category_form,
         'del_menu_form': del_menu_form,
         'restaurant_name': restaurant_name,
         'categories': categories,
@@ -57,7 +61,19 @@ def manage_menu(request):
 
 @login_required
 @require_POST
-def category_manage(request):
+def category_add(request):
+    return render(request, 'customer/menu.html')
+
+
+@login_required
+@require_POST
+def category_ch(request):
+    return render(request, 'customer/menu.html')
+
+
+@login_required
+@require_POST
+def category_del(request):
     return render(request, 'customer/menu.html')
 
 
@@ -147,3 +163,21 @@ def menu_price_manage(request):
     }
 
     return render(request, 'customer/detail.html', ctx)
+
+
+@login_required
+@require_POST
+def allergy_add(request):
+    return render(request, 'customer/menu.html')
+
+
+@login_required
+@require_POST
+def allergy_ch(request):
+    return render(request, 'customer/menu.html')
+
+
+@login_required
+@require_POST
+def allergy_del(request):
+    return render(request, 'customer/menu.html')

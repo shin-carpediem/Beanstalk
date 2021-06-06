@@ -7,7 +7,7 @@
 
   <div class="modal fade" id="category-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <form class="modal-content" action="{% url 'restaurant:category_manage' %}" method="POST">{% csrf_token %}
+      <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">カテゴリを変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -20,15 +20,32 @@
               <p>{{ category.name }}</p>
             {% endfor %}
           </div>
-          <div>
-            {{ add_category_form.as_p }}
-          </div>
+          <hr class="pb-3">
+
+          <form class="py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_add' %}" method="POST">{% csrf_token %}
+            <p class="badge__orange py-2 px-3 mr-2">追加</p>
+            <p>{{ add_category_form.as_p }}</p>
+            <button type="submit" class="ml-3 px-3 py-1 btn btn__orange">保存</button>
+          </form>
+          <hr>
+
+          <form class="py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_ch' %}" method="POST">{% csrf_token %}
+            <p class="badge__turquoise py-2 px-3 mr-2">名前の変更</p>
+            <div>
+              <p>{{ ch_category_form.as_p }}</p>
+              <p>変更後の名前: <input type="text" name="ch_category_form" value="入力してください"></p>
+            </div>
+            <button type="submit" class="ml-3 px-3 py-1 btn btn__turquoise">実行</button>
+          </form>
+          <hr>
+
+          <form class="py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_del' %}" method="POST">{% csrf_token %}
+            <p class="badge__grey py-2 px-3 mr-2">削除</p>
+            <p>{{ del_category_form.as_p }}</p>
+            <button type="submit" class="ml-3 px-3 py-1 btn btn__grey">実行</button>
+          </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
-          <button type="submit" class="px-4 py-2 btn btn__blue">保存</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 {% endif %}

@@ -193,6 +193,10 @@ a:hover {
   background-color: #ff5b51;
 }
 
+.btn__turquoise {
+  background-color: #aae2d1;
+}
+
 .icon {
   border-radius: 100px;
   text-align: center;

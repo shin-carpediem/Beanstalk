@@ -23,5 +23,16 @@ class AddMenuForm(forms.ModelForm):
         fields = ('name', 'category', 'price', 'img', 'allergies',)
 
 
-class DelMenuForm(forms.Form):
-    name = forms.ModelChoiceField(queryset=Menu.objects.all(), empty_label='選択してください')
+class ChooseCategoryForm(forms.Form):
+    name = forms.ModelChoiceField(
+        queryset=Category.objects.all(), empty_label='選択してください')
+
+
+class ChooseAllergyForm(forms.Form):
+    name = forms.ModelChoiceField(
+        queryset=Allergy.objects.all(), empty_label='選択してください')
+
+
+class ChooseMenuForm(forms.Form):
+    name = forms.ModelChoiceField(
+        queryset=Menu.objects.all(), empty_label='選択してください')
