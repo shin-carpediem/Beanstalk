@@ -38,7 +38,8 @@ p,
 a,
 label,
 form,
-input {
+input,
+select {
   font-size: 14px;
 }
 
@@ -252,7 +253,7 @@ a:hover {
   max-width: 550px;
   min-width: 335px;
   position: absolute;
-  z-index: 100000;
+  z-index: 10;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
@@ -502,5 +503,10 @@ section.header .clipboard {
   z-index: 2;
   bottom: 20px;
   right: 10px;
+}
+
+.modal-category .category-item {
+  border: 1px solid #9c9c9c;
+  border-radius: 4px;
 }
 /*# sourceMappingURL=main.css.map */

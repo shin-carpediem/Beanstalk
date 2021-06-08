@@ -5,7 +5,6 @@ from django.views.decorators.http import require_POST
 from account.models import User
 from customer.forms import AddToCartForm
 from .models import Category, Allergy, Menu
-from .forms import AddCategoryForm, AddAllergyForm, AddMenuForm, ChooseCategoryForm, ChooseAllergyForm, ChooseMenuForm
 
 
 # Create your views here.
@@ -33,26 +32,18 @@ def manage_login(request):
 
 @login_required
 def manage_menu(request):
-    add_category_form = AddCategoryForm()
-    add_menu_form = AddMenuForm()
-    ch_category_form = ChooseCategoryForm()
-    del_category_form = ChooseCategoryForm()
-    del_menu_form = ChooseMenuForm()
-
     user = request.user
     restaurant_name = user.name
+
+    table_num = '管理者'
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=2)
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
     ctx = {
-        'add_category_form': add_category_form,
-        'add_menu_form': add_menu_form,
-        'ch_category_form': ch_category_form,
-        'del_category_form': del_category_form,
-        'del_menu_form': del_menu_form,
         'restaurant_name': restaurant_name,
+        'table_num': table_num,
         'categories': categories,
         'menus': menus,
     }
@@ -62,19 +53,89 @@ def manage_menu(request):
 @login_required
 @require_POST
 def category_add(request):
-    return render(request, 'customer/menu.html')
+    name = request.POST.get('add_category_form')
+    if Category.objects.get(name=name).count() == 0:
+        category = Category(name=name)
+        category.save()
+    else:
+        messages.warning(request, f"同じ名前のカテゴリは作成できません。")
+
+    user = request.user
+    restaurant_name = user.name
+
+    table_num = '管理者'
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+    }
+
+    return render(request, 'customer/menu.html', ctx)
 
 
 @login_required
 @require_POST
 def category_ch(request):
-    return render(request, 'customer/menu.html')
+    name = request.POST.get('category_name')
+    required_name = request.POST.get('ch_category_form')
+    try:
+        category = Category.objects.get(name=name)
+        category.name = required_name
+        print(category.name)
+        category.save()
+    except:
+        messages.warning(request, f"変更に失敗しました。")
+
+    user = request.user
+    restaurant_name = user.name
+
+    table_num = '管理者'
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+    }
+    return render(request, 'customer/menu.html', ctx)
 
 
 @login_required
 @require_POST
 def category_del(request):
-    return render(request, 'customer/menu.html')
+    name = request.POST.get('del_category_form')
+    try:
+        category = Category.objects.get(name=name)
+        category.delete(False)
+    except:
+        messages.warning(request, f"削除に失敗しました。")
+
+    user = request.user
+    restaurant_name = user.name
+
+    table_num = '管理者'
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+    }
+    return render(request, 'customer/menu.html', ctx)
 
 
 @login_required
@@ -90,7 +151,7 @@ def menu_img_manage(request):
     menu.img = menu_img
     menu.save()
 
-    table_num = "管理者"
+    table_num = '管理者'
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
@@ -118,7 +179,7 @@ def menu_name_manage(request):
     menu.name = menu_name
     menu.save()
 
-    table_num = "管理者"
+    table_num = '管理者'
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
@@ -146,7 +207,7 @@ def menu_price_manage(request):
     menu.price = menu_price
     menu.save()
 
-    table_num = "管理者"
+    table_num = '管理者'
 
     menu = get_object_or_404(Menu, pk=menu_id)
     allergies = Allergy.objects.all().order_by('id')
