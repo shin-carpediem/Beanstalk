@@ -17,13 +17,9 @@
         <div class="modal-body d-flex justify-content-around">
           {% for allergy in allergies %}
             {% if allergy in has_allergies %}
-              <div class="allergy-box-brighten py-1 px-3">
-                {{ allergy }}
-              </div>
+              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}" checked>{{ allergy }}
             {% else %}
-              <div class="allergy-box py-1 px-3">
-                {{ allergy }}
-              </div>
+              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
             {% endif %}
           {% endfor %}
         </div>
