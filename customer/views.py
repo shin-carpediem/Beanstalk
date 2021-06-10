@@ -84,11 +84,14 @@ def menu(request):
     first_category = Category(id=2)
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
+    allergies = Allergy.objects.all().order_by('id')
+
     ctx = {
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
         'menus': menus,
+        'allergies': allergies,
     }
 
     return render(request, 'customer/menu.html', ctx)
@@ -117,11 +120,14 @@ def category_filter(request):
     categories = Category.objects.all().order_by('id')
     menus = Menu.objects.filter(category=category_id).order_by('-id')
 
+    allergies = Allergy.objects.all().order_by('id')
+
     ctx = {
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
         'menus': menus,
+        'allergies': allergies,
     }
 
     return render(request, 'customer/menu.html', ctx)
@@ -156,10 +162,15 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+    try:
+        user = request.user
+        table_num = "管理者"
 
-    table_num = user.table
+    except:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
+
+        table_num = user.table
 
     from .models import Cart
 

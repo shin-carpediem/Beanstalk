@@ -509,4 +509,8 @@ section.header .clipboard {
   border: 1px solid #9c9c9c;
   border-radius: 4px;
 }
+
+.modal-menu .menu-item label {
+  padding-top: 10px;
+}
 /*# sourceMappingURL=main.css.map */

@@ -41,11 +41,14 @@ def manage_menu(request):
     first_category = Category(id=2)
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
+    allergies = Allergy.objects.all().order_by('id')
+
     ctx = {
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
         'menus': menus,
+        'allergies': allergies,
     }
     return render(request, 'customer/menu.html', ctx)
 
@@ -54,7 +57,7 @@ def manage_menu(request):
 @require_POST
 def category_add(request):
     name = request.POST.get('add_category_form')
-    if Category.objects.get(name=name).count() == 0:
+    if Category.objects.filter(name=name).count() == 0:
         category = Category(name=name)
         category.save()
     else:
@@ -140,10 +143,78 @@ def category_del(request):
 
 @login_required
 @require_POST
+def menu_add(request):
+    name = request.POST.get('name')
+    category = request.POST.get('category')
+    # foreign_key
+    category_id = Category.objects.get(name=category)
+    price = request.POST.get('price')
+    img = request.POST.get('img')
+    # allergy = request.POST.get('allergy')
+    # allergy_list = []
+    # allergy_list.set(allergy)
+    # many_to_many
+    # allergy_ids = Allergy.objects.get(ingredient=allergy_list)
+    menu = Menu(name=name, category=category_id,
+                price=price, img=img)
+    menu.save()
+
+    user = request.user
+    restaurant_name = user.name
+
+    table_num = '管理者'
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    allergies = Allergy.objects.all().order_by('id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+    return render(request, 'customer/menu.html', ctx)
+
+
+@login_required
+@require_POST
+def menu_del(request):
+    required_menu = request.POST.get('menu')
+    menu = Menu.objects.get(name=required_menu)
+    menu.delete()
+
+    user = request.user
+    restaurant_name = user.name
+
+    table_num = '管理者'
+
+    categories = Category.objects.all().order_by('id')
+    first_category = Category(id=2)
+    menus = Menu.objects.filter(category=first_category).order_by('-id')
+
+    allergies = Allergy.objects.all().order_by('id')
+
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+    return render(request, 'customer/menu.html', ctx)
+
+
+@login_required
+@require_POST
 def menu_img_manage(request):
     menu_img = request.FILES.get('menu_img')
     menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
+    print(menu)
 
     # 以前のファイルは削除
     menu.img.delete(False)
@@ -160,8 +231,8 @@ def menu_img_manage(request):
     add_to_cart_form = AddToCartForm()
 
     ctx = {
-        'menu': menu,
         'table_num': table_num,
+        'menu': menu,
         'allergies': allergies,
         'has_allergies': has_allergies,
         'add_to_cart_form': add_to_cart_form,
@@ -229,7 +300,29 @@ def menu_price_manage(request):
 @login_required
 @require_POST
 def allergy_add(request):
-    return render(request, 'customer/menu.html')
+    name = request.POST.get('add_allergy_form')
+    menu_id = request.POST.get('menu_id')
+
+    menu = Menu.objects.get(id=menu_id)
+    menu.allergy = name
+    menu.save()
+
+    table_num = '管理者'
+
+    menu = get_object_or_404(Menu, pk=menu_id)
+    allergies = Allergy.objects.all().order_by('id')
+    has_allergies = menu.allergies.all().order_by('id')
+
+    add_to_cart_form = AddToCartForm()
+
+    ctx = {
+        'menu': menu,
+        'table_num': table_num,
+        'allergies': allergies,
+        'has_allergies': has_allergies,
+        'add_to_cart_form': add_to_cart_form,
+    }
+    return render(request, 'customer/menu.html', ctx)
 
 
 @login_required

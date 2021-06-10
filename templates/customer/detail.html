@@ -5,7 +5,9 @@
 {% block inner__content %}
 <section class="menu-detail">
   <div class="menu-top-view">
-    <img height=420 src="{{ menu.img.url }}" alt="Menu">
+    {% if menu.img %}
+      <img height=420 src="{{ menu.img.url }}" alt="Menu">
+    {% endif %}
 
     {% block menu_img %}
       {% include 'restaurant/manage/detail/menu_img.html' %}

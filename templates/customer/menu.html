@@ -20,29 +20,40 @@
     {% endblock %}
   </div>
 
-  <form action="{% url 'customer:cart' %}" method="GET">{% csrf_token %}
+  {% if user.is_authenticated %}
+    <div>
+  {% else %}
+    <form action="{% url 'customer:cart' %}" method="GET">
+  {% endif %}
 
-    <div class="d-flex flex-wrap">
-      {% for menu in menus %}
-        <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
-          <img src="{{ menu.img.url }}" alt="Menu">
-          <div class="text-box">
-            <p class="text-left pl-2">{{ menu.name }}</p>
-            <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
-          </div>
-        </a>
-        <!-- hidden -->
-        <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
-      {% endfor %}
+      <div class="d-flex flex-wrap">
+        {% for menu in menus %}
+          <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
+            {% if menu.formatted_img %}
+              <img src="{{ menu.formatted_img.url }}" alt="Menu">
+            {% endif %}
+            <div class="text-box">
+              <p class="text-left pl-2">{{ menu.name }}</p>
+              <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
+            </div>
+          </a>
+          <!-- hidden -->
+          <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
+        {% endfor %}
+      </div>
+
+      {% if not user.is_authenticated %}
+        <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
+      {% else %}
+        {% block menu_handle %}
+          {% include 'restaurant/manage/menu_handle.html' %}
+        {% endblock %}
+      {% endif %}
+
+  {% if user.is_authenticated %}
+    </form>
+  {% else %}
     </div>
-
-    {% if not user.is_authenticated %}
-      <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
-    {% else %}
-      {% block menu_handle %}
-        {% include 'restaurant/manage/menu_handle.html' %}
-      {% endblock %}
-    {% endif %}
-  </form>
+  {% endif %}
 </section>
 {% endblock %}

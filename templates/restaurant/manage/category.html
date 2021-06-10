@@ -24,7 +24,7 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_add' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__orange py-1">追加</p>
-            <input class="col-4" name="add_category_form" type="text">
+            <input class="col-4" name="add_category_form" type="text" required>
             <button type="submit" class="col-3 btn btn__orange">保存</button>
           </form>
           <hr>
@@ -39,7 +39,7 @@
                 {% endfor %}
               </select>
               <p class="mb-1">変更後の名前</p>
-              <input type="text" name="ch_category_form">
+              <input type="text" name="ch_category_form" required>
             </div>
             <button type="submit" class="col-3 btn btn__turquoise">実行</button>
           </form>
@@ -47,7 +47,7 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_del' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__grey py-1">削除</p>
-            <input class="col-4" name="del_category_form" type="text">
+            <input class="col-4" name="del_category_form" type="text" required>
             <button type="submit" class="col-3 btn btn__grey">実行</button>
           </form>
         </div>

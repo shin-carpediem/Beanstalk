@@ -13,7 +13,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <form class="modal-content" action="{% url 'restaurant:menu_name_manage' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalCenterTitle">名前を変更する</h5>
+          <h5 class="modal-title" id="exampleModalCenterTitle">表示名を変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -41,7 +41,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <input class="text-center" type="number" name="menu_price" value="{{ menu.price }}">
+          ¥ <input class="text-center" type="number" name="menu_price" value="{{ menu.price }}">
           <!-- hidden -->
           <input style="display: none;" type="text" name="menu_id" value="{{ menu.id }}">
         </div>

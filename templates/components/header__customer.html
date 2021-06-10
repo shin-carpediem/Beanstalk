@@ -13,7 +13,10 @@
         <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
         <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
       {% else %}
-        <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+        <!-- <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i> -->
+        <a href="{% url 'customer:menu' %}" class="mx-auto">
+          <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+        </a>
       {% endif %}
     </div>
   </div>

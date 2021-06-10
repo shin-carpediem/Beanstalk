@@ -11,27 +11,44 @@
 
   <div class="modal fade" id="menu-add-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-add-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content modal-body text-left py-3">
         <div class="modal-header">
           <h5 class="modal-title" id="menu-add-btn__ModalCenterTitle">メニューを追加する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body mx-auto text-left py-3">
-          {{ add_menu_form.as_p }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
-          <button type="submit" class="px-4 py-2 btn btn__orange">追加</button>
-        </div>
+        <form method="POST" action="{% url 'restaurant:menu_add' %}">{% csrf_token %}
+          <label class="pt-3">表示名</label><br>
+          <input class="w-50" name="name" type="text" required><br>
+          <label>カテゴリ</label><br>
+          <select class="w-50" name="category">
+            {% for category in categories %}
+              <option name="category" value="{{ category.name }}">{{ category.name }}</option>
+            {% endfor %}
+          </select><br>
+          <label>価格</label><br>
+          ¥ <input name="price" type="number" min=0 required><br>
+          <label>イメージ画像</label><br>
+          <input name="img" type="file" required><br>
+          <label>アレルギー</label><br>
+          <div class="d-flex justify-content-around pb-3">
+            {% for allergy in allergies %}
+              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
+            {% endfor %}
+          </div><br>
+          <div class="modal-footer">
+            <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+            <button type="submit" class="px-4 py-2 btn btn__orange">追加</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="menu-del-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-del-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <form class="modal-content" action="{% url 'restaurant:menu_del' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="menu-del-btn__ModalCenterTitle">メニューを削除する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -39,13 +56,17 @@
           </button>
         </div>
         <div class="modal-body">
-          {{ del_menu_form.as_p }}
+          <select class="w-50 py-2" name="menu">
+            {% for menu in menus %}
+             <option name="menu" value="{{ menu }}">{{ menu }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
           <button type="submit" class="px-4 py-2 btn btn__red">削除</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 {% endif %}
