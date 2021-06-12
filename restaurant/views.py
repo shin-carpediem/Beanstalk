@@ -69,17 +69,6 @@ def category_add(request):
 
     ctx['restaurant_name'] = restaurant_name
 
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # ctx = {
-    #     'restaurant_name': restaurant_name,
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    # }
-
     return render(request, 'customer/menu.html', ctx)
 
 
@@ -101,17 +90,6 @@ def category_ch(request):
 
     ctx['restaurant_name'] = restaurant_name
 
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # ctx = {
-    #     'restaurant_name': restaurant_name,
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    # }
-
     return render(request, 'customer/menu.html', ctx)
 
 
@@ -129,17 +107,6 @@ def category_del(request):
     restaurant_name = user.name
 
     ctx['restaurant_name'] = restaurant_name
-
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # ctx = {
-    #     'restaurant_name': restaurant_name,
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    # }
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -167,19 +134,6 @@ def menu_add(request):
 
     ctx['restaurant_name'] = restaurant_name
 
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # allergies = Allergy.objects.all().order_by('id')
-    # ctx = {
-    #     'restaurant_name': restaurant_name,
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    #     'allergies': allergies,
-    # }
-
     return render(request, 'customer/menu.html', ctx)
 
 
@@ -194,19 +148,6 @@ def menu_del(request):
     restaurant_name = user.name
 
     ctx['restaurant_name'] = restaurant_name
-
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # allergies = Allergy.objects.all().order_by('id')
-    # ctx = {
-    #     'restaurant_name': restaurant_name,
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    #     'allergies': allergies,
-    # }
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -225,21 +166,8 @@ def menu_img_manage(request):
     menu.img = menu_img
     menu.save()
 
-    # table_num = '管理者'
-    # menu = get_object_or_404(Menu, pk=menu_id)
-    # allergies = Allergy.objects.all().order_by('id')
-    # has_allergies = menu.allergies.all().order_by('id')
-
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
-
-    # ctx = {
-    #     'table_num': table_num,
-    #     'menu': menu,
-    #     'allergies': allergies,
-    #     'has_allergies': has_allergies,
-    #     'add_to_cart_form': add_to_cart_form,
-    # }
 
     return render(request, 'customer/detail.html', ctx)
 
@@ -253,21 +181,8 @@ def menu_name_manage(request):
     menu.name = menu_name
     menu.save()
 
-    # table_num = '管理者'
-    # menu = get_object_or_404(Menu, pk=menu_id)
-    # allergies = Allergy.objects.all().order_by('id')
-    # has_allergies = menu.allergies.all().order_by('id')
-
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
-
-    # ctx = {
-    #     'menu': menu,
-    #     'table_num': table_num,
-    #     'allergies': allergies,
-    #     'has_allergies': has_allergies,
-    #     'add_to_cart_form': add_to_cart_form,
-    # }
 
     return render(request, 'customer/detail.html', ctx)
 
@@ -281,21 +196,8 @@ def menu_price_manage(request):
     menu.price = menu_price
     menu.save()
 
-    # table_num = '管理者'
-    # menu = get_object_or_404(Menu, pk=menu_id)
-    # allergies = Allergy.objects.all().order_by('id')
-    # has_allergies = menu.allergies.all().order_by('id')
-
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
-
-    # ctx = {
-    #     'menu': menu,
-    #     'table_num': table_num,
-    #     'allergies': allergies,
-    #     'has_allergies': has_allergies,
-    #     'add_to_cart_form': add_to_cart_form,
-    # }
 
     return render(request, 'customer/detail.html', ctx)
 
@@ -310,21 +212,8 @@ def allergy_add(request):
     menu.allergy = name
     menu.save()
 
-    # table_num = '管理者'
-    # menu = get_object_or_404(Menu, pk=menu_id)
-    # allergies = Allergy.objects.all().order_by('id')
-    # has_allergies = menu.allergies.all().order_by('id')
-
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
-
-    # ctx = {
-    #     'menu': menu,
-    #     'table_num': table_num,
-    #     'allergies': allergies,
-    #     'has_allergies': has_allergies,
-    #     'add_to_cart_form': add_to_cart_form,
-    # }
 
     return render(request, 'customer/menu.html', ctx)
 
