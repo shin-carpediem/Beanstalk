@@ -321,10 +321,11 @@ section.header .clipboard {
 }
 
 .board__customer .choose-table input {
-  font-size: 28px;
+  font-size: 20px;
   text-align: center;
   background-color: #ffd79a;
   border-radius: 10px;
+  margin: 6px 0;
 }
 
 .board__customer section.menu-list .category {

@@ -58,11 +58,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # for customer
 class nonLoginUser(models.Model):
-    name = models.CharField("名前", max_length=256, blank=True, null=True)
-    table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     session = models.ForeignKey(
         Session, blank=True, null=True, on_delete=models.SET_NULL)
+    name = models.CharField("名前", max_length=256, blank=True, null=True)
+    table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):
-        return str(self.table)
+        return str(self.session)

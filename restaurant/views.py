@@ -204,27 +204,34 @@ def menu_price_manage(request):
 
 @login_required
 @require_POST
-def allergy_add(request):
-    name = request.POST.get('add_allergy_form')
-    menu_id = request.POST.get('menu_id')
-
-    menu = Menu.objects.get(id=menu_id)
-    menu.allergy = name
-    menu.save()
-
-    add_to_cart_form = AddToCartForm()
-    ctx['add_to_cart_form'] = add_to_cart_form
+def allergy_ch(request):
+    allergy_has = request.POST.getlist('has')
+    print(allergy_has)
+    allergy_not_have = request.POST.getlist('not_have')
+    print(allergy_not_have)
 
     return render(request, 'customer/menu.html', ctx)
 
 
-@login_required
-@require_POST
-def allergy_ch(request):
-    return render(request, 'customer/menu.html')
+# TODO:
+# @login_required
+# @require_POST
+# def allergy_add(request):
+#     name = request.POST.get('add_allergy_form')
+#     menu_id = request.POST.get('menu_id')
+
+#     menu = Menu.objects.get(id=menu_id)
+#     menu.allergy = name
+#     menu.save()
+
+#     add_to_cart_form = AddToCartForm()
+#     ctx['add_to_cart_form'] = add_to_cart_form
+
+#     return render(request, 'customer/menu.html', ctx)
 
 
-@login_required
-@require_POST
-def allergy_del(request):
-    return render(request, 'customer/menu.html')
+# TODO:
+# @login_required
+# @require_POST
+# def allergy_del(request):
+#     return render(request, 'customer/menu.html', ctx)

@@ -6,7 +6,7 @@
 <img class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Table">
 
 <form class="px-auto" method="POST" action="{% url 'customer:make_session' %}">{% csrf_token %}
-  <div class="text__bold text-sm-right mr-sm-5 pr-sm-5 pr-3 choose-table">
+  <div class="text__bold text-right mr-5 pr-sm-5 pr-3 choose-table">
     {{ choose_table_form.as_p }}
   </div>
   <div class="pt-5">

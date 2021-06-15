@@ -7,7 +7,7 @@
 
   <div class="modal fade" id="menu-allergy-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <form class="modal-content" action="{% url 'restaurant:allergy_ch' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">アレルギー対象の食品を編集する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -17,9 +17,9 @@
         <div class="modal-body d-flex justify-content-around">
           {% for allergy in allergies %}
             {% if allergy in has_allergies %}
-              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}" checked>{{ allergy }}
+              <input type="checkbox" name="has" value="{{ allergy }}" checked>{{ allergy }}
             {% else %}
-              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
+              <input type="checkbox" name="not_have" value="{{ allergy }}">{{ allergy }}
             {% endif %}
           {% endfor %}
         </div>
@@ -27,7 +27,7 @@
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
           <button type="submit" class="px-4 py-2 btn btn__blue">実行</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 {% endif %}

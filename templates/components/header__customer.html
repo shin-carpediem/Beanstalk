@@ -36,7 +36,7 @@
   </h5>
 
   {% if request.path != '/' %}
-    <p class="col-4 my-auto text__bold">テーブル番号 {{ table }}</p>
+    <p class="col-4 my-auto text__bold">テーブル番号: {{ table_num }}</p>
   {% endif %}
   {% if request.path == '/' %}
   {% elif request.path == '/history/' %}

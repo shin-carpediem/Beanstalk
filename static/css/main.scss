@@ -324,10 +324,11 @@ section.header {
   }
   .choose-table {
     input {
-      font-size: 28px;
+      font-size: 20px;
       text-align: center;
       background-color: $light-orange;
       border-radius: 10px;
+      margin: 6px 0;
     }
   }
   section.menu-list {
