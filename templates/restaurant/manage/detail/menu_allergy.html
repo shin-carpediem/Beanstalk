@@ -22,6 +22,8 @@
               <input type="checkbox" name="not_have" value="{{ allergy }}">{{ allergy }}
             {% endif %}
           {% endfor %}
+          <!-- hidden -->
+          <input type="hidden" name="menu_id" value="{{ menu.id }}">
         </div>
         <div class="modal-footer">
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
