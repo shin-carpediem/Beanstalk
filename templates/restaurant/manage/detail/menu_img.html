@@ -5,11 +5,11 @@
     <i class="fas fa-pencil-alt"></i>
   </button>
 
-  <div class="modal fade" id="menu-img-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade" id="menu-img-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-img-manage-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <form class="modal-content" enctype="multipart/form-data" action="{% url 'restaurant:menu_img_manage' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalCenterTitle">写真を変更する</h5>
+          <h5 class="modal-title" id="menu-img-manage-btn__ModalCenterTitle">写真を変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

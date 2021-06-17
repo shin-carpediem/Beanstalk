@@ -466,6 +466,12 @@ section.header .clipboard {
   left: 120px;
 }
 
+.board__customer section.menu-detail .menu-allergy .menu_allergy_handle_btn button {
+  border-color: transparent;
+  -webkit-transform: scale(0.7);
+          transform: scale(0.7);
+}
+
 .board__customer section.menu-detail .allergy-box-brighten {
   background-color: #ffd79a;
   color: #565454;

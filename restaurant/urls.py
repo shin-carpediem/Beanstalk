@@ -19,7 +19,7 @@ urlpatterns = [
     path('manage/menu/name', views.menu_name_manage, name='menu_name_manage'),
     path('manage/menu/price', views.menu_price_manage, name='menu_price_manage'),
     path('manage/menu/allergy/change', views.allergy_ch, name='allergy_ch'),
-    # path('manage/menu/allergy/item/add', views.allergy_add, name='allergy_add'),
-    # path('manage/menu/allergy/item/delete', views.allergy_del, name='allergy_del'),
+    path('manage/menu/allergy/item/add', views.allergy_add, name='allergy_add'),
+    path('manage/menu/allergy/item/delete', views.allergy_del, name='allergy_del'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

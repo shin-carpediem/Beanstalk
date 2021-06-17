@@ -119,14 +119,16 @@ def menu_add(request):
     # foreign_key
     category_id = Category.objects.get(name=category)
     price = request.POST.get('price')
-    img = request.POST.get('img')
-    # allergy = request.POST.get('allergy')
-    # allergy_list = []
-    # allergy_list.set(allergy)
-    # many_to_many
-    # allergy_ids = Allergy.objects.get(ingredient=allergy_list)
+    img = request.FILES.get('img')
+    allergy_list = request.POST.getlist('allergy')
+    print(allergy_list)
+
     menu = Menu(name=name, category=category_id,
                 price=price, img=img)
+    # for allergy in allergy_list:
+    #     allergy_id = Allergy.objects.get(ingredient=allergy)
+    #     print(allergy_id)
+    #     menu.allergies.set(allergy_id)
     menu.save()
 
     user = request.user
@@ -134,7 +136,7 @@ def menu_add(request):
 
     ctx['restaurant_name'] = restaurant_name
 
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:manage_menu')
 
 
 @login_required
@@ -169,14 +171,16 @@ def menu_img_manage(request):
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
 
-    return render(request, 'customer/detail.html', ctx)
+    return redirect('customer:menu_detail', menu_id=menu.id)
 
 
 @login_required
 @require_POST
 def menu_name_manage(request):
     menu_name = request.POST.get('menu_name')
+    print(menu_name)
     menu_id = request.POST.get('menu_id')
+    print(menu_id)
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()
@@ -184,7 +188,7 @@ def menu_name_manage(request):
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
 
-    return render(request, 'customer/detail.html', ctx)
+    return redirect('customer:menu_detail', menu_id=menu.id)
 
 
 @login_required
@@ -199,9 +203,10 @@ def menu_price_manage(request):
     add_to_cart_form = AddToCartForm()
     ctx['add_to_cart_form'] = add_to_cart_form
 
-    return render(request, 'customer/detail.html', ctx)
+    return redirect('customer:menu_detail', menu_id=menu.id)
 
 
+# TODO:
 @login_required
 @require_POST
 def allergy_ch(request):
@@ -213,25 +218,27 @@ def allergy_ch(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-# TODO:
-# @login_required
-# @require_POST
-# def allergy_add(request):
-#     name = request.POST.get('add_allergy_form')
-#     menu_id = request.POST.get('menu_id')
+@login_required
+@require_POST
+def allergy_add(request):
+    get_allergy = request.POST.get('allergy')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+    menu.allergies.create(ingredient=get_allergy)
+    menu.save()
 
-#     menu = Menu.objects.get(id=menu_id)
-#     menu.allergy = name
-#     menu.save()
-
-#     add_to_cart_form = AddToCartForm()
-#     ctx['add_to_cart_form'] = add_to_cart_form
-
-#     return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
 # TODO:
-# @login_required
-# @require_POST
-# def allergy_del(request):
-#     return render(request, 'customer/menu.html', ctx)
+@login_required
+@require_POST
+def allergy_del(request):
+    get_allergy = request.POST.get('allergy')
+    menu_id = request.POST.get('menu_id')
+    # allergy_id = Allergy.objects.get(id=get_allergy).id
+    menu = Menu.objects.get(id=menu_id)
+    # menu.allergies.remove()
+    menu.save()
+
+    return redirect('customer:menu')

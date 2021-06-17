@@ -448,6 +448,12 @@ section.header {
         top: 5px;
         left: 120px;
       }
+      .menu_allergy_handle_btn {
+        button {
+          border-color: transparent;
+          transform: scale(0.7);
+        }
+      }
     }
     .allergy-box-brighten {
       background-color: $light-orange;

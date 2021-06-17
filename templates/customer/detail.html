@@ -23,16 +23,23 @@
   </div>
 
   <div class="px-2 py-3 menu-allergy">
-    <p class="text-left text__bold">アレルギー表示</p>
+    <div class="d-flex justify-content-between">
+      <p class="text-left text__bold">アレルギー表示</p>
+      <div>
+        {% block menu_allergy_handle %}
+          {% include 'restaurant/manage/detail/menu_allergy_handle.html' %}
+        {% endblock %}
+      </div>
+    </div>
     <hr/>
-    <div class="d-flex justify-content-around">
+    <div class="d-flex flex-wrap">
       {% for allergy in allergies %}
         {% if allergy in has_allergies %}
-          <div class="allergy-box-brighten py-1 px-3">
+          <div class="allergy-box-brighten py-1 px-3 mr-1 mb-1">
             {{ allergy }}
           </div>
         {% else %}
-          <div class="allergy-box py-1 px-3">
+          <div class="allergy-box py-1 px-3 mr-1 mb-1">
             {{ allergy }}
           </div>
         {% endif %}

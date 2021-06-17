@@ -1,0 +1,62 @@
+{% block menu_allergy_handle %}
+
+{% if user.is_authenticated %}
+  <div class="d-flex menu_allergy_handle_btn">
+    <button type="button" class="badge__orange shadow px-3" data-toggle="modal" data-target="#menu-allergy-add-btn__ModalCenter">
+      <i class="fas fa-plus"></i>
+    </button>
+    <button type="button" class="badge__orange shadow px-3" data-toggle="modal" data-target="#menu-allergy-del-btn__ModalCenter">
+      <i class="fas fa-minus"></i>
+    </button>
+  </div>
+
+  <div class="modal fade" id="menu-allergy-add-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-allergy-add-btn__ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <form class="modal-content" action="{% url 'restaurant:allergy_add' %}" method="POST">{% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="menu-allergy-add-btn__ModalCenterTitle">アレルギーそのものを追加する</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="text-center" name="allergy">
+          <!-- hidden -->
+          <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <button type="submit" class="px-4 py-2 btn btn__orange">実行</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="menu-allergy-del-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-allergy-del-btn__ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <form class="modal-content" action="{% url 'restaurant:allergy_del' %}" method="POST">{% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="menu-allergy-del-btn__ModalCenterTitle">アレルギーそのものを削除する</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body d-flex justify-content-around">
+          <select class="py-2 w-50" name="allergy">
+            {% for allergy in allergies %}
+              <option name="allergy" value="{{ allergy }}">{{ allergy }}</option>
+            {% endfor %}
+            <!-- hidden -->
+            <input type="hidden" name="menu_id" value="{{ menu.id }}">
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <button type="submit" class="px-4 py-2 btn btn__orange">実行</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

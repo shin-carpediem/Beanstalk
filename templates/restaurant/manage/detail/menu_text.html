@@ -9,11 +9,11 @@
     <i class="fas fa-pencil-alt"></i>
   </button>
 
-  <div class="modal fade" id="menu-name-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade" id="menu-name-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-name-manage-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <form class="modal-content" action="{% url 'restaurant:menu_name_manage' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalCenterTitle">表示名を変更する</h5>
+          <h5 class="modal-title" id="menu-name-manage-btn__ModalCenterTitle">表示名を変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -31,11 +31,11 @@
     </div>
   </div>
 
-  <div class="modal fade" id="menu-price-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade" id="menu-price-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-price-manage-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <form class="modal-content" action="{% url 'restaurant:menu_price_manage' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalCenterTitle">金額を変更する</h5>
+          <h5 class="modal-title" id="menu-price-manage-btn__ModalCenterTitle">金額を変更する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
