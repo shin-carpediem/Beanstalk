@@ -1,13 +1,15 @@
 {% block menu_modal %}
 
 {% if user.is_authenticated %}
-  <button type="button" class="menu-add-btn btn btn__orange btn__fixed_bit_upper shadow" data-toggle="modal" data-target="#menu-add-btn__ModalCenter">
-    メニューを追加する
-  </button>
+  <div class="btn__fixed">
+    <button type="button" class="menu-add-btn btn btn__orange shadow" data-toggle="modal" data-target="#menu-add-btn__ModalCenter">
+      メニューを追加する
+    </button>
 
-  <button type="button" class="menu-del-btn btn btn__grey btn__fixed shadow" data-toggle="modal" data-target="#menu-del-btn__ModalCenter">
-    メニューを削除する
-  </button>
+    <button type="button" class="menu-del-btn btn btn__grey shadow my-3" data-toggle="modal" data-target="#menu-del-btn__ModalCenter">
+      メニューを削除する
+    </button>
+  </div>
 
   <div class="modal fade" id="menu-add-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-add-btn__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

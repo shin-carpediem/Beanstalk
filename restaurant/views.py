@@ -28,10 +28,9 @@ def order_manage(request):
     user = User.objects.get(id=request.user.id)
     formatted_logo = user.formatted_logo
     name = user.name
-    ctx = {
-        'formatted_logo': formatted_logo,
-        'name': name,
-    }
+    ctx['formatted_logo'] = formatted_logo
+    ctx['name'] = name,
+
     return render(request, 'restaurant/order_manage.html', ctx)
 
 
@@ -120,6 +119,7 @@ def menu_add(request):
 
     return redirect('customer:menu')
 
+
 @login_required
 @require_POST
 def menu_del(request):
@@ -143,9 +143,6 @@ def menu_img_manage(request):
     menu.img = menu_img
     menu.save()
 
-    add_to_cart_form = AddToCartForm()
-    ctx['add_to_cart_form'] = add_to_cart_form
-
     return redirect('customer:menu_detail', menu_id=menu.id)
 
 
@@ -154,12 +151,10 @@ def menu_img_manage(request):
 def menu_name_manage(request):
     menu_name = request.POST.get('menu_name')
     menu_id = request.POST.get('menu_id')
+    print(menu_id)
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()
-
-    add_to_cart_form = AddToCartForm()
-    ctx['add_to_cart_form'] = add_to_cart_form
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -172,9 +167,6 @@ def menu_price_manage(request):
     menu = Menu.objects.get(id=menu_id)
     menu.price = menu_price
     menu.save()
-
-    add_to_cart_form = AddToCartForm()
-    ctx['add_to_cart_form'] = add_to_cart_form
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 

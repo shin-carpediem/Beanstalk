@@ -4,18 +4,24 @@
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
       {% if request.path == '/' %}
-        <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
+        <!-- <img src="{{ request.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
         <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
       {% elif request.path == '/menu/' %}
-        <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
-        <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+        {% if request.user.img %}
+          <img src="{{ request.user.img.url }}" alt="Restaurant Logo" class="m-3">
+        {% else %}
+          <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+        {% endif %}
       {% elif request.path == '/manage/menu/' %}
-        <!-- <img src="{{ requset.user.img.url }}" alt="Restaurant Logo" class="m-3"> -->
-        <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+        {% if request.user.img %}
+          <img src="{{ request.user.img.url }}" alt="Restaurant Logo" class="m-3">
+        {% else %}
+          <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+        {% endif %}
       {% else %}
         <!-- <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i> -->
         <a href="{% url 'customer:menu' %}" class="mx-auto">
-          <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+          <i class="el__pointer m-auto py-auto back fas fa-angle-double-left"></i>
         </a>
       {% endif %}
     </div>
