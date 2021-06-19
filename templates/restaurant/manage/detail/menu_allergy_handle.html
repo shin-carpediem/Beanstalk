@@ -1,12 +1,12 @@
 {% block menu_allergy_handle %}
 
 {% if user.is_authenticated %}
-  <div class="d-flex menu_allergy_handle_btn">
-    <button type="button" class="badge__orange shadow px-3" data-toggle="modal" data-target="#menu-allergy-add-btn__ModalCenter">
-      <i class="fas fa-plus"></i>
+  <div class="menu_allergy_handle_btn">
+    <button type="button" class="px-3" data-toggle="modal" data-target="#menu-allergy-add-btn__ModalCenter">
+      アレルギーそのものを追加
     </button>
-    <button type="button" class="badge__orange shadow px-3" data-toggle="modal" data-target="#menu-allergy-del-btn__ModalCenter">
-      <i class="fas fa-minus"></i>
+    <button type="button" class="px-3" data-toggle="modal" data-target="#menu-allergy-del-btn__ModalCenter">
+      アレルギーそのものを削除
     </button>
   </div>
 

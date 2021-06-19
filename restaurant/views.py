@@ -125,10 +125,6 @@ def menu_add(request):
 
     menu = Menu(name=name, category=category_id,
                 price=price, img=img)
-    # for allergy in allergy_list:
-    #     allergy_id = Allergy.objects.get(ingredient=allergy)
-    #     print(allergy_id)
-    #     menu.allergies.set(allergy_id)
     menu.save()
 
     user = request.user
@@ -251,15 +247,11 @@ def allergy_add(request):
     return redirect('customer:menu')
 
 
-# TODO:
 @login_required
 @require_POST
 def allergy_del(request):
     get_allergy = request.POST.get('allergy')
-    menu_id = request.POST.get('menu_id')
-    # allergy_id = Allergy.objects.get(id=get_allergy).id
-    menu = Menu.objects.get(id=menu_id)
-    # menu.allergies.remove()
-    menu.save()
+    allergy = Allergy.objects.get(ingredient=get_allergy)
+    allergy.delete()
 
     return redirect('customer:menu')
