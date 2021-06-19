@@ -206,25 +206,35 @@ def menu_price_manage(request):
     return redirect('customer:menu_detail', menu_id=menu.id)
 
 
-# TODO:
 @login_required
 @require_POST
 def allergy_ch(request):
     allergy_list = request.POST.getlist('allergy')
-    print(allergy_list)
     menu_id = request.POST.get('menu_id')
-    menu = Menu.objects.get(id=menu_id)
-    print(menu.allergies.all())
 
+    menu = Menu.objects.get(id=menu_id)
     for allergy in allergy_list:
-        # 元と変わらない場合は何もしない
+        # データと変わらない場合は何もしない
         if allergy in menu.allergies.all():
             None
         # 新しくチェックをつけたものは登録する
         else:
             allergy_query = Allergy.objects.get(ingredient=allergy)
             menu.allergies.add(allergy_query)
-            menu.save()
+
+    menu.save()
+
+    menu = Menu.objects.get(id=menu_id)
+    for allergy in menu.allergies.all():
+        # チェックされているものとデータが同じ場合は何もしない
+        if allergy.ingredient in allergy_list:
+            None
+        # 新しくチェックを外したものはデータからも外す
+        else:
+            allergy_query = Allergy.objects.get(ingredient=allergy)
+            menu.allergies.remove(allergy_query)
+
+    menu.save()
 
     return render(request, 'customer/menu.html', ctx)
 
