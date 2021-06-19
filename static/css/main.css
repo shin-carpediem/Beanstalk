@@ -297,7 +297,7 @@ a:hover {
   max-width: 600px;
 }
 
-.wrapper .board {
+.wrapper .inner__wrapper .board {
   background-color: #fff;
   border-radius: 10px;
 }
@@ -321,6 +321,10 @@ section.header .back {
 }
 
 section.header div {
+  color: #fff;
+}
+
+section.header .back-menu {
   color: #fff;
 }
 

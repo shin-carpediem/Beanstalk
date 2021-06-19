@@ -11,7 +11,8 @@
     </div>
     <div class="my-auto text__bold pl-3">{{ user.name }}</div>
   </div>
-  <div class="px-3 my-auto">
+  <div class="px-3 my-auto d-flex">
+    <a class="mr-5 back-menu" href="{% url 'restaurant:manage_menu' %}">メニューを作成・管理する</a>
     {% if request.path == '/order_manage/' %}
       <a href="{% url 'restaurant:history' %}"><i class="clipboard fas fa-clipboard-list"></i></a>
     {% endif %}

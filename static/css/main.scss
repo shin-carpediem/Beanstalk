@@ -290,10 +290,10 @@ a {
   background-color: $light-grey;
   .inner__wrapper {
     max-width: 600px;
-  }
-  .board {
-    background-color: $white;
-    border-radius: 10px;
+    .board {
+      background-color: $white;
+      border-radius: 10px;
+    }
   }
 }
 
@@ -312,6 +312,9 @@ section.header {
     transform: scale(2);
   }
   div {
+    color: $white;
+  }
+  .back-menu {
     color: $white;
   }
   .clipboard {

@@ -111,28 +111,37 @@ def category_del(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+# TODO:
 @login_required
 @require_POST
 def menu_add(request):
     name = request.POST.get('name')
-    category = request.POST.get('category')
-    # foreign_key
-    category_id = Category.objects.get(name=category)
-    price = request.POST.get('price')
-    img = request.FILES.get('img')
-    allergy_list = request.POST.getlist('allergy')
-    print(allergy_list)
+    try:
+        Menu.objects.get(name=name)
+        category = request.POST.get('category')
+        # foreign_key
+        category_id = Category.objects.get(name=category)
+        price = request.POST.get('price')
+        img = request.FILES.get('img')
 
-    menu = Menu(name=name, category=category_id,
-                price=price, img=img)
-    menu.save()
+        menu = Menu(name=name, category=category_id,
+                    price=price, img=img)
+
+        allergy_list = request.POST.getlist('allergy')
+        for allergy in allergy_list:
+            menu.allergies.add(allergy)
+
+        menu.save()
+
+    except:
+        messages.warning(request, f"全く同じ名前のメニューは作れません。")
 
     user = request.user
     restaurant_name = user.name
 
     ctx['restaurant_name'] = restaurant_name
 
-    return redirect('customer:manage_menu')
+    return redirect('restaurant:manage_menu')
 
 
 @login_required
