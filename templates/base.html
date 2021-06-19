@@ -26,7 +26,22 @@
 
   <div class="w-100 full__wrapper">
     {% if user.is_authenticated %}
-      <a class="text-right logout" href="{% url 'restaurant:logout' %}">ログアウト</a>
+      {% if request.path == '/manage/menu/' %}
+        <div class="d-flex logout">
+          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+        </div>
+      {% elif request.path == '/category_filter/' %}
+        <div class="d-flex logout">
+          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+        </div>
+      {% elif request.path == '/detail/' %}
+        <div class="d-flex logout">
+          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+        </div>
+      {% endif %}
     {% endif %}
     <!-- messages -->
     {% for message in messages %}

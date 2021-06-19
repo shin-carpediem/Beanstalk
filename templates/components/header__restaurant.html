@@ -1,7 +1,13 @@
+{% load static %}
+
 <section class="p-2 header d-flex justify-content-between">
   <div class="d-flex px-3">
-    <div class="logo">
-      <i class="pt-2 pl-2 back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+    <div class="m-auto logo shadow d-flex align-items-center">
+      {% if request.path == '/order_manage/' %}
+        <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+      {% else %}
+        <i class="pt-2 pl-2 back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+      {% endif %}
     </div>
     <div class="my-auto text__bold pl-3">{{ user.name }}</div>
   </div>
