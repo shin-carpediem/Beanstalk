@@ -18,7 +18,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="POST" action="{% url 'restaurant:menu_add' %}">{% csrf_token %}
+        <form method="POST" enctype="multipart/form-data" action="{% url 'restaurant:menu_add' %}">{% csrf_token %}
           <label class="pt-3">表示名</label><br>
           <input class="w-50" name="name" type="text" required><br>
           <label>カテゴリ</label><br>
@@ -30,7 +30,7 @@
           <label>価格</label><br>
           ¥ <input name="price" type="number" min=0 required><br>
           <label>イメージ画像</label><br>
-          <input name="img" type="file" required><br>
+          <input name="img" type="file" value="{{ menu.name }}" required><br>
           <label>アレルギー</label><br>
           <div class="d-flex justify-content-around pb-3">
             {% for allergy in allergies %}

@@ -116,8 +116,10 @@ def category_del(request):
 @require_POST
 def menu_add(request):
     name = request.POST.get('name')
-    try:
-        Menu.objects.get(name=name)
+    if Menu.objects.filter(name=name).count() != 0:
+        messages.warning(request, f"全く同じ名前のメニューは作れません。")
+
+    else:
         category = request.POST.get('category')
         # foreign_key
         category_id = Category.objects.get(name=category)
@@ -126,23 +128,22 @@ def menu_add(request):
 
         menu = Menu(name=name, category=category_id,
                     price=price, img=img)
+        menu.save()
 
         allergy_list = request.POST.getlist('allergy')
         for allergy in allergy_list:
-            menu.allergies.add(allergy)
+            allergy_query = Allergy.objects.get(ingredient=allergy)
+            print(allergy_query)
+            menu.allergies.add(allergy_query)
 
         menu.save()
-
-    except:
-        messages.warning(request, f"全く同じ名前のメニューは作れません。")
 
     user = request.user
     restaurant_name = user.name
 
     ctx['restaurant_name'] = restaurant_name
 
-    return redirect('restaurant:manage_menu')
-
+    return redirect('customer:menu')
 
 @login_required
 @require_POST
@@ -156,7 +157,7 @@ def menu_del(request):
 
     ctx['restaurant_name'] = restaurant_name
 
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
 @login_required
@@ -165,7 +166,6 @@ def menu_img_manage(request):
     menu_img = request.FILES.get('menu_img')
     menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
-    print(menu)
 
     # 以前のファイルは削除
     menu.img.delete(False)
@@ -183,9 +183,7 @@ def menu_img_manage(request):
 @require_POST
 def menu_name_manage(request):
     menu_name = request.POST.get('menu_name')
-    print(menu_name)
     menu_id = request.POST.get('menu_id')
-    print(menu_id)
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()
