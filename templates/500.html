@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="m-auto p-auto">
+  <p>ご不便をおかけし申し訳ありません</p>
+  <img class="my-3" src="{% static 'img/common/error_500.svg' %}" alt="500_Error">
+  <button class="btn btn__blue" onclick="history.back(); return false;">
+    戻る
+  </button>
+</div>
+{% endblock %}
