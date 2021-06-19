@@ -64,12 +64,7 @@ def category_add(request):
     else:
         messages.warning(request, f"同じ名前のカテゴリは作成できません。")
 
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
-
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
 @login_required
@@ -77,20 +72,11 @@ def category_add(request):
 def category_ch(request):
     name = request.POST.get('category_name')
     required_name = request.POST.get('ch_category_form')
-    try:
-        category = Category.objects.get(name=name)
-        category.name = required_name
-        print(category.name)
-        category.save()
-    except:
-        messages.warning(request, f"変更に失敗しました。")
+    category = Category.objects.get(name=name)
+    category.name = required_name
+    category.save()
 
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
-
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
 @login_required
@@ -99,19 +85,13 @@ def category_del(request):
     name = request.POST.get('del_category_form')
     try:
         category = Category.objects.get(name=name)
-        category.delete(False)
+        category.delete()
     except:
         messages.warning(request, f"削除に失敗しました。")
 
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
-
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
-# TODO:
 @login_required
 @require_POST
 def menu_add(request):
@@ -138,11 +118,6 @@ def menu_add(request):
 
         menu.save()
 
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
-
     return redirect('customer:menu')
 
 @login_required
@@ -151,11 +126,6 @@ def menu_del(request):
     required_menu = request.POST.get('menu')
     menu = Menu.objects.get(name=required_menu)
     menu.delete()
-
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
 
     return redirect('customer:menu')
 
@@ -239,7 +209,7 @@ def allergy_ch(request):
 
     menu.save()
 
-    return render(request, 'customer/menu.html', ctx)
+    return redirect('customer:menu')
 
 
 @login_required

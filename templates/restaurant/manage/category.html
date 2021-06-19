@@ -33,9 +33,9 @@
             <p class="col-2 badge__light-orange py-1">変更</p>
             <div class="col-4">
               <p class="mb-1">変更前の名前</p>
-              <select class="w-100 py-2 mb-3">
+              <select name="category_name" class="w-100 py-2 mb-3">
                 {% for category in categories %}
-                  <option name="category_name" value="{{ category.name }}">{{ category.name }}</option>
+                  <option value="{{ category.name }}">{{ category.name }}</option>
                 {% endfor %}
               </select>
               <p class="mb-1">変更後の名前</p>
@@ -47,7 +47,11 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_del' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__grey py-1">削除</p>
-            <input class="col-4" name="del_category_form" type="text" required>
+            <select name="del_category_form" class="col-4 mt-3 py-2 mb-3">
+              {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
             <button type="submit" class="col-3 btn btn__grey">実行</button>
           </form>
         </div>
