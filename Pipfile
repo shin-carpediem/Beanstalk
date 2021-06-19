@@ -17,6 +17,9 @@ virtualenv = "==20.4.2"
 Django = "==3.1.6"
 pillow = "*"
 django-imagekit = "*"
+markdown = "*"
+django-filter = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

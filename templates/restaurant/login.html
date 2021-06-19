@@ -30,19 +30,19 @@
         <input name="username" class="px-3 mb-3"><br>
         <label>パスワード</label><br>
         <input type="password" name="password" class="px-3 mb-3">
-        <div>
-          <input type="checkbox">ログイン状態を保持する
-        </div>
-        <div class="pt-4">
-          <a href="#">パスワードを忘れましたか？</a>
-        </div>
+        <!-- <div>
+          <input type="checkbox" name="keep-login">ログイン状態を保持する
+        </div> -->
+        <!-- <div class="pt-4">
+          <a href="{% url 'restaurant:password_reset' %}" target="_blank" rel="noopener noreferrer">パスワードを忘れましたか？</a>
+        </div> -->
         <div class="pt-5">
           <button type="submit" class="px-4 btn btn__blue shadow">ログイン</button>
         </div>
       </form>
     </div>
-    <div class="pt-3 admin d-flex justify-content-between">
-      <div>
+    <div class="pt-3 admin row">
+      <div class="col-sm-5 col-12">
         <div>
           {% if request.path == '/login/' %}
             <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する</a>
@@ -54,8 +54,10 @@
           <a href="{% url 'customer:menu' %}">お客様用ページをチェックする</a>
         </div>
       </div>
-      <div>
+      <div class="col-sm-7 col-12 mt-sm-0 mt-4">
         <a href="#">ヘルプセンター</a>
+        <a class="mx-3" href="#">プライバシーポリシー</a>
+        <a href="#">利用規約</a>
       </div>
     </div>
   </div>

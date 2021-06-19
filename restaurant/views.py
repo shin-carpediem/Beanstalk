@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .models import Category, Allergy, Menu
 from account.models import User
-from customer.forms import AddToCartForm
+from beanstalk.settings import DEBUG
 
 
 # Create your views here.
@@ -42,6 +42,14 @@ def history(request):
 # for manageing menu
 def manage_login(request):
     return render(request, 'restaurant/login.html')
+
+
+def password_reset(request):
+    if DEBUG:
+        return redirect('http://127.0.0.1:8000/admin/password_reset/')
+    # TODO:
+    else:
+        return redirect('https://xxx.com/admin/password_reset/')
 
 
 @login_required
