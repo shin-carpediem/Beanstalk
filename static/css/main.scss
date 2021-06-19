@@ -193,12 +193,15 @@ a {
     transform: scale(0.9);
   }
 }
-
 .btn__blue {
   background-color: $blue;
 }
 .btn__orange {
   background-color: $orange;
+}
+.btn__light-orange {
+  background-color: $light-orange;
+  color: $black;
 }
 .btn__grey {
   background-color: $grey;
@@ -217,12 +220,10 @@ a {
   width: 29px;
   height: 29px;
 }
-
 .icon_yellow {
   background-color: $yellow;
   color: $black;
 }
-
 .icon__red {
   background-color: $red;
   color: $white;
@@ -234,21 +235,25 @@ a {
   border-radius: 100px;
   font-weight: bold;
 }
-
 .badge__orange {
   background-color: $orange;
   color: $white;
+  &.focus,
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 }
-
+.badge__light-orange {
+  background-color: $light-orange;
+}
 .badge__turquoise {
   background-color: $turquoise;
 }
-
 .badge__grey {
   background-color: $grey;
   color: $white;
 }
-
 .badge__yellow {
   background-color: $yellow;
 }

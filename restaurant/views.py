@@ -210,10 +210,21 @@ def menu_price_manage(request):
 @login_required
 @require_POST
 def allergy_ch(request):
-    allergy_has = request.POST.getlist('has')
-    print(allergy_has)
-    allergy_not_have = request.POST.getlist('not_have')
-    print(allergy_not_have)
+    allergy_list = request.POST.getlist('allergy')
+    print(allergy_list)
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+    print(menu.allergies.all())
+
+    for allergy in allergy_list:
+        # 元と変わらない場合は何もしない
+        if allergy in menu.allergies.all():
+            None
+        # 新しくチェックをつけたものは登録する
+        else:
+            allergy_query = Allergy.objects.get(ingredient=allergy)
+            menu.allergies.add(allergy_query)
+            menu.save()
 
     return render(request, 'customer/menu.html', ctx)
 

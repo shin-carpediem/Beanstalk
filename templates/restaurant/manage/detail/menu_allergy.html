@@ -14,12 +14,12 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body d-flex justify-content-around">
+        <div class="modal-body d-flex flex-wrap align-items-center">
           {% for allergy in allergies %}
             {% if allergy in has_allergies %}
-              <input type="checkbox" name="has" value="{{ allergy }}" checked>{{ allergy }}
+              <input class="ml-2" type="checkbox" name="allergy" value="{{ allergy }}" checked>{{ allergy }}
             {% else %}
-              <input type="checkbox" name="not_have" value="{{ allergy }}">{{ allergy }}
+              <input class="ml-2" type="checkbox" name="allergy" value="{{ allergy }}">{{ allergy }}
             {% endif %}
           {% endfor %}
           <!-- hidden -->

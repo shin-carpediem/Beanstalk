@@ -186,6 +186,11 @@ a:hover {
   background-color: #ff9900;
 }
 
+.btn__light-orange {
+  background-color: #ffd79a;
+  color: #565454;
+}
+
 .btn__grey {
   background-color: #9c9c9c;
 }
@@ -230,6 +235,16 @@ a:hover {
 .badge__orange {
   background-color: #ff9900;
   color: #fff;
+}
+
+.badge__orange.focus, .badge__orange:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.badge__light-orange {
+  background-color: #ffd79a;
 }
 
 .badge__turquoise {

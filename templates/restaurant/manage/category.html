@@ -17,7 +17,7 @@
         <div class="modal-body">
           <div class="d-flex flex-wrap">
             {% for category in categories %}
-              <p class="category-item p-2">{{ category.name }}</p>
+              <p class="category-item p-2 mr-1">{{ category.name }}</p>
             {% endfor %}
           </div>
           <hr class="pb-3">
@@ -30,7 +30,7 @@
           <hr>
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_ch' %}" method="POST">{% csrf_token %}
-            <p class="col-2 badge__turquoise py-1">変更</p>
+            <p class="col-2 badge__light-orange py-1">変更</p>
             <div class="col-4">
               <p class="mb-1">変更前の名前</p>
               <select class="w-100 py-2 mb-3">
@@ -41,7 +41,7 @@
               <p class="mb-1">変更後の名前</p>
               <input type="text" name="ch_category_form" required>
             </div>
-            <button type="submit" class="col-3 btn btn__turquoise">実行</button>
+            <button type="submit" class="col-3 btn btn__light-orange">実行</button>
           </form>
           <hr>
 
