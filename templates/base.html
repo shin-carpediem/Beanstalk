@@ -55,14 +55,16 @@
     {% endif %}
     <!-- messages -->
     {% for message in messages %}
-      <div class="message-{{ message.tags }} mx-auto text-center mess-box shadow success message-dismissible">
-        <!-- TODO: -->
-        <!-- <button type="button" class="p-3 close text-right" data-dismiss="success" aria-hidden="true">
-          &times;
-        </button> -->
+      <div class="message-{{ message.tags }} message fade show mx-auto text-center mess-box shadow message-dismissible">
+        <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
         <div class="p-5">
           <h4 class="text__bold text__large p-5">{{ message }}</h4>
-          <img height=178 class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Table">
+          {% if message.tags == 'success' %}
+            <img height=178 class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Message Success">
+          {% elif message.tags == 'warning' %}
+            <img height=178 class="mx-auto" src="{% static 'img/common/message-warning.svg' %}" alt="Message Warning">
         </div>
       </div>
     {% endfor %}
