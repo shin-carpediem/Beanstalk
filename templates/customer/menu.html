@@ -29,7 +29,7 @@
 
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
-      <form id="menu" class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
+      <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
         {% if menu.formatted_img %}
           <img src="{{ menu.formatted_img.url }}" alt="Menu">
         {% endif %}
@@ -40,7 +40,7 @@
         <!-- hidden -->
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         <input type="hidden" name="random_code" value="{{ random_code }}">
-        <input type="submit" style="display: none;" id="menu_btn">
+        <button type="submit" style="padding:0;border:0"></button>
       </form>
     {% endfor %}
   </div>

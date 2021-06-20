@@ -6,7 +6,7 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <form id="cart_top" class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
+      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
         <img src="{{ cart.menu.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ cart.menu.name }}</p>
@@ -15,7 +15,7 @@
         <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
         <!-- hidden -->
         <input type="hidden" name="random_code" value="{{ random_code }}">
-        <input type="submit" style="display: none;" id="cart_top_btn">
+        <button type="submit" style="padding:0;border:0"></button>
       </form>
     {% endfor %}
   </div>

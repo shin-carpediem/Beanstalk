@@ -1,8 +1,8 @@
-from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.db.models import Q, Sum
 import random
 import string
 from account.models import User, nonLoginUser
@@ -198,6 +198,7 @@ def menu_detail(request, menu_id):
 @require_POST
 def cart(request):
     random_code = request.POST.get('random_code')
+    print(random_code)
 
     user = request.user
     if user.is_authenticated:
@@ -352,7 +353,8 @@ def history(request):
         orders = Order.objects.filter(customer=user).order_by('-id')
 
         orders_in_cart = Cart.objects.filter(customer=user)
-        orders_in_order = Order.objects.filter(status='調理中', customer=user)
+        orders_in_order = Order.objects.filter(
+            (Q(status='キャンセル') | Q(status='済')), customer=user)
 
         in_cart_each_price = 0
         in_order_each_price = 0
