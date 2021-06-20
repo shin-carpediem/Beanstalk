@@ -27,40 +27,36 @@
     {% endblock %}
   </div>
 
+  <div class="d-flex flex-wrap">
+    {% for menu in menus %}
+      <form id="menu" class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
+        {% if menu.formatted_img %}
+          <img src="{{ menu.formatted_img.url }}" alt="Menu">
+        {% endif %}
+        <div class="text-box">
+          <p class="text-left pl-2">{{ menu.name }}</p>
+          <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
+        </div>
+        <!-- hidden -->
+        <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <input type="submit" style="display: none;" id="menu_btn">
+      </form>
+    {% endfor %}
+  </div>
+
   {% if user.is_authenticated %}
     <div>
-  {% else %}
-    <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
-  {% endif %}
-
-      <div class="d-flex flex-wrap">
-        {% for menu in menus %}
-          <a class="mx-auto my-1 menu-item shadow" value="{{ random_code }}" href="{% url 'customer:menu_detail' menu.id %}">
-            {% if menu.formatted_img %}
-              <img src="{{ menu.formatted_img.url }}" alt="Menu">
-            {% endif %}
-            <div class="text-box">
-              <p class="text-left pl-2">{{ menu.name }}</p>
-              <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
-            </div>
-          </a>
-          <!-- hidden -->
-          <input type="hidden" name="menu_id" value="{{ menu.id }}">
-        {% endfor %}
-      </div>
-
-      {% if user.is_authenticated %}
-        {% block menu %}
-          {% include 'restaurant/modal/menu.html' %}
-        {% endblock %}
-      {% else %}
-        <input type="hidden" name="random_code" value="{{ random_code }}">
-        <button type="submit" class="btn btn__orange btn__fixed shadow">カートを見る</button>
-      {% endif %}
-
-  {% if user.is_authenticated %}
+      {% block menu %}
+        {% include 'restaurant/modal/menu.html' %}
+      {% endblock %}
     </div>
   {% else %}
+    <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+      <input type="hidden" name="random_code" value="{{ random_code }}">
+      <button type="submit" class="btn btn__orange btn__fixed shadow">
+        カートを見る
+      </button>
     </form>
   {% endif %}
 </section>

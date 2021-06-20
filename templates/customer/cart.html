@@ -6,14 +6,17 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}">
+      <form class="mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
         <img src="{{ cart.menu.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ cart.menu.name }}</p>
           <p class="text-right pr-2">¥ {{ cart.menu.price | intcomma }}</p>
         </div>
         <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
-      </a>
+        <!-- hidden -->
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <input type="submit" style="display: none;" id="cart_btn">
+      </form>
     {% endfor %}
   </div>
 

@@ -6,7 +6,7 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-    <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}">
+    <form class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}?random_code={{ random_code }}">
       <img src="{{ cart.menu.img.url }}" alt="Menu">
       <div class="text-box">
         <p class="text-left pl-2">{{ cart.menu.name }}</p>
@@ -14,11 +14,14 @@
       </div>
       <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
       <p class="py-2 px-3 badge badge__orange">カート</p>
-    </a>
+      <!-- hidden -->
+      <input type="hidden" name="random_code" value="{{ random_code }}">
+      <input type="submit" style="display: none;" id="cart_btn">
+    </form>
     {% endfor %}
 
     {% for order in orders %}
-      <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' order.menu.id %}">
+      <form class="mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="POST">{% csrf_token %}
         <img src="{{ order.menu.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ order.menu.name }}</p>
@@ -30,7 +33,10 @@
         {% elif order.status == '済' %}
           <p class="py-2 px-3 badge badge__grey">済</p>
         {% endif %}
-      </a>
+        <!-- hidden -->
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <input type="submit" style="display: none;" id="order_btn">
+      </form>
     {% endfor %}
   </div>
 

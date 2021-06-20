@@ -2,6 +2,7 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 import random
 import string
 from account.models import User, nonLoginUser
@@ -35,6 +36,7 @@ def table(request):
         return render(request, 'customer/table.html', ctx)
 
 
+@require_POST
 def make_random_code(request):
     name = request.POST.get('name')
     table = request.POST.get('table')
@@ -74,6 +76,7 @@ def make_random_code(request):
         return render(request, 'customer/menu.html', ctx)
 
 
+@require_POST
 def menu(request):
     random_code = request.POST.get('random_code')
 
@@ -114,6 +117,7 @@ def menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+@require_POST
 def category_filter(request):
     random_code = request.POST.get('random_code')
 
@@ -157,6 +161,7 @@ def category_filter(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+@require_POST
 def menu_detail(request, menu_id):
     random_code = request.POST.get('random_code')
 
@@ -190,6 +195,7 @@ def menu_detail(request, menu_id):
     return render(request, 'customer/detail.html', ctx)
 
 
+@require_POST
 def cart(request):
     random_code = request.POST.get('random_code')
 
@@ -232,6 +238,7 @@ def cart(request):
     return render(request, 'customer/cart.html', ctx)
 
 
+@require_POST
 def cart_detail(request, menu_id):
     random_code = request.POST.get('random_code')
 
@@ -265,6 +272,7 @@ def cart_detail(request, menu_id):
         return render(request, 'customer/detail.html', ctx)
 
 
+@require_POST
 def order(request):
     random_code = request.POST.get('random_code')
 
@@ -320,9 +328,9 @@ def order(request):
         return render(request, 'customer/menu.html', ctx)
 
 
+@require_POST
 def history(request):
     random_code = request.POST.get('random_code')
-    print(random_code)
 
     user = request.user
     if user.is_authenticated:
@@ -331,7 +339,6 @@ def history(request):
     else:
         try:
             user = nonLoginUser.objects.get(random_code=random_code)
-            print(user)
         except:
             messages.warning(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')

@@ -11,3 +11,13 @@ const logoutConfirm = () => {
   });
 };
 logoutConfirm();
+
+const ClickMenu = () => {
+  const menu = document.getElementById("menu");
+  const menu_btn = document.getElementById("menu_btn");
+
+  menu.addEventListener("click", () => {
+    menu_btn.click();
+  });
+};
+ClickMenu();
