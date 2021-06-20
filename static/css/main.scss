@@ -245,6 +245,10 @@ a {
 .badge__turquoise {
   background-color: $turquoise;
 }
+.badge__blue {
+  background-color: $blue;
+  color: $white;
+}
 .badge__grey {
   background-color: $grey;
   color: $white;
@@ -301,6 +305,8 @@ a {
 
 section.header {
   min-width: 400px;
+  position: fixed;
+  z-index: 100;
   background-color: $blue;
   .back {
     color: $black;
@@ -317,9 +323,19 @@ section.header {
     transform: scale(2);
   }
 }
+
 section.order-table {
   .order-item {
     border-radius: 4px;
+    .status {
+      border-color: transparent;
+    }
+    .name {
+      font-size: 32px;
+      @media (max-width: 600px) {
+        font-size: 32px * 0.7;
+      }
+    }
   }
 }
 

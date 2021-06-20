@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block custom__header %}
-  <title>オーダー管理</title>
+  <title>履歴</title>
 {% endblock %}
 
 {% block content %}
@@ -10,6 +10,12 @@
   {% block header__restaurant %}
     {% include 'components/header__restaurant.html' %}
   {% endblock %}
-  <div></div>
+  <div class="pt-5">
+    <div class="pt-sm-3 pt-5">
+      {% block order_table %}
+        {% include 'components/order_table.html' %}
+      {% endblock %}
+    </div>
+  </div>
 </div>
 {% endblock %}

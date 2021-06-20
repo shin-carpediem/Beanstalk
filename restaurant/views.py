@@ -1,3 +1,4 @@
+from customer.models import Order
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -29,14 +30,24 @@ def order_manage(request):
     formatted_logo = user.formatted_logo
     name = user.name
     ctx['formatted_logo'] = formatted_logo
-    ctx['name'] = name,
+    ctx['name'] = name
+
+    order_list = Order.objects.filter(status='調理中')
+    ctx['order_list'] = order_list
 
     return render(request, 'restaurant/order_manage.html', ctx)
 
 
 @login_required
 def history(request):
-    return render(request, 'restaurant/history.html')
+    user = User.objects.get(id=request.user.id)
+    name = user.name
+    ctx['name'] = name
+
+    order_list = Order.objects.filter(status='済')
+    ctx['order_list'] = order_list
+
+    return render(request, 'restaurant/history.html', ctx)
 
 
 # for manageing menu
@@ -46,7 +57,7 @@ def manage_login(request):
 
 def password_reset(request):
     if DEBUG:
-        return redirect('http://127.0.0.1:8000/admin/password_reset/')
+        return render('http://127.0.0.1:8000/admin/password_reset/')
     # TODO:
     else:
         return redirect('https://xxx.com/admin/password_reset/')

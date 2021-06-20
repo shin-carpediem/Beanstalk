@@ -41,7 +41,7 @@
           <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
           <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
         </div>
-      {% elif request.path == '/category_filter/' %}
+      {% elif request.path == '/filter/' %}
         <div class="d-flex logout">
           <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
           <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
@@ -82,6 +82,7 @@
       delimiters: ['[[', ']]'],
       el: '#order_manage',
       data: {
+        // djangoからAPIでjsにリスト作成する必要あり
         items: [
           'item1',
           'item2',
