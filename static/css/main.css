@@ -328,6 +328,10 @@ section.header .clipboard {
           transform: scale(2);
 }
 
+section.order-table .order-item {
+  border-radius: 4px;
+}
+
 .board__customer section.header__customer .clipboard {
   -webkit-transform: scale(2.8);
           transform: scale(2.8);

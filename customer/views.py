@@ -9,19 +9,24 @@ from .forms import ChooseTableForm, AddToCartForm
 
 # Create your views here.
 def table(request):
-    choose_table_form = ChooseTableForm(request.POST or None)
+    user = request.user
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
 
-    try:
-        restaurant = User.objects.get(id=2)
-    except:
-        restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
+    else:
+        choose_table_form = ChooseTableForm(request.POST or None)
 
-    ctx = {
-        'choose_table_form': choose_table_form,
-        'restaurant_name': restaurant_name,
-    }
-    return render(request, 'customer/table.html', ctx)
+        try:
+            restaurant = User.objects.get(id=2)
+        except:
+            restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+
+        ctx = {
+            'choose_table_form': choose_table_form,
+            'restaurant_name': restaurant_name,
+        }
+        return render(request, 'customer/table.html', ctx)
 
 
 def make_session(request):
@@ -30,21 +35,22 @@ def make_session(request):
 
     try:
         session = Session.objects.get(pk=request.session.session_key)
+        print('try_ok')
     # create new session
     except Session.DoesNotExist:
         session = request.session.create()
+        print(session)
+        print('try_not')
 
-    newuser = nonLoginUser(name=name, table=table, session=session,)
+    newuser = nonLoginUser(session=session, name=name, table=table,)
     newuser.save()
+    print(newuser)
 
     try:
         restaurant = User.objects.get(id=2)
     except:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
-
-    name = request.POST.get('name')
-    table = request.POST.get('table')
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=2)
@@ -69,12 +75,12 @@ def menu(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
+    user = request.user
     # 店側かどうか判断する
-    try:
-        user = request.user
+    if user.is_authenticated:
         table_num = '管理者'
 
-    except:
+    else:
         session = Session.objects.get(pk=request.session.session_key)
         user = nonLoginUser.objects.get(session=session)
 
@@ -104,11 +110,11 @@ def category_filter(request):
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
-    try:
-        user = request.user
+    user = request.user
+    if user.is_authenticated:
         table_num = "管理者"
 
-    except:
+    else:
         session = Session.objects.get(pk=request.session.session_key)
         user = nonLoginUser.objects.get(session=session)
 
@@ -134,12 +140,11 @@ def category_filter(request):
 
 
 def menu_detail(request, menu_id):
-
-    try:
-        user = request.user
+    user = request.user
+    if user.is_authenticated:
         table_num = "管理者"
 
-    except:
+    else:
         session = Session.objects.get(pk=request.session.session_key)
         user = nonLoginUser.objects.get(session=session)
 
@@ -162,11 +167,11 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
-    try:
-        user = request.user
+    user = request.user
+    if user.is_authenticated:
         table_num = "管理者"
 
-    except:
+    else:
         session = Session.objects.get(pk=request.session.session_key)
         user = nonLoginUser.objects.get(session=session)
 
@@ -198,109 +203,125 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+    user = request.user
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
 
-    table_num = user.table
+    else:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
 
-    menu = get_object_or_404(Menu, pk=menu_id)
-    allergies = Allergy.objects.all().order_by('id')
-    has_allergies = menu.allergies.all().order_by('id')
+        table_num = user.table
 
-    add_to_cart_form = AddToCartForm()
+        menu = get_object_or_404(Menu, pk=menu_id)
+        allergies = Allergy.objects.all().order_by('id')
+        has_allergies = menu.allergies.all().order_by('id')
 
-    ctx = {
-        'table_num': table_num,
-        'menu': menu,
-        'allergies': allergies,
-        'has_allergies': has_allergies,
-        'add_to_cart_form': add_to_cart_form,
-    }
-    return render(request, 'customer/detail.html', ctx)
+        add_to_cart_form = AddToCartForm()
+
+        ctx = {
+            'table_num': table_num,
+            'menu': menu,
+            'allergies': allergies,
+            'has_allergies': has_allergies,
+            'add_to_cart_form': add_to_cart_form,
+        }
+        return render(request, 'customer/detail.html', ctx)
 
 
 def order(request):
+    user = request.user
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
 
-    try:
-        restaurant = User.objects.get(id=2)
-    except:
-        restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
+    else:
+        try:
+            restaurant = User.objects.get(id=2)
+        except:
+            restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
 
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
 
-    table_num = user.table
+        table_num = user.table
 
-    categories = Category.objects.all().order_by('id')
-    first_category = Category(id=2)
-    menus = Menu.objects.filter(category=first_category).order_by('-id')
+        categories = Category.objects.all().order_by('id')
+        first_category = Category(id=2)
+        menus = Menu.objects.filter(category=first_category).order_by('-id')
 
-    try:
-        from .models import Cart, Order
-        users_cart = Cart.objects.filter(customer=user).order_by('-id')
+        try:
+            from .models import Cart, Order
+            users_cart = Cart.objects.filter(customer=user).order_by('-id')
 
-        # cartからorderにコピー
-        for each in users_cart:
-            order = Order(status='調理中', menu=each.menu,
-                          num=each.num, customer=user)
-            order.save()
+            # cartからorderにコピー
+            for each in users_cart:
+                order = Order(status='調理中', menu=each.menu,
+                              num=each.num, customer=user)
+                order.save()
 
-        # コピーし終わったcartは削除
-        users_cart.delete()
+            # コピーし終わったcartは削除
+            users_cart.delete()
 
-    except:
-        # None
-        print("None")
+        except:
+            # None
+            # TODO:
+            print("None")
 
-    ctx = {
-        'restaurant_name': restaurant_name,
-        'table_num': table_num,
-        'categories': categories,
-        'menus': menus,
-    }
+        ctx = {
+            'restaurant_name': restaurant_name,
+            'table_num': table_num,
+            'categories': categories,
+            'menus': menus,
+        }
 
-    messages.success(request, f"注文を承りました。今しばらくお待ちください")
+        messages.success(request, f"注文を承りました。今しばらくお待ちください")
 
-    return render(request, 'customer/menu.html', ctx)
+        return render(request, 'customer/menu.html', ctx)
 
 
 def history(request):
-    session = Session.objects.get(pk=request.session.session_key)
-    user = nonLoginUser.objects.get(session=session)
+    user = request.user
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
 
-    table_num = user.table
+    else:
+        session = Session.objects.get(pk=request.session.session_key)
+        user = nonLoginUser.objects.get(session=session)
 
-    add_to_cart_form = AddToCartForm()
+        table_num = user.table
 
-    from .models import Cart, Order
-    carts = Cart.objects.filter(customer=user).order_by('-id')
-    orders = Order.objects.filter(customer=user).order_by('-id')
+        add_to_cart_form = AddToCartForm()
 
-    orders_in_cart = Cart.objects.filter(customer=user)
-    orders_in_order = Order.objects.filter(status='調理中', customer=user)
+        from .models import Cart, Order
+        carts = Cart.objects.filter(customer=user).order_by('-id')
+        orders = Order.objects.filter(customer=user).order_by('-id')
 
-    in_cart_each_price = 0
-    in_order_each_price = 0
+        orders_in_cart = Cart.objects.filter(customer=user)
+        orders_in_order = Order.objects.filter(status='調理中', customer=user)
 
-    # for i in orders_in_cart:
-    #     in_cart_each_price += 700 * int(orders_in_cart[i].num)
+        in_cart_each_price = 0
+        in_order_each_price = 0
 
-    # for i in orders_in_order:
-    #     in_order_each_price += 700 * int(orders_in_order[i].num)
+        # TODO:
+        # for i in orders_in_cart:
+        #     in_cart_each_price += 700 * int(orders_in_cart[i].num)
 
-    print(in_cart_each_price)
-    print(in_order_each_price)
+        # for i in orders_in_order:
+        #     in_order_each_price += 700 * int(orders_in_order[i].num)
 
-    total_price = in_cart_each_price + in_order_each_price
+        print(in_cart_each_price)
+        print(in_order_each_price)
 
-    ctx = {
-        'table_num': table_num,
-        'carts': carts,
-        'orders': orders,
-        'orders_in_cart': orders_in_cart,
-        'orders_in_order': orders_in_order,
-        'total_price': total_price,
-        'add_to_cart_form': add_to_cart_form,
-    }
-    return render(request, 'customer/history.html', ctx)
+        total_price = in_cart_each_price + in_order_each_price
+
+        ctx = {
+            'table_num': table_num,
+            'carts': carts,
+            'orders': orders,
+            'orders_in_cart': orders_in_cart,
+            'orders_in_order': orders_in_order,
+            'total_price': total_price,
+            'add_to_cart_form': add_to_cart_form,
+        }
+        return render(request, 'customer/history.html', ctx)

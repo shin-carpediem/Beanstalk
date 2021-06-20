@@ -6,6 +6,7 @@ Technique:
 
 - AWS lightsail(Ubuntu + Apache + gunicorn + Django)
 - Pipenv
+- Vue.Draggable
 - MySQL
 
 To go into virtual environment with Pipfile,

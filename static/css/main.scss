@@ -317,6 +317,11 @@ section.header {
     transform: scale(2);
   }
 }
+section.order-table {
+  .order-item {
+    border-radius: 4px;
+  }
+}
 
 // customer
 .board__customer {

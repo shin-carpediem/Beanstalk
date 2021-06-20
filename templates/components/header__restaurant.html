@@ -6,7 +6,7 @@
       {% if request.path == '/order_manage/' %}
         <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
       {% else %}
-        <i class="pt-2 pl-2 back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+        <i class="mx-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
       {% endif %}
     </div>
     <div class="my-auto text__bold pl-3">{{ user.name }}</div>
