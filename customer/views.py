@@ -322,6 +322,7 @@ def order(request):
 
 def history(request):
     random_code = request.POST.get('random_code')
+    print(random_code)
 
     user = request.user
     if user.is_authenticated:
@@ -330,6 +331,7 @@ def history(request):
     else:
         try:
             user = nonLoginUser.objects.get(random_code=random_code)
+            print(user)
         except:
             messages.warning(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
@@ -355,8 +357,8 @@ def history(request):
         # for i in orders_in_order:
         #     in_order_each_price += 700 * int(orders_in_order[i].num)
 
-        print(in_cart_each_price)
-        print(in_order_each_price)
+        # print(in_cart_each_price)
+        # print(in_order_each_price)
 
         total_price = in_cart_each_price + in_order_each_price
 

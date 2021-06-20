@@ -339,12 +339,9 @@ section.order-table .order-item {
   border-radius: 4px;
 }
 
-section.order-table .order-item button {
-  background-color: #fff;
-}
-
-section.order-table .order-item .status {
+section.order-table .order-item .order-item-card {
   border-color: transparent;
+  background-color: #fff;
 }
 
 section.order-table .order-item .name {
@@ -355,10 +352,6 @@ section.order-table .order-item .name {
   section.order-table .order-item .name {
     font-size: 22.4px;
   }
-}
-
-section.order-table .order-item .num-created_at {
-  margin-right: 100px;
 }
 
 .board__customer section.header__customer .clipboard {

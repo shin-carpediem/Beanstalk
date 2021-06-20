@@ -330,11 +330,9 @@ section.header {
 section.order-table {
   .order-item {
     border-radius: 4px;
-    button {
-      background-color: $white;
-    }
-    .status {
+    .order-item-card {
       border-color: transparent;
+      background-color: $white;
     }
     .name {
       font-size: 32px;

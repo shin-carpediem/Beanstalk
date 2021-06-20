@@ -16,6 +16,8 @@
           {% endif %}
               {{ category.name }}
             </button>
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
         </form>
       {% endfor %}
     </div>
@@ -28,12 +30,12 @@
   {% if user.is_authenticated %}
     <div>
   {% else %}
-    <form action="{% url 'customer:cart' %}" method="GET">
+    <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
   {% endif %}
 
       <div class="d-flex flex-wrap">
         {% for menu in menus %}
-          <a class="mx-auto my-1 menu-item shadow" href="{% url 'customer:menu_detail' menu.id %}">
+          <a class="mx-auto my-1 menu-item shadow" value="{{ random_code }}" href="{% url 'customer:menu_detail' menu.id %}">
             {% if menu.formatted_img %}
               <img src="{{ menu.formatted_img.url }}" alt="Menu">
             {% endif %}
@@ -44,22 +46,22 @@
           </a>
           <!-- hidden -->
           <input type="hidden" name="menu_id" value="{{ menu.id }}">
-          <input type="hidden" name="non_login_user_random_code" value="{{ random_code }}">
         {% endfor %}
       </div>
 
-      {% if not user.is_authenticated %}
-        <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
-      {% else %}
+      {% if user.is_authenticated %}
         {% block menu %}
           {% include 'restaurant/modal/menu.html' %}
         {% endblock %}
+      {% else %}
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <button type="submit" class="btn btn__orange btn__fixed shadow">カートを見る</button>
       {% endif %}
 
   {% if user.is_authenticated %}
-    </form>
-  {% else %}
     </div>
+  {% else %}
+    </form>
   {% endif %}
 </section>
 {% endblock %}

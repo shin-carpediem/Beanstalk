@@ -1,5 +1,6 @@
 {% load static %}
 
+{% block header__customer %}
 <section class="pt-3 header__customer row">
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
@@ -19,10 +20,7 @@
           <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
         {% endif %}
       {% else %}
-        <!-- <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i> -->
-        <a href="{% url 'customer:menu' %}" class="mx-auto">
-          <i class="el__pointer m-auto py-auto back fas fa-angle-double-left"></i>
-        </a>
+        <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
       {% endif %}
     </div>
   </div>
@@ -49,6 +47,8 @@
   {% else %}
       {% if not user.is_authenticated %}
         <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="POST">{% csrf_token %}
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
           <button class="focus" type="submit">
             <i class="clipboard fas fa-clipboard-list"></i>
           </button>
@@ -57,3 +57,4 @@
   {% endif %}
 </section>
 <hr class="mb-2" />
+{% endblock %}

@@ -1,5 +1,6 @@
 {% load static %}
 
+{% block header__restaurant %}
 <section class="p-2 header w-100 d-flex justify-content-between">
   <div class="d-flex px-3">
     <div class="m-auto logo shadow d-flex align-items-center">
@@ -14,7 +15,8 @@
   <div class="px-3 my-auto d-flex">
     <a class="mr-5 back-menu" href="{% url 'restaurant:manage_menu' %}">メニューを作成・管理する</a>
     {% if request.path == '/order_manage/' %}
-      <a href="{% url 'restaurant:history' %}"><i class="clipboard fas fa-clipboard-list"></i></a>
+      <a href="{% url 'restaurant:history' %}"><i class="clipboard fas fa-clipboard-list mr-sm-0 mr-5"></i></a>
     {% endif %}
   </div>
 </section>
+{% endblock %}
