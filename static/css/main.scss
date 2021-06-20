@@ -176,6 +176,14 @@ a {
   cursor: pointer;
 }
 
+.focus {
+  &.focus,
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 .btn {
   border-radius: 100px;
   color: $white;
@@ -233,11 +241,6 @@ a {
 .badge__orange {
   background-color: $orange;
   color: $white;
-  &.focus,
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
 }
 .badge__light-orange {
   background-color: $light-orange;

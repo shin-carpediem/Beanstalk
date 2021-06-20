@@ -148,6 +148,7 @@ def category_filter(request):
         'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
+        'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,

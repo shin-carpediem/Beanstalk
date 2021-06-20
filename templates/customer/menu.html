@@ -8,15 +8,20 @@
     <div class="d-flex ml-3">
       {% for category in categories %}
         <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
-          <button type="submit" class="category-btn p-2 text__bold" name="category" value="{{ category }}">
-            {{ category.name }}
-          </button>
+          <!--TODO: 現在のカテゴリの時に色が付いた状態にする -->
+          {% if category == '{{ category_name }}' %}
+            <button type="submit" style="background-color: #ffd79a;" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}">
+          {% else %}
+            <button type="submit" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}">
+          {% endif %}
+              {{ category.name }}
+            </button>
         </form>
       {% endfor %}
     </div>
 
-    {% block category %}
-      {% include 'restaurant/manage/category.html' %}
+    {% block category_modal %}
+      {% include 'restaurant/modal/category.html' %}
     {% endblock %}
   </div>
 
@@ -47,7 +52,7 @@
         <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
       {% else %}
         {% block menu_modal %}
-          {% include 'restaurant/manage/menu_modal.html' %}
+          {% include 'restaurant/modal/menu.html' %}
         {% endblock %}
       {% endif %}
 

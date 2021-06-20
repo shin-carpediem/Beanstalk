@@ -10,7 +10,7 @@
     {% endif %}
 
     {% block menu_img %}
-      {% include 'restaurant/manage/detail/menu_img.html' %}
+      {% include 'restaurant/modal/img.html' %}
     {% endblock %}
 
     <div class="text-box px-sm-5 px-2 py-1">
@@ -18,7 +18,7 @@
       <p class="text-right">¥ {{ menu.price | intcomma }}</p>
     </div>
     {% block menu_text %}
-      {% include 'restaurant/manage/detail/menu_text.html' %}
+      {% include 'restaurant/modal/text.html' %}
     {% endblock %}
   </div>
 
@@ -27,7 +27,7 @@
       <p class="text-left text__bold">アレルギー表示</p>
       <div class="ml-5">
         {% block menu_allergy_modal %}
-          {% include 'restaurant/manage/detail/menu_allergy_modal.html' %}
+          {% include 'restaurant/modal/allergy.html' %}
         {% endblock %}
       </div>
     </div>
@@ -46,7 +46,7 @@
       {% endfor %}
 
       {% block menu_allergy %}
-        {% include 'restaurant/manage/detail/menu_allergy.html' %}
+        {% include 'restaurant/modal/allergy_edit.html' %}
       {% endblock %}
     </div>
 

@@ -231,7 +231,7 @@ def allergy_ch(request):
 
     menu.save()
 
-    return redirect('customer:menu')
+    return redirect('customer:menu_detail', menu_id=menu.id)
 
 
 @login_required
@@ -243,14 +243,16 @@ def allergy_add(request):
     menu.allergies.create(ingredient=get_allergy)
     menu.save()
 
-    return redirect('customer:menu')
+    return redirect('customer:menu_detail', menu_id=menu.id)
 
 
 @login_required
 @require_POST
 def allergy_del(request):
     get_allergy = request.POST.get('allergy')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
     allergy = Allergy.objects.get(ingredient=get_allergy)
     allergy.delete()
 
-    return redirect('customer:menu')
+    return redirect('customer:menu_detail', menu_id=menu.id)

@@ -53,7 +53,7 @@
         </div>
       {% endif %}
     {% endif %}
-    <!-- messages -->
+
     {% for message in messages %}
       <div class="message-{{ message.tags }} message fade show mx-auto text-center mess-box shadow message-dismissible">
         <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
@@ -65,6 +65,7 @@
             <img height=178 class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Message Success">
           {% elif message.tags == 'warning' %}
             <img height=178 class="mx-auto" src="{% static 'img/common/message-warning.svg' %}" alt="Message Warning">
+          {% endif %}
         </div>
       </div>
     {% endfor %}
