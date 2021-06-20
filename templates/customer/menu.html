@@ -20,7 +20,7 @@
       {% endfor %}
     </div>
 
-    {% block category_modal %}
+    {% block category %}
       {% include 'restaurant/modal/category.html' %}
     {% endblock %}
   </div>
@@ -51,7 +51,7 @@
       {% if not user.is_authenticated %}
         <button class="btn btn__orange btn__fixed shadow">カートを見る</button>
       {% else %}
-        {% block menu_modal %}
+        {% block menu %}
           {% include 'restaurant/modal/menu.html' %}
         {% endblock %}
       {% endif %}

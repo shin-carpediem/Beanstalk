@@ -37,6 +37,10 @@
           <div class="d-flex justify-content-around pb-3">
             {% for allergy in allergies %}
               <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
+            {% empty %}
+              {% block allergy_edit %}
+                {% include 'restaurant/modal/allergy.html' %}
+              {% endblock %}
             {% endfor %}
           </div><br>
           <div class="modal-footer">
