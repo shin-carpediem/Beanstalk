@@ -8,7 +8,7 @@ from restaurant.models import Category, Allergy, Menu
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'logo', 'formatted_logo',
+        fields = ('id', 'name', 'logo',
                   'is_staff', 'is_active', 'date_joined')
 
 
