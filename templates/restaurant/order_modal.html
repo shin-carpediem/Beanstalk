@@ -15,21 +15,27 @@
 
   <div class="modal fade" id="order-modal__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="order-modal__ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <form class="modal-content" action="{% url 'restaurant:order_status_ch' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="order-modal__ModalCenterTitle">オーダーのステータスを変更</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          ...
+        <div class="modal-body mx-auto">
+          <select class="py-3 px-5" name="order_status">
+            <option value="調理中">オーダー</option>
+            <option value="キャンセル">キャンセル</option>
+            <option value="済">済</option>
+          </select>
         </div>
+        <!-- hidden -->
+        <input type="hidden" name="order_id" value='{{ order.id }}'>
         <div class="modal-footer">
           <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
           <button type="submit" class="px-4 py-2 btn btn__blue">実行</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 {% endblock %}

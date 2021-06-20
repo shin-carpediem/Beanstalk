@@ -39,12 +39,23 @@ def order_manage(request):
 
 
 @login_required
+@require_POST
+def order_status_ch(request):
+    order_status = request.POST.get('order_status')
+    order_id = request.POST.get('order_id')
+    order = Order.objects.get(id=order_id)
+    order.status = order_status
+    order.save()
+    return redirect('restaurant:order_manage')
+
+
+@login_required
 def history(request):
     user = User.objects.get(id=request.user.id)
     name = user.name
     ctx['name'] = name
 
-    order_list = Order.objects.filter(status='済')
+    order_list = Order.objects.filter(status='キャンセル' or '済')
     ctx['order_list'] = order_list
 
     return render(request, 'restaurant/history.html', ctx)

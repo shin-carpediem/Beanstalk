@@ -77,19 +77,21 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
   <script src="{% static 'js/main.min.js' %}"></script>
-  <script>
-    const appData = new Vue({
-      delimiters: ['[[', ']]'],
-      el: '#order_manage',
-      data: {
-        // djangoからAPIでjsにリスト作成する必要あり
-        items: [
-          'item1',
-          'item2',
-          'item3',
-        ]
-      }
-    });
-  </script>
+  {% if request.path == '/order_manage/' %}
+    <script>
+      const appData = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#order_manage',
+        data: {
+          // TODO: djangoからAPIでjsにリスト作成する必要あり
+          items: [
+            'item1',
+            'item2',
+            'item3',
+          ]
+        }
+      });
+    </script>
+  {% endif %}
 </body>
 </html>
