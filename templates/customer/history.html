@@ -6,7 +6,7 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-    <form class="mx-auto my-1 menu-item shadow" href="{% url 'customer:cart_detail' cart.menu.id %}?random_code={{ random_code }}">
+    <form id="cart" class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
       <img src="{{ cart.menu.img.url }}" alt="Menu">
       <div class="text-box">
         <p class="text-left pl-2">{{ cart.menu.name }}</p>
@@ -21,7 +21,7 @@
     {% endfor %}
 
     {% for order in orders %}
-      <form class="mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="POST">{% csrf_token %}
+      <form id="order" class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="POST">{% csrf_token %}
         <img src="{{ order.menu.img.url }}" alt="Menu">
         <div class="text-box">
           <p class="text-left pl-2">{{ order.menu.name }}</p>
