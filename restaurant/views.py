@@ -25,18 +25,6 @@ ctx = {
 
 @login_required
 def order_manage(request):
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # allergies = Allergy.objects.all().order_by('id')
-    # ctx = {
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    #     'allergies': allergies,
-    # }
-
     user = User.objects.get(id=request.user.id)
     formatted_logo = user.formatted_logo
     name = user.name
@@ -66,18 +54,6 @@ def password_reset(request):
 
 @login_required
 def manage_menu(request):
-    # table_num = '管理者'
-    # categories = Category.objects.all().order_by('id')
-    # first_category = Category(id=2)
-    # menus = Menu.objects.filter(category=first_category).order_by('-id')
-    # allergies = Allergy.objects.all().order_by('id')
-    # ctx = {
-    #     'table_num': table_num,
-    #     'categories': categories,
-    #     'menus': menus,
-    #     'allergies': allergies,
-    # }
-
     user = request.user
     restaurant_name = user.name
     ctx['restaurant_name'] = restaurant_name

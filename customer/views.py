@@ -2,12 +2,18 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
+import random
+import string
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu
 from .forms import ChooseTableForm, AddToCartForm
 
 
 # Create your views here.
+def non_login_user_random_code(n):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
+
+
 def table(request):
     user = request.user
     if user.is_authenticated:
@@ -29,46 +35,48 @@ def table(request):
         return render(request, 'customer/table.html', ctx)
 
 
-def make_session(request):
+def make_random_code(request):
     name = request.POST.get('name')
     table = request.POST.get('table')
+    user = request.user
 
-    try:
-        session = Session.objects.get(pk=request.session.session_key)
-        print('try_ok')
-    # create new session
-    except Session.DoesNotExist:
-        session = request.session.create()
-        print(session)
-        print('try_not')
+    # 店側かどうか判断する
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
 
-    newuser = nonLoginUser(session=session, name=name, table=table,)
-    newuser.save()
-    print(newuser)
+    else:
+        random_code = non_login_user_random_code(50)
 
-    try:
-        restaurant = User.objects.get(id=2)
-    except:
-        restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
+        newuser = nonLoginUser(random_code=random_code,
+                               name=name, table=table,)
+        newuser.save()
 
-    categories = Category.objects.all().order_by('id')
-    first_category = Category(id=2)
-    menus = Menu.objects.filter(category=first_category).order_by('-id')
+        try:
+            restaurant = User.objects.get(id=2)
+        except:
+            restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
 
-    ctx = {
-        'name': name,
-        'table': table,
-        'restaurant_name': restaurant_name,
-        'table': table,
-        'categories': categories,
-        'menus': menus,
-    }
+        categories = Category.objects.all().order_by('id')
+        first_category = Category(id=2)
+        menus = Menu.objects.filter(category=first_category).order_by('-id')
 
-    return render(request, 'customer/menu.html', ctx)
+        ctx = {
+            'random_code': random_code,
+            'name': name,
+            'table': table,
+            'restaurant_name': restaurant_name,
+            'table': table,
+            'categories': categories,
+            'menus': menus,
+        }
+
+        return render(request, 'customer/menu.html', ctx)
 
 
 def menu(request):
+    random_code = request.POST.get('random_code')
+
     try:
         restaurant = User.objects.get(id=2)
     except:
@@ -76,13 +84,15 @@ def menu(request):
     restaurant_name = restaurant.name
 
     user = request.user
-    # 店側かどうか判断する
     if user.is_authenticated:
         table_num = '管理者'
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -93,6 +103,7 @@ def menu(request):
     allergies = Allergy.objects.all().order_by('id')
 
     ctx = {
+        'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
@@ -104,6 +115,8 @@ def menu(request):
 
 
 def category_filter(request):
+    random_code = request.POST.get('random_code')
+
     try:
         restaurant = User.objects.get(id=2)
     except:
@@ -115,8 +128,11 @@ def category_filter(request):
         table_num = "管理者"
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -129,6 +145,7 @@ def category_filter(request):
     allergies = Allergy.objects.all().order_by('id')
 
     ctx = {
+        'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'categories': categories,
@@ -140,13 +157,18 @@ def category_filter(request):
 
 
 def menu_detail(request, menu_id):
+    random_code = request.POST.get('random_code')
+
     user = request.user
     if user.is_authenticated:
         table_num = "管理者"
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -157,6 +179,7 @@ def menu_detail(request, menu_id):
     add_to_cart_form = AddToCartForm()
 
     ctx = {
+        'random_code': random_code,
         'menu': menu,
         'table_num': table_num,
         'allergies': allergies,
@@ -167,13 +190,18 @@ def menu_detail(request, menu_id):
 
 
 def cart(request):
+    random_code = request.POST.get('random_code')
+
     user = request.user
     if user.is_authenticated:
         table_num = "管理者"
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -195,6 +223,7 @@ def cart(request):
 
     carts = Cart.objects.all().order_by('-id')
     ctx = {
+        'random_code': random_code,
         'table_num': table_num,
         'carts': carts,
     }
@@ -203,13 +232,18 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
+    random_code = request.POST.get('random_code')
+
     user = request.user
     if user.is_authenticated:
         return redirect('restaurant:logout')
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -220,6 +254,7 @@ def cart_detail(request, menu_id):
         add_to_cart_form = AddToCartForm()
 
         ctx = {
+            'randcom_code': random_code,
             'table_num': table_num,
             'menu': menu,
             'allergies': allergies,
@@ -230,6 +265,8 @@ def cart_detail(request, menu_id):
 
 
 def order(request):
+    random_code = request.POST.get('random_code')
+
     user = request.user
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -241,8 +278,11 @@ def order(request):
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -269,6 +309,7 @@ def order(request):
             print("None")
 
         ctx = {
+            'random_code': random_code,
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
@@ -281,13 +322,18 @@ def order(request):
 
 
 def history(request):
+    random_code = request.POST.get('random_code')
+
     user = request.user
     if user.is_authenticated:
         return redirect('restaurant:logout')
 
     else:
-        session = Session.objects.get(pk=request.session.session_key)
-        user = nonLoginUser.objects.get(session=session)
+        try:
+            user = nonLoginUser.objects.get(random_code=random_code)
+        except:
+            messages.warning(request, f'異常なエラーが発生しました。')
+            return redirect('customer:table')
 
         table_num = user.table
 
@@ -316,6 +362,7 @@ def history(request):
         total_price = in_cart_each_price + in_order_each_price
 
         ctx = {
+            'random_code': random_code,
             'table_num': table_num,
             'carts': carts,
             'orders': orders,

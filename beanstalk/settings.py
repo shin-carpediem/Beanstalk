@@ -69,8 +69,8 @@ ROOT_URLCONF = 'beanstalk.urls'
 
 CONN_MAX_AGE = 0
 
-# customerのsession持続時間を14時間に指定
-SESSION_COOKIE_AGE = 60 * 60 * 14
+# restaurantのsession持続時間を100年（実質無限時間）に指定
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365 * 100
 SESSION_SAVE_EVERY_REQUEST = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 

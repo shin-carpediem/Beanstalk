@@ -36,6 +36,11 @@
           <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
           <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
         </div>
+      {% elif request.path == '/menu/' %}
+        <div class="d-flex logout">
+          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+        </div>
       {% elif request.path == '/category_filter/' %}
         <div class="d-flex logout">
           <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
@@ -51,6 +56,7 @@
     <!-- messages -->
     {% for message in messages %}
       <div class="message-{{ message.tags }} mx-auto text-center mess-box shadow success message-dismissible">
+        <!-- TODO: -->
         <!-- <button type="button" class="p-3 close text-right" data-dismiss="success" aria-hidden="true">
           &times;
         </button> -->

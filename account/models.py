@@ -1,7 +1,7 @@
+import random
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.sessions.models import Session
 from django.core.mail import send_mail
 from django.utils import timezone
 from imagekit.models import ImageSpecField, ProcessedImageField
@@ -58,8 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # for customer
 class nonLoginUser(models.Model):
-    session = models.ForeignKey(
-        Session, blank=True, null=True, on_delete=models.DO_NOTHING)
+    random_code = models.CharField("固有コード", max_length=256, blank=True, null=True)
     name = models.CharField("名前", max_length=256, blank=True, null=True)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)

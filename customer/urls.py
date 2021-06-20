@@ -6,9 +6,9 @@ from django.contrib.auth import views as auth_views
 app_name = 'customer'
 urlpatterns = [
     path('', views.table, name='table'),
-    path('make_session/', views.make_session, name='make_session'),
+    path('account/', views.make_random_code, name='make_random_code'),
     path('menu/', views.menu, name='menu'),
-    path('category_filter/', views.category_filter, name='category_filter'),
+    path('filter/', views.category_filter, name='category_filter'),
     path('<int:menu_id>/detail/', views.menu_detail, name='menu_detail'),
     path('cart/', views.cart, name='cart'),
     path('cart/<int:menu_id>/detail/', views.cart_detail, name='cart_detail'),
