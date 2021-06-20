@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db.models import Q
 from .models import Category, Allergy, Menu
 from account.models import User
 from beanstalk.settings import DEBUG
@@ -55,7 +56,7 @@ def history(request):
     name = user.name
     ctx['name'] = name
 
-    order_list = Order.objects.filter(status='キャンセル' or '済')
+    order_list = Order.objects.filter(Q(status='キャンセル') | Q(status='済'))
     ctx['order_list'] = order_list
 
     return render(request, 'restaurant/history.html', ctx)

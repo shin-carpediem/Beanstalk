@@ -14,21 +14,14 @@
   <div id="order_manage">
     <draggable :list="items">
       {% for order in order_list %}
-        <div v-for="item in items" class="order-item el__pointer shadow d-flex justify-content-between align-items-center py-4 my-2">
-          <div class="d-flex justify-content-between align-items-center ml-2">
-            {% block order_modal %}
-              {% include 'restaurant/order_modal.html' %}
-            {% endblock %}
-            <p class="mt-3 ml-sm-5 table text__bold icon icon_yellow text__large">{{ order.customer.table }}</p>
-          </div>
-          <p class="name text__bold">{{ order.menu.name }}</p>
-          <div class="d-flex justify-content-between align-items-center mr-5">
-            <p class="num mr-sm-5 mr-3 text__bold text__large icon icon__red">{{ order.num }}</p>
-            <p class="created_at text__large text__bold">{{ order.created_at | time }}</p>
-          </div>
+        <div v-for="item in items" class="order-item el__pointer shadow py-4 my-2">
+          {% block order_modal %}
+            {% include 'restaurant/order_modal.html' %}
+          {% endblock %}
         </div>
       {% endfor %}
     </draggable>
-      items: [[ items ]]
+      <!-- TODO: -->
+      <!-- items: [[ items ]] -->
   </div>
 </section>

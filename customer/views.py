@@ -305,9 +305,7 @@ def order(request):
             users_cart.delete()
 
         except:
-            # None
-            # TODO:
-            print("None")
+            None
 
         ctx = {
             'random_code': random_code,

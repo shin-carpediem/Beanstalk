@@ -56,9 +56,10 @@
 
     {% for message in messages %}
       <div class="message-{{ message.tags }} message fade show mx-auto text-center mess-box shadow message-dismissible">
-        <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+        <!-- TODO: -->
+        <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
         <div class="p-5">
           <h4 class="text__bold text__large p-5">{{ message }}</h4>
           {% if message.tags == 'success' %}
@@ -81,7 +82,7 @@
 
   <script src="{% static 'js/main.min.js' %}"></script>
   {% if request.path == '/order_manage/' %}
-    <script>
+    <!-- <script>
       const appData = new Vue({
         delimiters: ['[[', ']]'],
         el: '#order_manage',
@@ -94,7 +95,7 @@
           ]
         }
       });
-    </script>
+    </script> -->
   {% endif %}
 </body>
 </html>

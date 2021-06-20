@@ -330,6 +330,9 @@ section.header {
 section.order-table {
   .order-item {
     border-radius: 4px;
+    button {
+      background-color: $white;
+    }
     .status {
       border-color: transparent;
     }
