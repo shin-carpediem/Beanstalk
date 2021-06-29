@@ -29,11 +29,11 @@
           </button>
         </div>
         <div class="modal-body mx-auto">
-          <select class="py-3 px-5" name="order_status">
-            <option value="調理中">オーダー</option>
-            <option value="キャンセル">キャンセル</option>
-            <option value="済">済</option>
-          </select>
+          <div class="py-3 d-flex justify-content-around align-items-center">
+            <input type="radio" name="order_status" value="調理中" checked><p class="badge__orange ml-3 mr-4 px-3 py-2 text__bold">オーダー</p>
+            <input type="radio" name="order_status" value="キャンセル"><p class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p>
+            <input type="radio" name="order_status" value="済"><p class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
+          </div>
         </div>
         <!-- hidden -->
         <input type="hidden" name="order_id" value='{{ order.id }}'>

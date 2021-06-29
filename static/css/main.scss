@@ -315,8 +315,10 @@ section.header {
     color: $black;
     transform: scale(2);
   }
-  div {
-    color: $white;
+  .title {
+    h5 {
+      color: $white;
+    }
   }
   .back-menu {
     color: $white;

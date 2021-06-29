@@ -321,7 +321,7 @@ section.header .back {
           transform: scale(2);
 }
 
-section.header div {
+section.header .title h5 {
   color: #fff;
 }
 
