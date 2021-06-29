@@ -7,7 +7,7 @@
   <div class="category mb-3">
     <div class="d-flex ml-3">
       {% for category in categories %}
-        <form action="{% url 'customer:category_filter' %}" method="POST">{% csrf_token %}
+        <form action="{% url 'customer:filter' %}" method="POST">{% csrf_token %}
           <!--TODO: 現在のカテゴリの時に色が付いた状態にする -->
           {% if category == '{{ category_name }}' %}
             <button type="submit" style="background-color: #ffd79a;" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}">
@@ -22,34 +22,31 @@
       {% endfor %}
     </div>
 
-    {% block category %}
-      {% include 'restaurant/modal/category.html' %}
-    {% endblock %}
+    {% include 'components/restaurant/modal/category.html' %}
   </div>
 
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
       <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
-        {% if menu.formatted_img %}
-          <img src="{{ menu.formatted_img.url }}" alt="Menu">
-        {% endif %}
-        <div class="text-box">
-          <p class="text-left pl-2">{{ menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
-        </div>
-        <!-- hidden -->
-        <input type="hidden" name="menu_id" value="{{ menu.id }}">
-        <input type="hidden" name="random_code" value="{{ random_code }}">
-        <button type="submit" style="padding:0;border:0"></button>
+        <button type="submit" class="w-100 h-100 p-0 focus">
+          {% if menu.formatted_img %}
+            <img src="{{ menu.formatted_img.url }}" class="m-0" alt="Menu">
+          {% endif %}
+          <div class="text-box">
+            <p class="text-left pl-2">{{ menu.name }}</p>
+            <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
+          </div>
+          <!-- hidden -->
+          <input type="hidden" name="menu_id" value="{{ menu.id }}">
+          <input type="hidden" name="random_code" value="{{ random_code }}">
+        </button>
       </form>
     {% endfor %}
   </div>
 
   {% if user.is_authenticated %}
     <div>
-      {% block menu %}
-        {% include 'restaurant/modal/menu.html' %}
-      {% endblock %}
+      {% include 'components/restaurant/modal/menu.html' %}
     </div>
   {% else %}
     <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}

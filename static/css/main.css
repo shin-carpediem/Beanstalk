@@ -413,32 +413,36 @@ section.order-table .order-item .name {
           transform: scale(1.05);
 }
 
-.board__customer section.menu-list .menu-item img {
+.board__customer section.menu-list .menu-item button {
+  border: transparent;
+}
+
+.board__customer section.menu-list .menu-item button img {
   border-radius: 4px;
   height: 100%;
 }
 
-.board__customer section.menu-list .menu-item img:hover {
+.board__customer section.menu-list .menu-item button img:hover {
   border-radius: 6px;
 }
 
-.board__customer section.menu-list .menu-item .text-box {
+.board__customer section.menu-list .menu-item button .text-box {
   position: absolute;
   bottom: 0;
   left: 0;
   z-index: 1;
   background-color: #9b9999;
   opacity: 0.7;
-  border-radius: 0 0 px 4px;
+  border-radius: 0 0 4px 4px;
   width: 174px;
   height: 44px;
 }
 
-.board__customer section.menu-list .menu-item .text-box:hover {
+.board__customer section.menu-list .menu-item button .text-box:hover {
   border-radius: 0 0 6px 6px;
 }
 
-.board__customer section.menu-list .menu-item .text-box p {
+.board__customer section.menu-list .menu-item button .text-box p {
   color: #fff;
   font-size: 16px;
 }

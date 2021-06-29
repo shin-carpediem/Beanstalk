@@ -7,14 +7,10 @@
 
 {% block content %}
 <div class="w-100">
-  {% block header__restaurant %}
-    {% include 'components/header__restaurant.html' %}
-  {% endblock %}
+  {% include 'components/restaurant/header.html' %}
   <div class="pt-5">
     <div class="pt-sm-3 pt-5">
-      {% block order_table %}
-        {% include 'restaurant/order_table.html' %}
-      {% endblock %}
+      {% include 'restaurant/order_table.html' %}
     </div>
   </div>
 </div>

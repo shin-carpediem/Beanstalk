@@ -118,7 +118,7 @@ def menu(request):
 
 
 @require_POST
-def category_filter(request):
+def filter(request):
     random_code = request.POST.get('random_code')
 
     try:
@@ -229,7 +229,8 @@ def cart(request):
     except:
         None
 
-    carts = Cart.objects.all().order_by('-id')
+    carts = Cart.objects.filter(customer=user).order_by('-id')
+
     ctx = {
         'random_code': random_code,
         'table_num': table_num,
@@ -332,6 +333,7 @@ def order(request):
 @require_POST
 def history(request):
     random_code = request.POST.get('random_code')
+    print(random_code)
 
     user = request.user
     if user.is_authenticated:
@@ -351,10 +353,8 @@ def history(request):
         from .models import Cart, Order
         carts = Cart.objects.filter(customer=user).order_by('-id')
         orders = Order.objects.filter(customer=user).order_by('-id')
-
-        orders_in_cart = Cart.objects.filter(customer=user)
-        orders_in_order = Order.objects.filter(
-            (Q(status='キャンセル') | Q(status='済')), customer=user)
+        # _orders = Order.objects.filter(
+        #     (Q(status='キャンセル') | Q(status='済')), customer=user)
 
         in_cart_each_price = 0
         in_order_each_price = 0
@@ -376,8 +376,6 @@ def history(request):
             'table_num': table_num,
             'carts': carts,
             'orders': orders,
-            'orders_in_cart': orders_in_cart,
-            'orders_in_order': orders_in_order,
             'total_price': total_price,
             'add_to_cart_form': add_to_cart_form,
         }

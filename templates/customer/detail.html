@@ -9,27 +9,21 @@
       <img height=420 src="{{ menu.img.url }}" alt="Menu">
     {% endif %}
 
-    {% block img %}
-      {% include 'restaurant/modal/img.html' %}
-    {% endblock %}
+    {% include 'components/restaurant/modal/img.html' %}
 
     <div class="text-box px-sm-5 px-2 py-1">
       <p class="text-left">{{ menu.name }}</p>
       <p class="text-right">¥ {{ menu.price | intcomma }}</p>
     </div>
 
-    {% block text %}
-      {% include 'restaurant/modal/text.html' %}
-    {% endblock %}
+    {% include 'components/restaurant/modal/text.html' %}
   </div>
 
   <div class="px-2 py-3 menu-allergy">
     <div class="d-flex">
       <p class="text-left text__bold">アレルギー表示</p>
       <div class="ml-5">
-        {% block allergy_edit %}
-          {% include 'restaurant/modal/allergy.html' %}
-        {% endblock %}
+        {% include 'components/restaurant/modal/allergy.html' %}
       </div>
     </div>
     <hr/>
@@ -46,9 +40,7 @@
         {% endif %}
       {% endfor %}
 
-      {% block allergy %}
-        {% include 'restaurant/modal/allergy_edit.html' %}
-      {% endblock %}
+      {% include 'components/restaurant/modal/allergy_edit.html' %}
     </div>
 
     <!-- TODO: new feature -->

@@ -7,35 +7,37 @@
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
       <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
-        <img src="{{ cart.menu.img.url }}" alt="Menu">
-        <div class="text-box">
-          <p class="text-left pl-2">{{ cart.menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ cart.menu.price }}</p>
-        </div>
-        <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
-        <p class="py-2 px-3 badge badge__orange">カート</p>
-        <!-- hidden -->
-        <input type="hidden" name="random_code" value="{{ random_code }}">
-        <button type="submit" style="padding:0;border:0"></button>
+        <button type="submit" class="w-100 h-100 p-0 focus">
+          <img src="{{ cart.menu.img.url }}" alt="Menu">
+          <div class="text-box">
+            <p class="text-left pl-2">{{ cart.menu.name }}</p>
+            <p class="text-right pr-2">¥ {{ cart.menu.price }}</p>
+          </div>
+          <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
+          <p class="py-2 px-3 badge badge__orange">カート</p>
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
+        </button>
       </form>
     {% endfor %}
 
     {% for order in orders %}
       <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="POST">{% csrf_token %}
-        <img src="{{ order.menu.img.url }}" alt="Menu">
-        <div class="text-box">
-          <p class="text-left pl-2">{{ order.menu.name }}</p>
-          <p class="text-right pr-2">¥ {{ order.menu.price | intcomma }}</p>
-        </div>
-        <p class="pt-1 cart-num icon icon__red text__bold">{{ order.num }}</p>
-        {% if order.status == '調理中' %}
-          <p class="py-2 px-3 badge badge__turquoise">調理中</p>
-        {% elif order.status == '済' %}
-          <p class="py-2 px-3 badge badge__grey">済</p>
-        {% endif %}
-        <!-- hidden -->
-        <input type="hidden" name="random_code" value="{{ random_code }}">
-        <button type="submit" style="padding:0;border:0"></button>
+        <button type="submit" class="w-100 h-100 p-0 focus">
+          <img src="{{ order.menu.img.url }}" alt="Menu">
+          <div class="text-box">
+            <p class="text-left pl-2">{{ order.menu.name }}</p>
+            <p class="text-right pr-2">¥ {{ order.menu.price | intcomma }}</p>
+          </div>
+          <p class="pt-1 cart-num icon icon__red text__bold">{{ order.num }}</p>
+          {% if order.status == '調理中' %}
+            <p class="py-2 px-3 badge badge__turquoise">調理中</p>
+          {% elif order.status == '済' %}
+            <p class="py-2 px-3 badge badge__grey">済</p>
+          {% endif %}
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
+        </button>
       </form>
     {% endfor %}
   </div>

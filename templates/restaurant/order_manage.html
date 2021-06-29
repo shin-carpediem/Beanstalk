@@ -8,15 +8,11 @@
 
 {% block content %}
 <div class="w-100 order-manage-wrapper">
-  {% block header__restaurant %}
-    {% include 'components/header__restaurant.html' %}
-  {% endblock %}
+  {% include 'components/restaurant/header.html' %}
   <div class="pt-5">
     <div class="pt-sm-3 pt-5">
       <p>＊このページは10秒毎に自動で再読み込みします</p>
-      {% block order_table %}
-        {% include 'restaurant/order_table.html' %}
-      {% endblock %}
+      {% include 'components/restaurant/order_table.html' %}
     </div>
   </div>
 </div>

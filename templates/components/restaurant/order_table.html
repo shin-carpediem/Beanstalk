@@ -15,9 +15,7 @@
     <draggable :list="items">
       {% for order in order_list %}
         <div v-for="item in items" class="order-item el__pointer shadow py-4 my-2">
-          {% block order_modal %}
-            {% include 'restaurant/order_modal.html' %}
-          {% endblock %}
+          {% include 'components/restaurant/modal/order.html' %}
         </div>
       {% endfor %}
     </draggable>

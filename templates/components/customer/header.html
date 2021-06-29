@@ -1,6 +1,5 @@
 {% load static %}
 
-{% block header__customer %}
 <section class="pt-3 header__customer row">
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
@@ -26,7 +25,7 @@
 
   <h5 class="col-4 my-auto text__bold">
     {% if request.path == '/' %}
-    　　{{ restaurant_name }}
+      {{ restaurant_name }}
     {% elif request.path == '/menu/' %}
       {{ restaurant_name }}
     {% elif request.path == '/manage/menu/' %}
@@ -41,9 +40,10 @@
   {% if request.path != '/' %}
     <p class="col-4 my-auto text__bold">テーブル番号: {{ table_num }}</p>
   {% endif %}
+
   {% if request.path == '/' %}
   {% elif request.path == '/history/' %}
-  {% else %}
+  {% elif request.path == '/cart/' or request.path == '/menu/' %}
     {% if not user.is_authenticated %}
       <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="POST">{% csrf_token %}
         <!-- hidden -->
@@ -53,7 +53,7 @@
         </button>
       </form>
     {% endif %}
+  {% else %}
   {% endif %}
 </section>
 <hr class="mb-2" />
-{% endblock %}
