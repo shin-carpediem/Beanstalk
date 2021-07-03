@@ -6,7 +6,7 @@
       {% if request.path == '/order_manage/' %}
         <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
       {% else %}
-        <i class="el__pointer mx-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+        <a href="{% url 'restaurant:order_manage' %}" class="m-auto back focus">戻る</a>
       {% endif %}
     </div>
     <div class="title my-auto text__bold pl-3 pt-2 d-flex align-items-center">
@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="px-3 my-auto d-flex align-items-center">
-    <a class="mr-5 back-menu" href="{% url 'restaurant:manage_menu' %}">メニューを作成・管理する</a>
+    <a class="mr-5 back-menu" href="{% url 'restaurant:manage_menu' %}" id="manageMenu">（メニューを作成・管理する）</a>
     {% if request.path == '/order_manage/' %}
       <a href="{% url 'restaurant:history' %}"><i class="clipboard fas fa-clipboard-list mr-sm-0 mr-5"></i></a>
     {% endif %}

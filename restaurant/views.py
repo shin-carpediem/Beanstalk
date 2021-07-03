@@ -20,7 +20,7 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 # default
 table_num = '管理者'
 categories = Category.objects.all().order_by('id')
-first_category = Category(id=2)
+first_category = Category(id=1)
 menus = Menu.objects.filter(category=first_category).order_by('-id')
 allergies = Allergy.objects.all().order_by('id')
 ctx = {
@@ -58,7 +58,7 @@ def confirm(request):
     TO = email
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = '【beanstalk】6桁の認証コードをログイン画面に入力してください'
+    msg['Subject'] = '【beanstalk】6ケタの数字をログイン画面に入力してください'
     msg['From'] = EMAIL
     msg['To'] = TO
 
@@ -84,7 +84,7 @@ def confirm(request):
         s.sendmail(EMAIL, TO, msg.as_string())
         s.quit()
         messages.info(
-            request, f"入力したメールアドレス宛てに6桁の数字が書かれたメールを送信しました。その数字を以下に入力してください。")
+            request, f"入力したメールアドレス宛てに6ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
 
     except:
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
@@ -224,7 +224,6 @@ def menu_add(request):
         allergy_list = request.POST.getlist('allergy')
         for allergy in allergy_list:
             allergy_query = Allergy.objects.get(ingredient=allergy)
-            print(allergy_query)
             menu.allergies.add(allergy_query)
 
         menu.save()
@@ -263,7 +262,6 @@ def menu_img_manage(request):
 def menu_name_manage(request):
     menu_name = request.POST.get('menu_name')
     menu_id = request.POST.get('menu_id')
-    print(menu_id)
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()

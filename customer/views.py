@@ -76,7 +76,6 @@ def make_random_code(request):
         return render(request, 'customer/menu.html', ctx)
 
 
-@require_POST
 def menu(request):
     random_code = request.POST.get('random_code')
 
@@ -100,7 +99,7 @@ def menu(request):
         table_num = user.table
 
     categories = Category.objects.all().order_by('id')
-    first_category = Category(id=2)
+    first_category = Category(id=1)
     menus = Menu.objects.filter(category=first_category).order_by('-id')
 
     allergies = Allergy.objects.all().order_by('id')
@@ -161,7 +160,6 @@ def filter(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-@require_POST
 def menu_detail(request, menu_id):
     random_code = request.POST.get('random_code')
 
@@ -198,7 +196,6 @@ def menu_detail(request, menu_id):
 @require_POST
 def cart(request):
     random_code = request.POST.get('random_code')
-    print(random_code)
 
     user = request.user
     if user.is_authenticated:
@@ -333,7 +330,6 @@ def order(request):
 @require_POST
 def history(request):
     random_code = request.POST.get('random_code')
-    print(random_code)
 
     user = request.user
     if user.is_authenticated:

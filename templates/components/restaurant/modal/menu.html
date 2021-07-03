@@ -19,7 +19,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content modal-body text-left py-3">
         <div class="modal-header">
-          <h5 class="modal-title" id="menu-add-btn__ModalCenterTitle">メニューを追加する</h5>
+          <h5 class="modal-title mx-auto" id="menu-add-btn__ModalCenterTitle">メニューを追加する</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -41,15 +41,14 @@
             <label>表示する画像</label><br>
             <input name="img" type="file" value="{{ menu.name }}" required><br>
             <label>アレルギー</label><br>
-            <div class="d-flex justify-content-around pb-3">
+            <div class="d-flex align-items-center pb-3">
               {% for allergy in allergies %}
-                <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
-                {% include 'components/restaurant/modal/allergy.html' %}
+                <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}" class="mr-2 ml-3">{{ allergy }}
               {% endfor %}
-            </div><br>
+            </div>
             <div class="modal-footer">
               <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
-              <button type="submit" class="px-4 py-2 btn btn__orange">追加</button>
+              <button type="submit" class="mx-auto focus px-4 py-2 btn btn__orange">追加</button>
             </div>
           </form>
         {% endif %}
@@ -75,7 +74,7 @@
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
-          <button type="submit" class="px-4 py-2 btn btn__red">削除</button>
+          <button type="submit" class="px-4 py-2 btn btn__red mx-auto">削除</button>
         </div>
       </form>
     </div>

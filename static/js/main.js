@@ -1,13 +1,25 @@
 "use strict";
 
-const logoutConfirm = () => {
-  const logout = document.getElementById("logout");
+const manageMenuConfirm = () => {
+  const manageMenu = document.getElementById("manageMenu");
 
-  logout.addEventListener("click", () => {
-    const answer = confirm("ログアウトしますか？");
+  manageMenu.addEventListener("click", () => {
+    const answer = confirm("この画面から離れますが問題ありませんか？");
     if (answer) {
-      window.location.href = "/logout/";
+      window.location.href = "/manage/menu/";
     }
   });
 };
-logoutConfirm();
+manageMenuConfirm();
+
+// const logoutConfirm = () => {
+//   const logout = document.getElementById("logout");
+
+//   logout.addEventListener("click", () => {
+//     const answer = confirm("ログアウトしますか？");
+//     if (answer) {
+//       window.location.href = "/logout/";
+//     }
+//   });
+// };
+// logoutConfirm();

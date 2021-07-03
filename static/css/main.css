@@ -82,6 +82,10 @@ select {
   font-size: large;
 }
 
+.text__small {
+  font-size: small;
+}
+
 .input__fixed {
   position: fixed;
   left: 5vh;
@@ -317,8 +321,6 @@ section.header {
 
 section.header .back {
   color: #565454;
-  -webkit-transform: scale(2);
-          transform: scale(2);
 }
 
 section.header .title h5 {
@@ -352,6 +354,11 @@ section.order-table .order-item .name {
   section.order-table .order-item .name {
     font-size: 22.4px;
   }
+}
+
+.board__customer section.header__customer .back {
+  border-color: transparent;
+  background-color: transparent;
 }
 
 .board__customer section.header__customer .clipboard {

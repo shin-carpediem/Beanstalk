@@ -18,7 +18,12 @@
           <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
         {% endif %}
       {% else %}
-        <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i>
+        <!-- <i class="el__pointer m-auto py-auto back fas fa-angle-double-left" onclick="history.back(); return false;"></i> -->
+        <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
+          <button type="submit" class="m-auto back focus pl-2">戻る</button>
+        </form>
       {% endif %}
     </div>
   </div>
