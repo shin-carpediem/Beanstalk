@@ -263,7 +263,7 @@ a:hover {
   position: relative;
 }
 
-.full__wrapper .mess-box {
+.full__wrapper .msg-box {
   max-width: 550px;
   min-width: 335px;
   position: absolute;

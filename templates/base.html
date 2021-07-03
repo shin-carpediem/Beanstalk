@@ -55,20 +55,30 @@
     {% endif %}
 
     {% for message in messages %}
-      <div class="message-{{ message.tags }} message fade show mx-auto text-center mess-box shadow message-dismissible">
-        <!-- TODO: -->
-        <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button> -->
-        <div class="p-5">
-          <h4 class="text__bold text__large p-5">{{ message }}</h4>
-          {% if message.tags == 'success' %}
-            <img height=178 class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Message Success">
-          {% elif message.tags == 'warning' %}
-            <img height=300 class="mx-auto" src="{% static 'img/common/message-warning.svg' %}" alt="Message Warning">
-          {% endif %}
+      {% if message.tags == 'info' %}
+        <div class="message-{{ message.tags }} message fade show mx-auto text-center shadow message-dismissible">
+          <!-- TODO: -->
+          <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+            <p class="py-2">{{ message }}</p>
         </div>
-      </div>
+      {% else %}
+        <div class="message-{{ message.tags }} message fade show mx-auto text-center msg-box shadow message-dismissible">
+          <!-- TODO: -->
+          <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+            <div class="p-5">
+              <h4 class="text__bold text__large p-5">{{ message }}</h4>
+              {% if message.tags == 'success' %}
+                <img height=178 class="mx-auto" src="{% static 'img/customer/table.svg' %}" alt="Message Success">
+              {% elif message.tags == 'warning' %}
+                <img height=300 class="mx-auto" src="{% static 'img/common/message-warning.svg' %}" alt="Message Warning">
+              {% endif %}
+            </div>
+        </div>
+      {% endif %}
     {% endfor %}
 
     {% block content %}

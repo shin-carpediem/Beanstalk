@@ -12,33 +12,29 @@ from imagekit.processors import ResizeToFill
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    # def _create_user(self, email, password, **extra_fields):
-    def _create_user(self, email, **extra_fields):
+    def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('メールアドレスは必須です。')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        # user.set_password(password)
+        user.set_password(password)
         user.save(using=self.db)
         return user
 
-    # def create_user(self, email, password=None, **extra_fields):
-    def create_user(self, email, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        # return self._create_user(email, password, **extra_fields)
-        return self._create_user(email, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
-    # def create_superuser(self, email, password, **extra_fields):
-    def create_superuser(self, email, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
+        user = self.model(email=email, **extra_fields)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('rootユーザーは、is_staff=Trueである必要があります。')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('rootユーザーは、is_superuser=Trueである必要があります。')
-        # return self._create_user(email, password, **extra_fields)
-        return self._create_user(email, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

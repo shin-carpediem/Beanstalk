@@ -1,8 +1,8 @@
-from re import template
 from customer.models import Order
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Q
@@ -31,27 +31,26 @@ ctx = {
 }
 
 
-def login(request):
+def login_as_user(request):
     return render(request, 'restaurant/login.html')
 
 
 @require_POST
 def confirm(request):
-    email = request.POST.get('email')
+    # メールアドレスを取得
+    email = request.POST.get('username')
 
     # セッションにすでにユーザがいれば削除
     if 'user' in request.session:
         del request.session['user']
 
     # ランダムな6桁の文字列を生成
-    passcode = random.randrange(10**10, 10**6)
+    passcode = str(random.randrange(10)) + str(random.randrange(10)) + str(random.randrange(10)) + \
+        str(random.randrange(10)) + \
+        str(random.randrange(10)) + str(random.randrange(10))
 
     # メールアドレスとパスコードのセットになったセッションを作成
     request.session['user'] = {email: passcode}
-    passcode = request.session['user']['passcode']
-
-    print(request.session['user'])
-    print("セッションに正しく保存されました")
 
     # パスコードをメール送信
     EMAIL = EMAIL_HOST_USER
@@ -59,7 +58,7 @@ def confirm(request):
     TO = email
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = '【beanstalk】6桁の認証コードをお送りします'
+    msg['Subject'] = '【beanstalk】6桁の認証コードをログイン画面に入力してください'
     msg['From'] = EMAIL
     msg['To'] = TO
 
@@ -74,8 +73,8 @@ def confirm(request):
     """
 
     html = Template(html)
-    ctx = Context({'passcode': passcode})
-    template = MIMEText(html.render(context=ctx), 'html')
+    context = Context({'passcode': passcode})
+    template = MIMEText(html.render(context=context), 'html')
     msg.attach(template)
 
     try:
@@ -91,40 +90,40 @@ def confirm(request):
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
         return render(request, 'restaurant/login.html')
 
-    return render(request, 'restaurant/confirm.html')
+    ctx['email'] = email
+
+    return render(request, 'restaurant/confirm.html', ctx)
 
 
 def order_manage(request):
     if request.method == 'POST':
-
+        email = request.POST.get('username')
         passcode = request.POST.get('passcode')
 
         # 入力されたパスコードがセッションに保持されたパスコードと一致するならログインを許可
-        if passcode in request.session:
-            email = request.session['user']['email']
+        if passcode == request.session['user'][email]:
             user = User.objects.get(email=email)
             login(request, user)
 
-            print("ログインに成功しました")
+            return render(request, 'restaurant/order_manage.html', ctx)
 
         else:
-            messages.error(
+            messages.info(
                 request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
             return render(request, 'restaurant/login.html')
 
+    else:
         user = User.objects.get(id=request.user.id)
         formatted_logo = user.formatted_logo
         name = user.name
-        ctx['formatted_logo'] = formatted_logo
-        ctx['name'] = name
 
         order_list = Order.objects.filter(status='調理中')
+
+        ctx['formatted_logo'] = formatted_logo
+        ctx['name'] = name
         ctx['order_list'] = order_list
 
         return render(request, 'restaurant/order_manage.html', ctx)
-
-    else:
-        return render(request, 'restaurant/login.html')
 
 
 @login_required
@@ -142,9 +141,10 @@ def order_status_ch(request):
 def history(request):
     user = User.objects.get(id=request.user.id)
     name = user.name
-    ctx['name'] = name
 
     order_list = Order.objects.filter(Q(status='キャンセル') | Q(status='済'))
+
+    ctx['name'] = name
     ctx['order_list'] = order_list
 
     return render(request, 'restaurant/history.html', ctx)
@@ -152,13 +152,14 @@ def history(request):
 
 # for manageing menu
 def manage_login(request):
-    return render(request, 'restaurant/login.html')
+    return render(request, 'restaurant/login.html', ctx)
 
 
 @login_required
 def manage_menu(request):
     user = request.user
     restaurant_name = user.name
+
     ctx['restaurant_name'] = restaurant_name
 
     return render(request, 'customer/menu.html', ctx)

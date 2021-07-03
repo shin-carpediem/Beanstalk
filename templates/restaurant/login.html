@@ -25,9 +25,11 @@
       <form method="POST"
        {% if request.path == '/manage/login/' %}
         action="{% url 'restaurant:manage_menu' %}"
+        {% else %}
+        action="{% url 'restaurant:confirm' %}"
         {% endif %}>{% csrf_token %}
         <label>メールアドレス</label><br>
-        <input name="username" class="px-3 mb-3"><br>
+        <input name="username" class="px-3 mb-3 w-50 py-2"><br>
         <!-- <label>パスワード</label><br>
         <input type="password" name="password" class="px-3 mb-3"> -->
         <!-- <div>
@@ -47,7 +49,7 @@
           <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
         {% endif %}
       </div>
-      <div class="col-sm-6 col-12">
+      <div class="col-sm-6 col-12 text-sm-right pt-sm-0 pt-5">
         <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
       </div>
     </div>

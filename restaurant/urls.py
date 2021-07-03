@@ -5,9 +5,7 @@ from django.contrib.auth import views as auth_views
 
 app_name = 'restaurant'
 urlpatterns = [
-    # path('login/', auth_views.LoginView.as_view(template_name='restaurant/login.html'), name='login'),
-    path('login/', views.login, name='login'),
-    # path('confirm/', auth_views.LoginView.as_view(template_name='restaurant/confirm.html'), name='confirm'),
+    path('login/', views.login_as_user, name='login'),
     path('confirm/', views.confirm, name='confirm'),
     path('order_manage/', views.order_manage, name='order_manage'),
     path('order_manage/change/', views.order_status_ch, name='order_status_ch'),
