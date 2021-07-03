@@ -1,4 +1,5 @@
 import random
+from re import T
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -12,29 +13,33 @@ from imagekit.processors import ResizeToFill
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, name, password, **extra_fields):
-        user = self.model(name=name, **extra_fields)
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('メールアドレスは必須です。')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self.db)
         return user
 
-    def create_user(self, name, password=None, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(name, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, name, password, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('rootユーザーは、is_staff=Trueである必要があります。')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('rootユーザーは、is_superuser=Trueである必要があります。')
-        return self._create_user(name, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    name = models.CharField("店名", max_length=256, unique=True)
+    email = models.EmailField("メールアドレス", unique=True)
+    name = models.CharField("店名", max_length=256, blank=True, null=True)
     logo = models.ImageField("ロゴ", upload_to="logo",
                              max_length=50, blank=True, null=True)
     formatted_logo = ImageSpecField(source="logo",
@@ -48,7 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "name"
+    USERNAME_FIELD = "email"
+    EMAIL_FIELD = "email"
     REQUIRED_FIELDS = []
 
     class Meta:

@@ -26,7 +26,7 @@
        {% if request.path == '/manage/login/' %}
         action="{% url 'restaurant:manage_menu' %}"
         {% endif %}>{% csrf_token %}
-        <label>店名</label><br>
+        <label>メールアドレス</label><br>
         <input name="username" class="px-3 mb-3"><br>
         <label>パスワード</label><br>
         <input type="password" name="password" class="px-3 mb-3">

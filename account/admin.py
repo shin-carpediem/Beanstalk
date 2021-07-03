@@ -16,12 +16,12 @@ class MyUserChangeForm(UserChangeForm):
 class MyUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('name',)
+        fields = ('email', 'name',)
 
 
 class MyUserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('name', 'password', 'logo')}),
+        (None, {'fields': ('email', 'name', 'password', 'logo')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff',
                                        'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -29,7 +29,7 @@ class MyUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('name', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2'),
         }),
     )
     form = MyUserChangeForm
