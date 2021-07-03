@@ -33,23 +33,23 @@
     {% if user.is_authenticated %}
       {% if request.path == '/manage/menu/' %}
         <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
+          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
         </div>
       {% elif request.path == '/menu/' %}
         <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
+          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
         </div>
       {% elif request.path == '/filter/' %}
         <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
+          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
         </div>
       {% elif request.path == '/detail/' %}
         <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a>
+          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
+          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
         </div>
       {% endif %}
     {% endif %}

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block custom__header %}
-  <title>オーダー管理</title>
+  <title>注文管理</title>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
       <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
         <label>メールアドレス</label><br>
         <input name="username" class="px-3 mb-3 w-50 py-2" value="{{ email }}"><br>
-        <label>確認コード</label><br>
+        <label>6ケタの数字</label><br>
         <input name="passcode" class="px-3 mb-3 w-50 py-2"><br>
         <div class="pt-5">
           <button type="submit" class="px-4 btn btn__blue shadow">ログイン</button>

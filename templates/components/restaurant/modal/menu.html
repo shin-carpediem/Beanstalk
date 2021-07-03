@@ -4,9 +4,15 @@
       メニューを追加する
     </button>
 
-    <button type="button" class="menu-del-btn btn btn__grey shadow my-3" data-toggle="modal" data-target="#menu-del-btn__ModalCenter">
-      メニューを削除する
-    </button>
+    {% if menus|length == 0 %}
+      <button class="menu-del-btn btn btn__grey shadow my-3">
+        メニューを削除する
+      </button>
+    {% else %}
+      <button type="button" class="menu-del-btn btn btn__grey shadow my-3" data-toggle="modal" data-target="#menu-del-btn__ModalCenter">
+        メニューを削除する
+      </button>
+    {% endif %}
   </div>
 
   <div class="modal fade" id="menu-add-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-add-btn__ModalCenterTitle" aria-hidden="true">
@@ -18,31 +24,35 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'restaurant:menu_add' %}">{% csrf_token %}
-          <label class="pt-3">表示名</label><br>
-          <input class="w-50" name="name" type="text" required><br>
-          <label>カテゴリ</label><br>
-          <select class="w-50" name="category">
-            {% for category in categories %}
-              <option name="category" value="{{ category.name }}">{{ category.name }}</option>
-            {% endfor %}
-          </select><br>
-          <label>価格</label><br>
-          ¥ <input name="price" type="number" min=0 required><br>
-          <label>イメージ画像</label><br>
-          <input name="img" type="file" value="{{ menu.name }}" required><br>
-          <label>アレルギー</label><br>
-          <div class="d-flex justify-content-around pb-3">
-            {% for allergy in allergies %}
-              <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
-              {% include 'components/restaurant/modal/allergy.html' %}
-            {% endfor %}
-          </div><br>
-          <div class="modal-footer">
-            <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
-            <button type="submit" class="px-4 py-2 btn btn__orange">追加</button>
-          </div>
-        </form>
+        {% if categories|length == 0 %}
+          <p class="text-center py-4">先に画面左上の鉛筆マークを押して、カテゴリを追加してください。</p>
+        {% else %}
+          <form method="POST" enctype="multipart/form-data" action="{% url 'restaurant:menu_add' %}">{% csrf_token %}
+            <label class="pt-3">表示名</label><br>
+            <input class="w-50" name="name" type="text" required><br>
+            <label>カテゴリ</label><br>
+            <select class="w-50" name="category">
+              {% for category in categories %}
+                <option name="category" value="{{ category.name }}">{{ category.name }}</option>
+              {% endfor %}
+            </select><br>
+            <label>価格</label><br>
+            ¥ <input name="price" type="number" min=0 required><br>
+            <label>表示する画像</label><br>
+            <input name="img" type="file" value="{{ menu.name }}" required><br>
+            <label>アレルギー</label><br>
+            <div class="d-flex justify-content-around pb-3">
+              {% for allergy in allergies %}
+                <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}">{{ allergy }}
+                {% include 'components/restaurant/modal/allergy.html' %}
+              {% endfor %}
+            </div><br>
+            <div class="modal-footer">
+              <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
+              <button type="submit" class="px-4 py-2 btn btn__orange">追加</button>
+            </div>
+          </form>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -64,7 +74,7 @@
           </select>
         </div>
         <div class="modal-footer">
-          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
           <button type="submit" class="px-4 py-2 btn btn__red">削除</button>
         </div>
       </form>

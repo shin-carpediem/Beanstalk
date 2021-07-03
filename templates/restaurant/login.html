@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block custom__header %}
-  <title>オーダー管理</title>
+  <title>注文管理</title>
 {% endblock %}
 
 {% block content %}
@@ -46,11 +46,11 @@
           <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
           <p class="pl-3">*最初にログインを要求されます</p>
         {% elif request.path == '/manage/login/' %}
-          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
         {% endif %}
       </div>
       <div class="col-sm-6 col-12 text-sm-right pt-sm-0 pt-5">
-        <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
+        <a href="{% url 'customer:table' %}">お客様用ページを確認する</a>
       </div>
     </div>
   </div>

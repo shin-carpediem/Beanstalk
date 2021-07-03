@@ -2,7 +2,7 @@
 　<button type="button" class="order-item-card w-100 d-flex align-items-center justify-content-between focus" data-toggle="modal" data-target="#order-modal__ModalCenter">
     <div class="d-flex align-items-center justify-content-between">
       {% if order.status == '調理中' %}
-        <p class="badge__orange text__bold text__large px-sm-3 py-sm-2">オーダー</p>
+        <p class="badge__orange text__bold text__large px-sm-3 py-sm-2">注文</p>
       {% elif order.status == 'キャンセル' %}
         <p class="badge__blue text__bold text__large px-sm-1 py-sm-2">{{ order.status }}</p>
       {% elif order.status == '済' %}
@@ -23,7 +23,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <form class="modal-content" action="{% url 'restaurant:order_status_ch' %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="order-modal__ModalCenterTitle">オーダーのステータスを変更</h5>
+          <h5 class="modal-title" id="order-modal__ModalCenterTitle">注文状況を変更</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -38,7 +38,7 @@
         <!-- hidden -->
         <input type="hidden" name="order_id" value='{{ order.id }}'>
         <div class="modal-footer">
-          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">キャンセル</button>
+          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
           <button type="submit" class="px-4 py-2 btn btn__blue">実行</button>
         </div>
       </form>
