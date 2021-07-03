@@ -1,5 +1,4 @@
-import random
-from re import T
+import uuid
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -64,6 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # for customer
 class nonLoginUser(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     random_code = models.CharField("固有コード", max_length=256, blank=True, null=True)
     name = models.CharField("名前", max_length=256, blank=True, null=True)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
