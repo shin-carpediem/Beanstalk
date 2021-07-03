@@ -67,12 +67,8 @@ def manage_login(request):
     return render(request, 'restaurant/login.html')
 
 
-def password_reset(request):
-    if DEBUG:
-        return render('http://127.0.0.1:8000/admin/password_reset/')
-    # TODO:
-    else:
-        return redirect('https://xxx.com/admin/password_reset/')
+def confirm(request):
+    return render(request, 'restaurant/confirm.html')
 
 
 @login_required
