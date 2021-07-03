@@ -44,6 +44,7 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(),
         name='password_reset_complete',
     ),
+    path('', include('account.urls')),
     path('', include('customer.urls')),
     path('', include('restaurant.urls')),
     url(r'^api/', include(api_router.urls)),

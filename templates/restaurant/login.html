@@ -33,9 +33,9 @@
         <!-- <div>
           <input type="checkbox" name="keep-login">ログイン状態を保持する
         </div> -->
-        <!-- <div class="pt-4">
-          <a href="{% url 'restaurant:password_reset' %}" target="_blank" rel="noopener noreferrer">パスワードを忘れましたか？</a>
-        </div> -->
+        <div class="pt-4">
+          <a href="{% url 'admin_password_reset' %}" target="_blank" rel="noopener noreferrer">パスワードを忘れましたか？</a>
+        </div>
         <div class="pt-5">
           <button type="submit" class="px-4 btn btn__blue shadow">ログイン</button>
         </div>
@@ -45,7 +45,8 @@
       <div class="col-sm-5 col-12">
         <div>
           {% if request.path == '/login/' %}
-            <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する</a>
+            <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
+            <p class="pl-3">*最初にログインを要求されます</p>
           {% elif request.path == '/manage/login/' %}
             <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
           {% endif %}
@@ -53,11 +54,6 @@
         <div class="pt-2">
           <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
         </div>
-      </div>
-      <div class="col-sm-7 col-12 mt-sm-0 mt-4">
-        <a href="#">ヘルプセンター</a>
-        <a class="mx-3" href="#">プライバシーポリシー</a>
-        <a href="#">利用規約</a>
       </div>
     </div>
   </div>
