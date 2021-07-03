@@ -55,6 +55,12 @@ LOGIN_URL = 'restaurant:login'
 LOGIN_REDIRECT_URL = 'restaurant:order_manage'
 LOGOUT_REDIRECT_URL = 'restaurant:login'
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'bootcore.beanstalk@gmail.com'
+EMAIL_HOST_PASSWORD = 'gpunkrxoxajxbedu'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

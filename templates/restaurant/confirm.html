@@ -9,52 +9,20 @@
 <div class="wrapper w-100">
   <div class="inner__wrapper m-auto py-5 px-sm-0 px-3">
     <div class="board shadow beautify text-center my-5 py-4 px-5">
-      <h4 class="text__bold">
-        {% if request.path == '/login/' %}
-          ログイン画面
-        {% elif request.path == '/manage/login/' %}
-          メニュー管理
-        {% endif %}
-      </h4>
+      <h4 class="text__bold">ログイン画面</h4>
       <div class="d-flex p-5 mx-5">
         <div class="pl-5">
           <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="logo shadow">
         </div>
         <h5 class="m-auto">beanstalk</h5>
       </div>
-      <form method="POST"
-       {% if request.path == '/manage/login/' %}
-        action="{% url 'restaurant:manage_menu' %}"
-        {% endif %}>{% csrf_token %}
-        <label>メールアドレス</label><br>
-        <input name="username" class="px-3 mb-3"><br>
-        <!-- <label>パスワード</label><br>
-        <input type="password" name="password" class="px-3 mb-3"> -->
-        <!-- <div>
-          <input type="checkbox" name="keep-login">ログイン状態を保持する
-        </div> -->
-        <!-- <div class="pt-4">
-          <a href="{% url 'admin_password_reset' %}" target="_blank" rel="noopener noreferrer">パスワードを忘れましたか？</a>
-        </div> -->
+      <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
+        <label>確認コード</label><br>
+        <input name="passcode" class="px-3 mb-3"><br>
         <div class="pt-5">
-          <button type="submit" class="px-4 btn btn__blue shadow">確認メールの送信</button>
+          <button type="submit" class="px-4 btn btn__blue shadow">ログイン</button>
         </div>
       </form>
-    </div>
-    <div class="pt-3 admin row">
-      <div class="col-sm-5 col-12">
-        <div>
-          {% if request.path == '/login/' %}
-            <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
-            <p class="pl-3">*最初にログインを要求されます</p>
-          {% elif request.path == '/manage/login/' %}
-            <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          {% endif %}
-        </div>
-        <div class="pt-2">
-          <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
-        </div>
-      </div>
     </div>
   </div>
 </div>

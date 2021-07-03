@@ -1,3 +1,4 @@
+from re import template
 from customer.models import Order
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
@@ -5,9 +6,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Q
+from django.template import Context, Template
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+import random
 from .models import Category, Allergy, Menu
 from account.models import User
-from beanstalk.settings import DEBUG
+from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
 
 # Create your views here.
@@ -25,18 +31,100 @@ ctx = {
 }
 
 
-@login_required
+def login(request):
+    return render(request, 'restaurant/login.html')
+
+
+@require_POST
+def confirm(request):
+    email = request.POST.get('email')
+
+    # セッションにすでにユーザがいれば削除
+    if 'user' in request.session:
+        del request.session['user']
+
+    # ランダムな6桁の文字列を生成
+    passcode = random.randrange(10**10, 10**6)
+
+    # メールアドレスとパスコードのセットになったセッションを作成
+    request.session['user'] = {email: passcode}
+    passcode = request.session['user']['passcode']
+
+    print(request.session['user'])
+    print("セッションに正しく保存されました")
+
+    # パスコードをメール送信
+    EMAIL = EMAIL_HOST_USER
+    PASSWORD = EMAIL_HOST_PASSWORD
+    TO = email
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = '【beanstalk】6桁の認証コードをお送りします'
+    msg['From'] = EMAIL
+    msg['To'] = TO
+
+    html = """\
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>{{ passcode }}</p>
+      </body>
+    </html>
+    """
+
+    html = Template(html)
+    ctx = Context({'passcode': passcode})
+    template = MIMEText(html.render(context=ctx), 'html')
+    msg.attach(template)
+
+    try:
+        s = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
+        s.starttls()
+        s.login(EMAIL, PASSWORD)
+        s.sendmail(EMAIL, TO, msg.as_string())
+        s.quit()
+        messages.info(
+            request, f"入力したメールアドレス宛てに6桁の数字が書かれたメールを送信しました。その数字を以下に入力してください。")
+
+    except:
+        messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+        return render(request, 'restaurant/login.html')
+
+    return render(request, 'restaurant/confirm.html')
+
+
 def order_manage(request):
-    user = User.objects.get(id=request.user.id)
-    formatted_logo = user.formatted_logo
-    name = user.name
-    ctx['formatted_logo'] = formatted_logo
-    ctx['name'] = name
+    if request.method == 'POST':
 
-    order_list = Order.objects.filter(status='調理中')
-    ctx['order_list'] = order_list
+        passcode = request.POST.get('passcode')
 
-    return render(request, 'restaurant/order_manage.html', ctx)
+        # 入力されたパスコードがセッションに保持されたパスコードと一致するならログインを許可
+        if passcode in request.session:
+            email = request.session['user']['email']
+            user = User.objects.get(email=email)
+            login(request, user)
+
+            print("ログインに成功しました")
+
+        else:
+            messages.error(
+                request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+            return render(request, 'restaurant/login.html')
+
+        user = User.objects.get(id=request.user.id)
+        formatted_logo = user.formatted_logo
+        name = user.name
+        ctx['formatted_logo'] = formatted_logo
+        ctx['name'] = name
+
+        order_list = Order.objects.filter(status='調理中')
+        ctx['order_list'] = order_list
+
+        return render(request, 'restaurant/order_manage.html', ctx)
+
+    else:
+        return render(request, 'restaurant/login.html')
 
 
 @login_required
@@ -65,10 +153,6 @@ def history(request):
 # for manageing menu
 def manage_login(request):
     return render(request, 'restaurant/login.html')
-
-
-def confirm(request):
-    return render(request, 'restaurant/confirm.html')
 
 
 @login_required

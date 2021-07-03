@@ -39,18 +39,16 @@
       </form>
     </div>
     <div class="pt-3 admin row">
-      <div class="col-sm-5 col-12">
-        <div>
-          {% if request.path == '/login/' %}
-            <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
-            <p class="pl-3">*最初にログインを要求されます</p>
-          {% elif request.path == '/manage/login/' %}
-            <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
-          {% endif %}
-        </div>
-        <div class="pt-2">
-          <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
-        </div>
+      <div class="col-sm-6 col-12">
+        {% if request.path == '/login/' %}
+          <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
+          <p class="pl-3">*最初にログインを要求されます</p>
+        {% elif request.path == '/manage/login/' %}
+          <a href="{% url 'restaurant:order_manage' %}">オーダー管理画面に戻る</a>
+        {% endif %}
+      </div>
+      <div class="col-sm-6 col-12">
+        <a href="{% url 'customer:table' %}">お客様用ページをチェックする</a>
       </div>
     </div>
   </div>
