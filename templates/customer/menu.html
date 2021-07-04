@@ -18,6 +18,7 @@
             </button>
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
         </form>
       {% endfor %}
     </div>
@@ -39,6 +40,7 @@
           <!-- hidden -->
           <input type="hidden" name="menu_id" value="{{ menu.id }}">
           <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}
@@ -50,7 +52,9 @@
     </div>
   {% else %}
     <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+      <!-- hidden -->
       <input type="hidden" name="random_code" value="{{ random_code }}">
+      <input type="hidden" name="table" value="{{ table_num }}">
       <button type="submit" class="btn btn__orange btn__fixed shadow">
         カートを見る
       </button>

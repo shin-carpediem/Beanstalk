@@ -17,6 +17,7 @@
           <p class="py-2 px-3 badge badge__orange">カート</p>
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}
@@ -37,6 +38,7 @@
           {% endif %}
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}

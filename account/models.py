@@ -65,10 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 # for customer
 class nonLoginUser(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    random_code = models.CharField("固有コード", max_length=256, blank=True, null=True)
-    name = models.CharField("名前", max_length=256, blank=True, null=True)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.table) + str(self.created_at)

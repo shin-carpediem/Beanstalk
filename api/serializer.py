@@ -8,14 +8,14 @@ from restaurant.models import Category, Allergy, Menu
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'logo',
+        fields = ('id', 'email', 'name', 'logo',
                   'is_staff', 'is_active', 'date_joined')
 
 
 class NonLoginUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = nonLoginUser
-        fields = ('id', 'session', 'name', 'table', 'created_at')
+        fields = ('uuid', 'table', 'created_at')
 
 
 class CartSerializer(serializers.ModelSerializer):

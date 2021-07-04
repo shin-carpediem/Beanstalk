@@ -18,7 +18,7 @@
       </div>
       <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
         <label>メールアドレス</label><br>
-        <input name="username" class="px-3 mb-3 w-50 py-2" value="{{ email }}"><br>
+        <input name="username" class="px-3 mb-3 w-50 py-2" value="{{ email }}" readonly><br>
         <label>6ケタの数字</label><br>
         <input name="passcode" class="px-3 mb-3 w-50 py-2"><br>
         <div class="pt-5">

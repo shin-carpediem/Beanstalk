@@ -14,11 +14,6 @@
   <link rel="apple-touch-icon" href="{% static 'img/common/icon.png' %}">
   <link rel="icon" type="image/svg" href="{% static 'img/common/favicon.ico' %}">
 
-  <!-- Vue.JS -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
-
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,25 +26,9 @@
 
   <div class="w-100 full__wrapper">
     {% if user.is_authenticated %}
-      {% if request.path == '/manage/menu/' %}
+      {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}
         <div class="d-flex logout">
           <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
-          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
-        </div>
-      {% elif request.path == '/menu/' %}
-        <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
-          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
-        </div>
-      {% elif request.path == '/filter/' %}
-        <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
-          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
-        </div>
-      {% elif request.path == '/detail/' %}
-        <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
-          <!-- <a class="ml-4" href="{% url 'restaurant:logout' %}" id="logout">ログアウト</a> -->
         </div>
       {% endif %}
     {% endif %}
@@ -58,17 +37,17 @@
       {% if message.tags == 'info' %}
         <div class="message-{{ message.tags }} message fade show mx-auto text-center shadow message-dismissible">
           <!-- TODO: -->
-          <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+          <button type="button" class="p-3 close text-right" data-dismiss="message-{{ message.tags }}" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-          </button> -->
+          </button>
             <p class="py-2">{{ message }}</p>
         </div>
       {% else %}
-        <div class="message-{{ message.tags }} message fade show mx-auto text-center msg-box shadow message-dismissible">
+        <div class="message-{{ message.tags }} message fade show mx-auto text-center shadow message-dismissible msg-box">
           <!-- TODO: -->
-          <!-- <button type="button" class="p-3 close text-right" data-dismiss="message" aria-label="Close">
+          <button type="button" class="p-3 close text-right" data-dismiss="message-{{ message.tags }}" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-          </button> -->
+          </button>
             <div class="p-5">
               <h4 class="text__bold text__large p-5">{{ message }}</h4>
               {% if message.tags == 'success' %}
@@ -92,22 +71,6 @@
 
   {% if user.authenticated %}
     <script src="{% static 'js/main.min.js' %}"></script>
-  {% endif %}
-  {% if request.path == '/order_manage/' %}
-    <!-- <script>
-      const appData = new Vue({
-        delimiters: ['[[', ']]'],
-        el: '#order_manage',
-        data: {
-          // TODO: djangoからAPIでjsにリスト作成する必要あり
-          items: [
-            'item1',
-            'item2',
-            'item3',
-          ]
-        }
-      });
-    </script> -->
   {% endif %}
 </body>
 </html>

@@ -16,6 +16,7 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}
@@ -26,6 +27,7 @@
       <!-- hidden -->
       <input type="hidden" name="menu_id" value="{{ menu.id }}">
       <input type="hidden" name="random_code" value="{{ random_code }}">
+      <input type="hidden" name="table" value="{{ table_num }}">
       {% if carts %}
         <button class="btn btn__orange btn__fixed shadow">注文</button>
       {% else %}
