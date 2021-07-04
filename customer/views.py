@@ -20,24 +20,30 @@ def index(request):
 
 
 def table(request):
-    try:
-        restaurant = User.objects.get(id=3)
-    except:
-        restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
-
-    user = request.user
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
+    # 新規の客かどうかをセッションで判断する
+    if not 'nonloginuser_uuid' in request.session:
+        messages.info(request, f'すでに使用中の場合は、画面下の「復元」ボタンを押してください')
+        return redirect('customer:index')
     else:
-        choose_table_form = ChooseTableForm(request.POST or None)
 
-        ctx = {
-            'choose_table_form': choose_table_form,
-            'restaurant_name': restaurant_name,
-        }
+        try:
+            restaurant = User.objects.get(id=3)
+        except:
+            restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
 
-        return render(request, 'customer/table.html', ctx)
+        user = request.user
+        if user.is_authenticated:
+            return redirect('restaurant:logout')
+        else:
+            choose_table_form = ChooseTableForm(request.POST or None)
+
+            ctx = {
+                'choose_table_form': choose_table_form,
+                'restaurant_name': restaurant_name,
+            }
+
+            return render(request, 'customer/table.html', ctx)
 
 
 def menu(request):
@@ -60,9 +66,13 @@ def menu(request):
 
         # 新規の客かどうかをセッションで判断する
         if not 'nonloginuser_uuid' in request.session:
-            table_num = request.POST.get('table')
-            newuser = nonLoginUser(table=table_num,)
-            newuser.save()
+            try:
+                table_num = request.POST.get('table')
+                newuser = nonLoginUser(table=table_num,)
+                newuser.save()
+            except:
+                messages.info(request, f'まだ一度もメニュー画面にたどり着いていないようです')
+                return redirect('customer:index')
 
             uuid = str(newuser.uuid)
             # userid = newuser.table
@@ -76,7 +86,11 @@ def menu(request):
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
         else:
-            table_num = request.session['table'][1]
+            try:
+                table_num = request.session['table']['1']
+            except:
+                messages.info(request, f'すでに使用中の場合は、画面下の「復元」ボタンを押してください')
+                return redirect('customer:index')
 
     if user.is_authenticated:
         ctx = {
@@ -121,11 +135,12 @@ def filter(request):
         table_num = "管理者"
     # 客側から
     else:
+        print(request.session['nonloginuser']['1'])
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
@@ -163,7 +178,7 @@ def menu_detail(request, menu_id):
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
@@ -190,7 +205,7 @@ def cart(request):
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     # uuid = request.session['nonloginuser_uuid'][table_num]
-    uuid = request.session['nonloginuser_uuid'][1]
+    uuid = request.session['nonloginuser_uuid']['1']
 
     if user.is_authenticated:
         table_num = "管理者"
@@ -200,7 +215,7 @@ def cart(request):
 
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
@@ -278,7 +293,7 @@ def cart_detail(request, menu_id):
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
@@ -304,7 +319,7 @@ def order(request):
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     # uuid = request.session['nonloginuser_uuid'][table_num]
-    uuid = request.session['nonloginuser_uuid'][1]
+    uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=1)
@@ -322,7 +337,7 @@ def order(request):
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
@@ -365,7 +380,7 @@ def history(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid'][1]
+    uuid = request.session['nonloginuser_uuid']['1']
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -374,7 +389,7 @@ def history(request):
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
             # if random_code == request.session['nonloginuser'][table_num]:
-            if random_code == request.session['nonloginuser'][1]:
+            if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
