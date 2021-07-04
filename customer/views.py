@@ -20,17 +20,17 @@ def index(request):
 
 
 def table(request):
+    try:
+        restaurant = User.objects.get(id=3)
+    except:
+        restaurant = User.objects.get(id=1)
+    restaurant_name = restaurant.name
+
     user = request.user
     if user.is_authenticated:
         return redirect('restaurant:logout')
     else:
         choose_table_form = ChooseTableForm(request.POST or None)
-
-        try:
-            restaurant = User.objects.get(id=3)
-        except:
-            restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
 
         ctx = {
             'choose_table_form': choose_table_form,
@@ -41,7 +41,6 @@ def table(request):
 
 
 def menu(request):
-    table_num = request.POST.get('table')
     user = request.user
 
     categories = Category.objects.all().order_by('id')
@@ -61,6 +60,7 @@ def menu(request):
 
         # 新規の客かどうかをセッションで判断する
         if not 'nonloginuser_uuid' in request.session:
+            table_num = request.POST.get('table')
             newuser = nonLoginUser(table=table_num,)
             newuser.save()
 
@@ -70,10 +70,13 @@ def menu(request):
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {userid: uuid}
 
+            # テーブル番号のセッションを作成
+            request.session['table'] = {userid: table_num}
+
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {userid: random_code}
         else:
-            None
+            table_num = request.session['table'][userid]
 
     if user.is_authenticated:
         ctx = {
@@ -128,7 +131,7 @@ def filter(request):
                 request.session['nonloginuser'] = {table_num: random_code}
         except:
             messages.info(request, f'申し訳ありません。異常なエラーが発生しました。')
-            return redirect('customer:table')
+            return redirect('customer:index')
 
     ctx = {
         'random_code': random_code,

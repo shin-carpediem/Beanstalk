@@ -3,19 +3,19 @@
 
 {% block content %}
 <section class="wrapper w-100 top-view">
-  <img src="{% static 'img/common/top-view.jpeg' %}" alt="Top View">
+  <img src="{% static 'img/common/top-view.jpg' %}" alt="Top View">
   <div class="forms">
-    <h1 class="text__bold">メニュー表</h1>
-    <form class="px-auto mt-3 mb-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
+    <h1 class="text__bold text-center">メニュー表</h1>
+    <form class="px-auto mt-4 mb-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
       <!-- hidden -->
-      <input type="hidden" name="form-type" value="始める">
-      <button type="submit" class="w-100 btn btn__orange shadow mb-5 text__bold text__large">始める</button>
+      <button type="submit" class="btn__glass w-100 btn shadow mb-5 text__bold text__large">始める</button>
     </form>
-    <form class="px-auto mt-5 pt-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
-      <p></p>
+
+    <form class="px-auto mt-5 pt-5" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
+      <p class="text__small mb-4">ブラウザを閉じてしまった方はこちらから</p>
       <!-- hidden -->
-      <input type="hidden" name="form-type" value="復元">
-      <button type="submit" class="w-100 btn btn__grey shadow mb-5">復元</button>
+      <input type="hidden" name="table" value="{{ table_num }}">
+      <button type="submit" class="btn__glass w-50 btn shadow mb-5">復元</button>
     </form>
   </div>
 </section>

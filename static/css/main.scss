@@ -226,6 +226,20 @@ a {
 .btn__turquoise {
   background-color: $turquoise;
 }
+.btn__glass {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0,191,255, 0.075);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+  border: 2px rgba(255,255,255,0.4) solid;
+  border-bottom: 2px rgba(40,40,40,0.35) solid;
+  border-right: 2px rgba(40,40,40,0.35) solid;
+}
 
 .icon {
   border-radius: 100px;
@@ -346,9 +360,22 @@ a {
 
 // customer
 section.top-view {
+  animation: slideIn 1s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards;
+  @keyframes slideIn {
+    0% {
+      transform: translateX(180px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+    }
+    40%,
+    100% {
+      opacity: 1;
+    }
+  }
   img {
     position: relative;
-    opacity: 0.5;
   }
   .forms {
     position: absolute;
@@ -360,6 +387,11 @@ section.top-view {
     -ms-transform: translate(-50%, -50%);
     h1 {
       color: $white;
+    }
+    form {
+      p {
+        color: $white;
+      }
     }
   }
 }
