@@ -100,6 +100,14 @@ select {
   bottom: 10px;
 }
 
+.btn__fixed-righter {
+  width: 130px;
+  position: fixed;
+  z-index: 10000;
+  right: 5vh;
+  bottom: 10px;
+}
+
 input,
 textarea {
   padding: 5px 0 5px 0;
@@ -295,6 +303,12 @@ a:hover {
   border-radius: 10px;
 }
 
+@media (max-width: 600px) {
+  .wrapper .inner__wrapper .board {
+    margin: 0 5px 0 5px;
+  }
+}
+
 .restaurant section.header {
   min-width: 400px;
   position: fixed;
@@ -338,6 +352,25 @@ a:hover {
   .restaurant section.order-table .order-item .name {
     font-size: 22.4px;
   }
+}
+
+section.top-view img {
+  position: relative;
+  opacity: 0.5;
+}
+
+section.top-view .forms {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+section.top-view .forms h1 {
+  color: #fff;
 }
 
 .board__customer section.header__customer .back {
@@ -514,6 +547,10 @@ a:hover {
 .board__customer section.menu-detail .allergy-box {
   background-color: #9c9c9c;
   color: #fff;
+}
+
+.board__customer section.menu-detail .cart-form .plus-minus {
+  font-size: 30px;
 }
 
 .board__customer section.menu-detail .cart-form input {

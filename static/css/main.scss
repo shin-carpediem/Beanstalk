@@ -108,6 +108,13 @@ select {
   left: 15vh;
   bottom: 10px;
 }
+.btn__fixed-righter {
+  width: 130px;
+  position: fixed;
+  z-index: 10000;
+  right: 5vh;
+  bottom: 10px;
+}
 
 input,
 textarea {
@@ -290,6 +297,9 @@ a {
     .board {
       background-color: $white;
       border-radius: 10px;
+      @media (max-width: 600px) {
+        margin: 0 5px 0 5px;
+      }
     }
   }
 }
@@ -335,6 +345,25 @@ a {
 }
 
 // customer
+section.top-view {
+  img {
+    position: relative;
+    opacity: 0.5;
+  }
+  .forms {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    h1 {
+      color: $white;
+    }
+  }
+}
+
 .board__customer {
   section.header__customer {
     .back {
@@ -487,6 +516,9 @@ a {
       color: $white;
     }
     .cart-form {
+      .plus-minus {
+        font-size: 30px;
+      }
       input {
         width: 39px;
         height: 39px;

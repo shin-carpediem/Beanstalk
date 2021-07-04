@@ -15,6 +15,10 @@ def non_login_user_random_code(n):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
 
 
+def index(request):
+    return render(request, 'customer/index.html')
+
+
 def table(request):
     user = request.user
     if user.is_authenticated:

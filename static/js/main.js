@@ -11,3 +11,10 @@ const manageMenuConfirm = () => {
   });
 };
 manageMenuConfirm();
+
+const cartPlusMinus = () => {
+  const cartNum = document.getElementById("cart-num");
+  const cartMinus = document.getElementById("cart-minus");
+  const cartPlus = document.getElementById("cart-plus");
+};
+cartPlusMinus();
