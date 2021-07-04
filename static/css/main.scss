@@ -266,22 +266,6 @@ a {
 
 .full__wrapper {
   position: relative;
-  .msg-box {
-    max-width: 550px;
-    min-width: 335px;
-    position: absolute;
-    z-index: 10;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    border-radius: 10px;
-    background-color: $white;
-  }
-}
-.full__wrapper {
-  position: relative;
   .logout {
     position: absolute;
     top: 10px;
@@ -317,6 +301,7 @@ section.header {
   background-color: $blue;
   .back {
     color: $black;
+    text-decoration: none;
   }
   .title {
     h5 {

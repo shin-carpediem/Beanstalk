@@ -37,10 +37,9 @@ def table(request):
 
 
 def menu(request):
-    table = request.POST.get('table')
+    table_num = request.POST.get('table')
     user = request.user
 
-    # 店側から
     try:
         restaurant = User.objects.get(id=3)
     except:
@@ -50,30 +49,25 @@ def menu(request):
     if user.is_authenticated:
         userid = '管理者'
 
-    # 客側から
     else:
-        try:
-            newuser = nonLoginUser(table=table,)
+        random_code = non_login_user_random_code(50)
+
+        # 新規の客かどうかをセッションで判断する
+        if not 'nonloginuser_uuid' in request.session:
+            newuser = nonLoginUser(table=table_num,)
             newuser.save()
 
             uuid = str(newuser.uuid)
             userid = newuser.table
-            random_code = non_login_user_random_code(50)
+
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {userid: uuid}
+
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {userid: random_code}
 
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][userid]:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {userid: random_code}
-
-        except:
-            messages.warning(request, f'申し訳ありません。異常なエラーが発生しました。')
-            return redirect('customer:table')
+        else:
+            None
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=1)
@@ -81,14 +75,24 @@ def menu(request):
 
     allergies = Allergy.objects.all().order_by('id')
 
-    ctx = {
-        'random_code': random_code,
-        'restaurant_name': restaurant_name,
-        'table_num': userid,
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
+    if user.is_authenticated:
+        ctx = {
+            'restaurant_name': restaurant_name,
+            'table_num': table_num,
+            'categories': categories,
+            'menus': menus,
+            'allergies': allergies,
+        }
+
+    else:
+        ctx = {
+            'random_code': random_code,
+            'restaurant_name': restaurant_name,
+            'table_num': table_num,
+            'categories': categories,
+            'menus': menus,
+            'allergies': allergies,
+        }
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -120,7 +124,7 @@ def filter(request):
                 request.session['nonloginuser'] = {table_num: random_code}
 
         except:
-            messages.warning(request, f'申し訳ありません。異常なエラーが発生しました。')
+            messages.info(request, f'申し訳ありません。異常なエラーが発生しました。')
             return redirect('customer:table')
 
     category_name = request.POST.get('category')
@@ -162,7 +166,7 @@ def menu_detail(request, menu_id):
                 request.session['nonloginuser'] = {table_num: random_code}
 
         except:
-            messages.warning(request, f'異常なエラーが発生しました。')
+            messages.info(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
 
     menu = get_object_or_404(Menu, pk=menu_id)
@@ -178,6 +182,7 @@ def menu_detail(request, menu_id):
         'allergies': allergies,
         'has_allergies': has_allergies,
         'add_to_cart_form': add_to_cart_form,
+        'add_cart': "direct",
     }
     return render(request, 'customer/detail.html', ctx)
 
@@ -200,9 +205,11 @@ def cart(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {table_num: random_code}
+            else:
+                None
 
         except:
-            messages.warning(request, f'異常なエラーが発生しました。')
+            messages.info(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
 
     from .models import Cart
@@ -213,23 +220,47 @@ def cart(request):
 
         menu_instance = Menu.objects.get(id=menu_id)
         cart_num = request.POST.get('cart_num')
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-        cart = Cart(menu=menu_instance, num=cart_num, customer=uuid)
+        cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
         cart.save()
 
     # メニュー画面から見るルート
     except:
         None
 
-    carts = Cart.objects.filter(customer=uuid).order_by('-id')
+    if request.POST.get('direct') == 'direct':
+        try:
+            restaurant = User.objects.get(id=3)
+        except:
+            restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
 
-    ctx = {
-        'random_code': random_code,
-        'table_num': table_num,
-        'carts': carts,
-    }
+        categories = Category.objects.all().order_by('id')
+        first_category = Category(id=1)
+        menus = Menu.objects.filter(category=first_category).order_by('-id')
+        allergies = Allergy.objects.all().order_by('id')
 
-    return render(request, 'customer/cart.html', ctx)
+        ctx = {
+            'random_code': random_code,
+            'restaurant_name': restaurant_name,
+            'table_num': table_num,
+            'categories': categories,
+            'menus': menus,
+            'allergies': allergies,
+        }
+        return render(request, 'customer/menu.html', ctx)
+
+    else:
+        carts = Cart.objects.filter(customer=uuid).order_by('-id')
+
+        ctx = {
+            'random_code': random_code,
+            'table_num': table_num,
+            'carts': carts,
+        }
+
+        return render(request, 'customer/cart.html', ctx)
 
 
 @require_POST
@@ -251,7 +282,7 @@ def cart_detail(request, menu_id):
                 request.session['nonloginuser'] = {table_num: random_code}
 
         except:
-            messages.warning(request, f'異常なエラーが発生しました。')
+            messages.info(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
 
         menu = get_object_or_404(Menu, pk=menu_id)
@@ -297,7 +328,7 @@ def order(request):
                 request.session['nonloginuser'] = {table_num: random_code}
 
         except:
-            messages.warning(request, f'異常なエラーが発生しました。')
+            messages.info(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
 
         categories = Category.objects.all().order_by('id')
@@ -307,11 +338,12 @@ def order(request):
         try:
             from .models import Cart, Order
             users_cart = Cart.objects.filter(customer=uuid).order_by('-id')
+            user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
             # cartからorderにコピー
             for each in users_cart:
                 order = Order(status='調理中', menu=each.menu,
-                              num=each.num, customer=uuid)
+                              num=each.num, customer=user_uuid)
                 order.save()
 
             # コピーし終わったcartは削除
@@ -328,7 +360,7 @@ def order(request):
             'menus': menus,
         }
 
-        messages.success(request, f"注文を承りました。今しばらくお待ちください")
+        messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
         return render(request, 'customer/menu.html', ctx)
 
@@ -353,14 +385,15 @@ def history(request):
                 request.session['nonloginuser'] = {table_num: random_code}
 
         except:
-            messages.warning(request, f'異常なエラーが発生しました。')
+            messages.info(request, f'異常なエラーが発生しました。')
             return redirect('customer:table')
 
         add_to_cart_form = AddToCartForm()
 
         from .models import Cart, Order
-        carts = Cart.objects.filter(customer=uuid).order_by('-id')
-        orders = Order.objects.filter(customer=uuid).order_by('-id')
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        carts = Cart.objects.filter(customer=user_uuid).order_by('-id')
+        orders = Order.objects.filter(customer=user_uuid).order_by('-id')
         # _orders = Order.objects.filter(
         #     (Q(status='キャンセル') | Q(status='済')), customer=user)
 
