@@ -85,7 +85,6 @@ def confirm(request):
         s.quit()
         messages.info(
             request, f"入力したメールアドレス宛てに6ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
-
     except:
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
         return render(request, 'restaurant/login.html')
@@ -106,12 +105,10 @@ def order_manage(request):
             login(request, user)
 
             return render(request, 'restaurant/order_manage.html', ctx)
-
         else:
             messages.info(
                 request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
             return render(request, 'restaurant/login.html')
-
     else:
         user = User.objects.get(id=request.user.id)
         formatted_logo = user.formatted_logo
@@ -209,7 +206,6 @@ def menu_add(request):
     name = request.POST.get('name')
     if Menu.objects.filter(name=name).count() != 0:
         messages.warning(request, f"全く同じ名前のメニューは作れません。")
-
     else:
         category = request.POST.get('category')
         # foreign_key

@@ -263,6 +263,13 @@ a:hover {
   background-color: #ffe5be;
 }
 
+.logo {
+  background-color: #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
 .full__wrapper {
   position: relative;
 }
@@ -288,54 +295,47 @@ a:hover {
   border-radius: 10px;
 }
 
-.logo {
-  background-color: #fff;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-}
-
-section.header {
+.restaurant section.header {
   min-width: 400px;
   position: fixed;
   z-index: 100;
   background-color: #257cff;
 }
 
-section.header .back {
+.restaurant section.header .back {
   color: #565454;
   text-decoration: none;
 }
 
-section.header .title h5 {
+.restaurant section.header .title h5 {
   color: #fff;
 }
 
-section.header .back-menu {
+.restaurant section.header .back-menu {
   color: #fff;
 }
 
-section.header .clipboard {
+.restaurant section.header .clipboard {
   color: #fff;
   -webkit-transform: scale(2);
           transform: scale(2);
 }
 
-section.order-table .order-item {
+.restaurant section.order-table .order-item {
   border-radius: 4px;
 }
 
-section.order-table .order-item .order-item-card {
+.restaurant section.order-table .order-item .order-item-card {
   border-color: transparent;
   background-color: #fff;
 }
 
-section.order-table .order-item .name {
+.restaurant section.order-table .order-item .name {
   font-size: 32px;
 }
 
 @media (max-width: 600px) {
-  section.order-table .order-item .name {
+  .restaurant section.order-table .order-item .name {
     font-size: 22.4px;
   }
 }
