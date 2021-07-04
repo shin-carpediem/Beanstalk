@@ -323,7 +323,7 @@ a:hover {
 }
 
 .wrapper {
-  min-height: 100vh;
+  min-height: 120vh;
   background-color: #f1f1f1;
 }
 
@@ -334,12 +334,6 @@ a:hover {
 .wrapper .inner__wrapper .board {
   background-color: #fff;
   border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-  .wrapper .inner__wrapper .board {
-    margin: 0 5px 0 5px;
-  }
 }
 
 .restaurant section.header {

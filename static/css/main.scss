@@ -309,16 +309,13 @@ a {
 
 // restaurant
 .wrapper {
-  min-height: 100vh;
+  min-height: 120vh;
   background-color: $light-grey;
   .inner__wrapper {
     max-width: 600px;
     .board {
       background-color: $white;
       border-radius: 10px;
-      @media (max-width: 600px) {
-        margin: 0 5px 0 5px;
-      }
     }
   }
 }

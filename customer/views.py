@@ -76,13 +76,10 @@ def menu(request):
 
             uuid = str(newuser.uuid)
             # userid = newuser.table
-
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {1: uuid}
-
             # テーブル番号のセッションを作成
             request.session['table'] = {1: table_num}
-
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
         else:
@@ -176,8 +173,7 @@ def menu_detail(request, menu_id):
     else:
 
         try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
+
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
@@ -213,8 +209,6 @@ def cart(request):
     else:
         try:
 
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
@@ -291,8 +285,7 @@ def cart_detail(request, menu_id):
     else:
 
         try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
+
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
@@ -335,8 +328,7 @@ def order(request):
         restaurant_name = restaurant.name
 
         try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
+
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
@@ -387,8 +379,7 @@ def history(request):
     else:
 
         try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
+
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
