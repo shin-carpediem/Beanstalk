@@ -54,7 +54,7 @@ def menu(request):
     restaurant_name = restaurant.name
 
     if user.is_authenticated:
-        userid = '管理者'
+        table_num = '管理者'
     else:
         random_code = non_login_user_random_code(50)
 
@@ -65,18 +65,18 @@ def menu(request):
             newuser.save()
 
             uuid = str(newuser.uuid)
-            userid = newuser.table
+            # userid = newuser.table
 
             # テーブル番号と客のuuidのセットになったセッションを作成
-            request.session['nonloginuser_uuid'] = {userid: uuid}
+            request.session['nonloginuser_uuid'] = {1: uuid}
 
             # テーブル番号のセッションを作成
-            request.session['table'] = {userid: table_num}
+            request.session['table'] = {1: table_num}
 
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
-            request.session['nonloginuser'] = {userid: random_code}
+            request.session['nonloginuser'] = {1: random_code}
         else:
-            table_num = request.session['table'][userid]
+            table_num = request.session['table'][1]
 
     if user.is_authenticated:
         ctx = {
@@ -124,13 +124,14 @@ def filter(request):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
         except:
-            messages.info(request, f'申し訳ありません。異常なエラーが発生しました。')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
     ctx = {
@@ -161,13 +162,15 @@ def menu_detail(request, menu_id):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
+
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
         except:
-            messages.info(request, f'異常なエラーが発生しました。')
-            return redirect('customer:table')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
 
     ctx = {
         'random_code': random_code,
@@ -186,7 +189,8 @@ def cart(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid'][table_num]
+    # uuid = request.session['nonloginuser_uuid'][table_num]
+    uuid = request.session['nonloginuser_uuid'][1]
 
     if user.is_authenticated:
         table_num = "管理者"
@@ -195,15 +199,17 @@ def cart(request):
         try:
 
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
+
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
             else:
                 None
         except:
-            messages.info(request, f'異常なエラーが発生しました。')
-            return redirect('customer:table')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
 
     from .models import Cart
 
@@ -271,14 +277,15 @@ def cart_detail(request, menu_id):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
         except:
-            messages.info(request, f'異常なエラーが発生しました。')
-            return redirect('customer:table')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
 
         ctx = {
             'randcom_code': random_code,
@@ -296,7 +303,8 @@ def order(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid'][table_num]
+    # uuid = request.session['nonloginuser_uuid'][table_num]
+    uuid = request.session['nonloginuser_uuid'][1]
 
     categories = Category.objects.all().order_by('id')
     first_category = Category(id=1)
@@ -313,14 +321,15 @@ def order(request):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
         except:
-            messages.info(request, f'異常なエラーが発生しました。')
-            return redirect('customer:table')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
 
         try:
             from .models import Cart, Order
@@ -356,7 +365,7 @@ def history(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid'][table_num]
+    uuid = request.session['nonloginuser_uuid'][1]
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -364,14 +373,15 @@ def history(request):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser'][table_num]:
+            # if random_code == request.session['nonloginuser'][table_num]:
+            if random_code == request.session['nonloginuser'][1]:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {table_num: random_code}
+                request.session['nonloginuser'] = {1: random_code}
         except:
-            messages.info(request, f'異常なエラーが発生しました。')
-            return redirect('customer:table')
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
 
         from .models import Cart, Order
         user_uuid = nonLoginUser.objects.get(uuid=uuid)

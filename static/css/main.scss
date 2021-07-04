@@ -11,6 +11,8 @@ h1,
 h2,
 h3,
 h4,
+h5,
+h6,
 p,
 figure,
 blockquote,
@@ -86,13 +88,28 @@ select {
 .text__bold {
   font-weight: bold;
 }
-
 .text__large {
   font-size: large;
 }
-
 .text__small {
   font-size: small;
+}
+.text__underline {
+  text-decoration: underline;
+}
+.text__underline-none {
+  text-decoration: none;
+}
+.el__pointer {
+  cursor: pointer;
+}
+
+.focus {
+  &.focus,
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 }
 
 .input__fixed {
@@ -183,18 +200,6 @@ a {
   }
 }
 
-.el__pointer {
-  cursor: pointer;
-}
-
-.focus {
-  &.focus,
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
-}
-
 .btn {
   border-radius: 100px;
   color: $white;
@@ -234,11 +239,11 @@ a {
   gap: 20px;
   border-radius: 10px;
   backdrop-filter: blur(5px);
-  background-color: rgba(0,191,255, 0.075);
+  background-color: rgba(0, 191, 255, 0.075);
   box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
-  border: 2px rgba(255,255,255,0.4) solid;
-  border-bottom: 2px rgba(40,40,40,0.35) solid;
-  border-right: 2px rgba(40,40,40,0.35) solid;
+  border: 2px rgba(255, 255, 255, 0.4) solid;
+  border-bottom: 2px rgba(40, 40, 40, 0.35) solid;
+  border-right: 2px rgba(40, 40, 40, 0.35) solid;
 }
 
 .icon {

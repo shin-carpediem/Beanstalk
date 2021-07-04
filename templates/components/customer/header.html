@@ -11,6 +11,8 @@
         {% else %}
           <img src="{% static 'img/common/logo.png' %}" alt="Logo">
         {% endif %}
+      {% elif request.path == '/table/' %}
+         <a href="{% url 'customer:index' %}" class="mx-auto text__underline-none">戻る</a>
       {% else %}
         <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}
           <!-- hidden -->

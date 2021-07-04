@@ -12,6 +12,8 @@ h1,
 h2,
 h3,
 h4,
+h5,
+h6,
 p,
 figure,
 blockquote,
@@ -84,6 +86,24 @@ select {
 
 .text__small {
   font-size: small;
+}
+
+.text__underline {
+  text-decoration: underline;
+}
+
+.text__underline-none {
+  text-decoration: none;
+}
+
+.el__pointer {
+  cursor: pointer;
+}
+
+.focus.focus, .focus:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .input__fixed {
@@ -162,16 +182,6 @@ a:hover {
 .beautify:hover {
   -webkit-box-shadow: 0 0 4px 6px #9c9c9c;
           box-shadow: 0 0 4px 6px #9c9c9c;
-}
-
-.el__pointer {
-  cursor: pointer;
-}
-
-.focus.focus, .focus:focus {
-  outline: none;
-  -webkit-box-shadow: none;
-          box-shadow: none;
 }
 
 .btn {
