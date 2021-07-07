@@ -16,24 +16,26 @@ if (path == "/order_manage/") {
   manageMenuConfirm();
 }
 
-let cartPlusMinus = () => {
-  let cartNum = document.getElementById("cartNum");
-  let NumVal = cartNum.value;
-  let num = parseInt(NumVal);
+if (path.indexOf("/detail/") === 0) {
+  let cartPlusMinus = () => {
+    let cartNum = document.getElementById("cartNum");
+    let NumVal = cartNum.value;
+    let num = parseInt(NumVal);
 
-  const cartMinus = document.getElementById("cartMinus");
-  const cartPlus = document.getElementById("cartPlus");
+    const cartMinus = document.getElementById("cartMinus");
+    const cartPlus = document.getElementById("cartPlus");
 
-  cartMinus.addEventListener("click", () => {
-    if (num > 1) {
-      num = num - 1;
+    cartMinus.addEventListener("click", () => {
+      if (num > 1) {
+        num = num - 1;
+        cartNum.value = num;
+      }
+    });
+
+    cartPlus.addEventListener("click", () => {
+      num = num + 1;
       cartNum.value = num;
-    }
-  });
-
-  cartPlus.addEventListener("click", () => {
-    num = num + 1;
-    cartNum.value = num;
-  });
-};
-cartPlusMinus();
+    });
+  };
+  cartPlusMinus();
+}
