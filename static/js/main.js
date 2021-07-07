@@ -16,23 +16,24 @@ if (path == "/order_manage/") {
   manageMenuConfirm();
 }
 
-const cartPlusMinus = () => {
-  let cartNum = document.getElementById("cart-num");
-  let cartNumVal = cartNum.value;
-  console.log(cartNumVal);
-  const cartMinus = document.getElementById("cart-minus");
-  const cartPlus = document.getElementById("cart-plus");
+let cartPlusMinus = () => {
+  let cartNum = document.getElementById("cartNum");
+  let NumVal = cartNum.value;
+  let num = parseInt(NumVal);
+
+  const cartMinus = document.getElementById("cartMinus");
+  const cartPlus = document.getElementById("cartPlus");
 
   cartMinus.addEventListener("click", () => {
-    if (cartNumVal > 1) {
-      cartNumVal = cartNumVal - 1;
-      console.log(cartNumVal);
+    if (num > 1) {
+      num = num - 1;
+      cartNum.value = num;
     }
   });
 
   cartPlus.addEventListener("click", () => {
-    cartNumVal = cartNumVal + 1;
-    console.log(cartNumVal);
+    num = num + 1;
+    cartNum.value = num;
   });
 };
 cartPlusMinus();
