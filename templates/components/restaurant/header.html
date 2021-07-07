@@ -4,12 +4,12 @@
   <div class="d-flex px-3">
     <div class="m-auto logo shadow d-flex align-items-center">
       {% if request.path == '/order_manage/' %}
-        <img src="{% static 'img/common/logo.svg' %}" alt="Logo" class="m-3">
+        <img src="{% static 'img/common/logo.png' %}" alt="Logo">
       {% else %}
         <a href="{% url 'restaurant:order_manage' %}" class="m-auto back focus">戻る</a>
       {% endif %}
     </div>
-    <div class="title my-auto text__bold pl-3 pt-2 d-flex align-items-center">
+    <div class="title my-auto text__bold pl-3 d-flex align-items-center">
       <h5 class="pr-sm-5 mr-sm-5">{{ user.name }}</h5>
       <h5 class="pl-sm-5 ml-sm-5 ml-2 text__bold">
         {% if request.path == '/order_manage/' %}
