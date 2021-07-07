@@ -147,7 +147,17 @@ def history(request):
     return render(request, 'restaurant/history.html', ctx)
 
 
-# for manageing menu
+@login_required
+def total(request):
+    return render(request, 'restaurant/total.html', ctx)
+
+
+@login_required
+def daily(request):
+    return render(request, 'restaurant/daily.html', ctx)
+
+
+# for manageing customer screen
 def manage_login(request):
     return render(request, 'restaurant/login.html', ctx)
 

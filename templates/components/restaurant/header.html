@@ -11,17 +11,25 @@
     </div>
     <div class="title my-auto text__bold pl-3 d-flex align-items-center">
       <h5 class="pr-sm-5 mr-sm-5">{{ user.name }}</h5>
-      <h5 class="pl-sm-5 ml-sm-5 ml-2 text__bold">
+      <h5 class="pl-sm-5 ml-sm-5 ml-sm-2 ml-5 text__bold">
         {% if request.path == '/order_manage/' %}
-          注文管理表
-        {% else %}
+          注文管理
+        {% elif request.path == '/order_manage/history/total/' %}
+          卓版管理
+        {% elif request.path == '/order_manage/history/daily/' %}
+          売上管理
+        {% elif request.path == '/order_manage/history/' %}
           注文履歴
         {% endif %}
       </h5>
     </div>
   </div>
   <div class="px-3 my-auto d-flex align-items-center">
-    <a class="mr-5 back-menu" href="{% url 'restaurant:manage_menu' %}" id="manageMenu">（メニューを作成・管理する）</a>
+    {% if request.path != '/order_manage/' %}
+    <a class="back-menu" href="{% url 'restaurant:total' %}">卓版<br class="d-sm-none d-block" />管理</a>
+    <a class="back-menu mx-4" href="{% url 'restaurant:daily' %}">売上<br class="d-sm-none d-block" />管理</a>
+    <a class="back-menu mr-sm-0 mr-3" href="{% url 'restaurant:manage_menu' %}" id="manageMenu">メニュー<br class="d-sm-none d-block" />管理</a>
+    {% endif %}
     {% if request.path == '/order_manage/' %}
       <a href="{% url 'restaurant:history' %}"><i class="clipboard fas fa-clipboard-list mr-sm-0 mr-5"></i></a>
     {% endif %}
