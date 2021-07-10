@@ -385,6 +385,13 @@ a:hover {
   }
 }
 
+.restaurant section.daily .daily-interest,
+.restaurant section.daily .total-interest {
+  border-color: #9c9c9c;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+}
+
 section.top-view {
   -webkit-animation: slideIn 1s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards;
           animation: slideIn 1s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards;

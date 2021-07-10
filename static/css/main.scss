@@ -359,6 +359,14 @@ a {
       }
     }
   }
+  section.daily {
+    .daily-interest,
+    .total-interest {
+      border-color: $grey;
+      border-radius: 4px;
+      background-color: $light-grey;
+    }
+  }
 }
 
 // customer

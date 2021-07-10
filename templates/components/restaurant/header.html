@@ -15,7 +15,7 @@
         {% if request.path == '/order_manage/' %}
           注文管理
         {% elif request.path == '/order_manage/history/total/' %}
-          卓版管理
+          お客様お会計
         {% elif request.path == '/order_manage/history/daily/' %}
           売上管理
         {% elif request.path == '/order_manage/history/' %}
@@ -26,8 +26,12 @@
   </div>
   <div class="px-3 my-auto d-flex align-items-center">
     {% if request.path != '/order_manage/' %}
-    <a class="back-menu" href="{% url 'restaurant:total' %}">卓版<br class="d-sm-none d-block" />管理</a>
-    <a class="back-menu mx-4" href="{% url 'restaurant:daily' %}">売上<br class="d-sm-none d-block" />管理</a>
+      {% if request.path != '/order_manage/history/total/'  %}
+        <a class="back-menu mx-sm-3 mx-2" href="{% url 'restaurant:total' %}">お客様<br class="d-sm-none d-block" />お会計</a>
+      {% endif %}
+      {% if request.path != '/order_manage/history/daily/' %}
+        <a class="back-menu mx-sm-3 mx-2" href="{% url 'restaurant:daily' %}">売上<br class="d-sm-none d-block" />管理</a>
+      {% endif %}
     <a class="back-menu mr-sm-0 mr-3" href="{% url 'restaurant:manage_menu' %}" id="manageMenu">メニュー<br class="d-sm-none d-block" />管理</a>
     {% endif %}
     {% if request.path == '/order_manage/' %}

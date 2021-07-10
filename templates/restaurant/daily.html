@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block custom__header %}
   <title>売上管理</title>
@@ -8,11 +9,36 @@
 {% block content %}
 <div class="w-100 restaurant">
   {% include 'components/restaurant/header.html' %}
-  <div class="pt-5">
+  <section class="pt-5 daily">
     <div class="p-5">
-      <h6>1日の売上と各商品の数量</h6>
-      <div></div>
+      <div class="daily-interest p-2 m-2">
+        <p>1日の売上と各商品の数量</p>
+        <div class="pt-3">
+          <p class="text__bold text__large">{{ totays_total_price }}　円</p>
+        </div>
+        <div>
+          {% for order in todays_orders %}
+            <p>料理名：　{{ order.menu.name }}</p>
+            <p>単価　：　{{ order.menu.price }}</p>
+            <p>個数　：　{{ order.num }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="total-interest p-2 mt-5 m-2">
+        <p>これまでの売上と各商品の個数</p>
+        <div class="pt-3">
+          <p class="text__bold text__large">{{ totays_total_price }}　円</p>
+        </div>
+        <div>
+          {% for order in orders %}
+            <p>料理名：　{{ order.menu.name }}</p>
+            <p>単価　：　{{ order.menu.price }}</p>
+            <p>個数　：　{{ order.num }}</p>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </div>
 {% endblock %}

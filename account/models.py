@@ -63,7 +63,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # for customer
 class nonLoginUser(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 

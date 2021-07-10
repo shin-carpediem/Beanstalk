@@ -9,11 +9,12 @@ class Category(models.Model):
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + "__" + str(self.created_at)
 
 
 class Allergy(models.Model):
-    ingredient = models.CharField("アレルギー食品", max_length=256, blank=True, null=True)
+    ingredient = models.CharField(
+        "アレルギー食品", max_length=256, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):

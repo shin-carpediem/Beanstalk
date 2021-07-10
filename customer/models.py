@@ -24,4 +24,4 @@ class Order(models.Model):
     created_at = models.DateTimeField("オーダー発生時刻", auto_now=True)
 
     def __str__(self):
-        return str(self.status)
+        return str(self.status) + "__" + str(self.created_at)

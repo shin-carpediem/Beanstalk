@@ -12,8 +12,9 @@ from email.mime.text import MIMEText
 import smtplib
 import random
 import datetime
+from itertools import groupby
 from .models import Category, Allergy, Menu
-from account.models import User
+from account.models import User, nonLoginUser
 from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
 
@@ -22,7 +23,8 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 table_num = '管理者'
 categories = Category.objects.defer('created_at').order_by('id')
 first_category = Category(id=1)
-menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
+menus = Menu.objects.defer('created_at').filter(
+    category=first_category).order_by('-id')
 allergies = Allergy.objects.all().order_by('id')
 ctx = {
     'table_num': table_num,
@@ -151,22 +153,41 @@ def history(request):
 @login_required
 def total(request):
     dt_now = datetime.datetime.now()
-    # 卓版と金額の一致
-    # 24時間以内に作られた注文のみを抽出
-    # orders = Order.objects.filter(created_at=)
-    orders = Order.objects.filter(created_at__date=datetime.date(
-        dt_now.year, dt_now.month, dt_now.day))
-    print(orders)
+    # 同日日時、あるいは昨日に作られた注文のみを抽出
+    orders = Order.objects.filter(Q(created_at__date=datetime.date(
+        dt_now.year, dt_now.month, dt_now.day)) | Q(created_at__date=datetime.date(
+            dt_now.year, dt_now.month, (dt_now.day)-1)))
+
     ctx['orders'] = orders
+
     return render(request, 'restaurant/total.html', ctx)
 
 
 @login_required
 def daily(request):
+    orders = Order.objects.filter(status='済').order_by('-id')
+
+    total_price = 0
+
+    for order in orders:
+        total_price = total_price + (order.menu.price * order.num)
+
     # 1日の売上と各商品の数量
     dt_now = datetime.datetime.now()
-    # orders = Order.objects.filter(created_at=).order_by('-id')
-    # print(orders)
+    todays_orders = Order.objects.filter(status='済', created_at__date=datetime.date(
+        dt_now.year, dt_now.month, dt_now.day)).order_by('-id')
+
+    totays_total_price = 0
+
+    for todays_order in todays_orders:
+        totays_total_price = totays_total_price + \
+            (todays_order.menu.price * todays_order.num)
+
+    ctx['orders'] = orders
+    ctx['total_price'] = total_price
+    ctx['todays_orders'] = todays_orders
+    ctx['totays_total_price'] = totays_total_price
+
     return render(request, 'restaurant/daily.html', ctx)
 
 
