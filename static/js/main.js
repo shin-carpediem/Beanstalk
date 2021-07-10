@@ -1,5 +1,6 @@
 "use strict";
 
+lazyload();
 let path = window.location.href;
 
 if (path == "/order_manage/") {

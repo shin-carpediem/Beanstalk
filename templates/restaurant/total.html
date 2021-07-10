@@ -11,6 +11,32 @@
   <div class="pt-5">
     <div class="pt-sm-3 pt-5">
       {% for order in orders %}
+        <table class="mx-5 my-3">
+          <thead>
+            <tr>
+              <th>{{ order.customer.table }}</th>
+            </tr>
+            <tr>
+              <th>{{ order.customer }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ order.status }}</td>
+            </tr>
+            <tr>
+              <td>{{ order.menu }}</td>
+            </tr>
+            <tr>
+              <td>{{ order.menu.price }}</td>
+            </tr>
+            <tr>
+              <td>{{ order.num }}</td>
+            </tr>
+            <tr></tr>
+          </tbody>
+        </table>
+      <hr>
       {% endfor %}
     </div>
   </div>

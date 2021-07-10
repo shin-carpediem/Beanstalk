@@ -152,6 +152,8 @@ def history(request):
 def total(request):
     dt_now = datetime.datetime.now()
     # 卓版と金額の一致
+    # 24時間以内に作られた注文のみを抽出
+    # orders = Order.objects.filter(created_at=)
     orders = Order.objects.filter(created_at__date=datetime.date(
         dt_now.year, dt_now.month, dt_now.day))
     print(orders)
