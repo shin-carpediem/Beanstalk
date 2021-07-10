@@ -20,9 +20,9 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 # Create your views here.
 # default
 table_num = '管理者'
-categories = Category.objects.all().order_by('id')
+categories = Category.objects.defer('created_at').order_by('id')
 first_category = Category(id=1)
-menus = Menu.objects.filter(category=first_category).order_by('-id')
+menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
 allergies = Allergy.objects.all().order_by('id')
 ctx = {
     'table_num': table_num,

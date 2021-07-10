@@ -49,9 +49,9 @@ def table(request):
 def menu(request):
     user = request.user
 
-    categories = Category.objects.all().order_by('id')
+    categories = Category.objects.defer('created_at').order_by('id')
     first_category = Category(id=1)
-    menus = Menu.objects.filter(category=first_category).order_by('-id')
+    menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
     allergies = Allergy.objects.all().order_by('id')
     try:
         restaurant = User.objects.get(id=3)
@@ -124,9 +124,9 @@ def filter(request):
     category_name = request.POST.get('category')
 
     category_id = Category.objects.get(name=category_name)
-    categories = Category.objects.all().order_by('id')
-    menus = Menu.objects.filter(category=category_id).order_by('-id')
-    allergies = Allergy.objects.all().order_by('id')
+    categories = Category.objects.defer('created_at').order_by('id')
+    menus = Menu.objects.defer('created_at').filter(category=category_id).order_by('-id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
     try:
         restaurant = User.objects.get(id=3)
     except:
@@ -170,7 +170,7 @@ def menu_detail(request, menu_id):
     table_num = request.POST.get('table')
     menu = get_object_or_404(Menu, pk=menu_id)
 
-    allergies = Allergy.objects.all().order_by('id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
     has_allergies = menu.allergies.all().order_by('id')
 
     if user.is_authenticated:
@@ -248,10 +248,10 @@ def cart(request):
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
-        categories = Category.objects.all().order_by('id')
+        categories = Category.objects.defer('created_at').order_by('id')
         first_category = Category(id=1)
         menus = Menu.objects.filter(category=first_category).order_by('-id')
-        allergies = Allergy.objects.all().order_by('id')
+        allergies = Allergy.objects.defer('created_at').order_by('id')
 
         ctx = {
             'random_code': random_code,
@@ -264,7 +264,7 @@ def cart(request):
 
         return render(request, 'customer/menu.html', ctx)
     else:
-        carts = Cart.objects.filter(customer=uuid).order_by('-id')
+        carts = Cart.objects.defer('created_at').filter(customer=uuid).order_by('-id')
 
         ctx = {
             'random_code': random_code,
@@ -282,8 +282,8 @@ def cart_detail(request, menu_id):
     table_num = request.POST.get('table')
     menu = get_object_or_404(Menu, pk=menu_id)
 
-    allergies = Allergy.objects.all().order_by('id')
-    has_allergies = menu.allergies.all().order_by('id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
+    has_allergies = menu.allergies.defer('created_at').order_by('id')
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -319,9 +319,9 @@ def order(request):
     # uuid = request.session['nonloginuser_uuid'][table_num]
     uuid = request.session['nonloginuser_uuid']['1']
 
-    categories = Category.objects.all().order_by('id')
+    categories = Category.objects.defer('created_at').order_by('id')
     first_category = Category(id=1)
-    menus = Menu.objects.filter(category=first_category).order_by('-id')
+    menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -345,7 +345,7 @@ def order(request):
 
         try:
             from .models import Cart, Order
-            users_cart = Cart.objects.filter(customer=uuid).order_by('-id')
+            users_cart = Cart.objects.defer('created_at').filter(customer=uuid).order_by('-id')
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
             # cartからorderにコピー
@@ -396,8 +396,8 @@ def history(request):
 
         from .models import Cart, Order
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        carts = Cart.objects.filter(customer=user_uuid).order_by('-id')
-        orders = Order.objects.filter(customer=user_uuid).order_by('-id')
+        carts = Cart.objects.defer('created_at').filter(customer=user_uuid).order_by('-id')
+        orders = Order.objects.defer('created_at').filter(customer=user_uuid).order_by('-id')
         # _orders = Order.objects.filter(
         #     (Q(status='キャンセル') | Q(status='済')), customer=user)
 
