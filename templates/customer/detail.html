@@ -6,7 +6,7 @@
 <section class="menu-detail">
   <div class="menu-top-view">
     {% if menu.img %}
-      <img class="lazyload" height=420 data-src="{{ menu.img.url }}" alt="Menu">
+      <img class="lazyload" height=420 src="{{ menu.img.url }}" alt="Menu">
     {% endif %}
 
     {% include 'components/restaurant/modal/img.html' %}
