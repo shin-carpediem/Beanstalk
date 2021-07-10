@@ -65,7 +65,11 @@ def menu(request):
         random_code = non_login_user_random_code(50)
 
         # 新規の客かどうかをセッションで判断する
+        # 新規の客
         if not 'nonloginuser_uuid' in request.session:
+            table_num = request.POST.get('table')
+            print(table_num)
+            print("hoge")
             try:
                 table_num = request.POST.get('table')
                 newuser = nonLoginUser(table=table_num,)
@@ -82,7 +86,9 @@ def menu(request):
             request.session['table'] = {1: table_num}
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
+        # 既存の客
         else:
+            print(request.session['table'])
             try:
                 table_num = request.session['table']['1']
             except:
