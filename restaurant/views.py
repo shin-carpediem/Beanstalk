@@ -11,6 +11,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import random
+import datetime
 from .models import Category, Allergy, Menu
 from account.models import User
 from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
@@ -149,11 +150,21 @@ def history(request):
 
 @login_required
 def total(request):
+    dt_now = datetime.datetime.now()
+    # 卓版と金額の一致
+    orders = Order.objects.filter(created_at__date=datetime.date(
+        dt_now.year, dt_now.month, dt_now.day))
+    print(orders)
+    ctx['orders'] = orders
     return render(request, 'restaurant/total.html', ctx)
 
 
 @login_required
 def daily(request):
+    # 1日の売上と各商品の数量
+    dt_now = datetime.datetime.now()
+    # orders = Order.objects.filter(created_at=).order_by('-id')
+    # print(orders)
     return render(request, 'restaurant/daily.html', ctx)
 
 

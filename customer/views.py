@@ -21,7 +21,7 @@ def index(request):
 
 def table(request):
     # 新規の客かどうかをセッションで判断する
-    if not 'nonloginuser_uuid' in request.session:
+    if 'nonloginuser_uuid' in request.session:
         messages.info(request, f'すでに使用中の場合は、画面下の「復元」ボタンを押してください')
         return redirect('customer:index')
     else:
@@ -132,7 +132,6 @@ def filter(request):
         table_num = "管理者"
     # 客側から
     else:
-        print(request.session['nonloginuser']['1'])
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック

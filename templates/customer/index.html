@@ -2,8 +2,10 @@
 {% load static %}
 
 {% block content %}
-<section class="wrapper w-100 top-view">
-  <img src="{% static 'img/common/top-view.jpg' %}" alt="Top View">
+<section class="w-100 top-view">
+  <div class="img">
+    <img src="{% static 'img/common/top-view.jpg' %}" alt="Top View">
+  </div>
   <div class="forms">
     <h1 class="text__bold text-center">メニュー表</h1>
     <form class="px-auto mt-4 mb-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
@@ -15,7 +17,7 @@
       <p class="text__small mb-4">ブラウザを閉じてしまった方はこちらから</p>
       <!-- hidden -->
       <input type="hidden" name="table" value="{{ table_num }}">
-      <button type="submit" class="btn__glass w-50 btn shadow mb-5">復元</button>
+      <button type="submit" class="btn__glass w-50 btn shadow">復元</button>
     </form>
   </div>
 </section>

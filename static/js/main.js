@@ -16,7 +16,7 @@ if (path == "/order_manage/") {
   manageMenuConfirm();
 }
 
-if (path.indexOf("/detail/") === 0) {
+if (path.indexOf("detail") > -1) {
   let cartPlusMinus = () => {
     let cartNum = document.getElementById("cartNum");
     let NumVal = cartNum.value;

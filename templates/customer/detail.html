@@ -61,7 +61,7 @@
       <form class="cart-form" action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
         <div class="d-flex input__fixed justify-content-center align-items-center">
           <p class="text__bold plus-minus el__pointer" id="cartMinus">-</p>
-          <input type="text" class="ml-4 mr-2 text__bold" value="1" id="cartNum" required readonly>
+          <input type="number" name="cart_num" class="ml-4 mr-2 text__bold" value="1" id="cartNum" required readonly>
           <p class="pt-2 text__bold text__large">個</p>
           <p class="ml-4 text__bold plus-minus el__pointer" id="cartPlus">+</p>
         </div>

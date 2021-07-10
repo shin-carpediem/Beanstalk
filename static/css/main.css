@@ -362,6 +362,10 @@ a:hover {
           transform: scale(2);
 }
 
+.restaurant section.order-table {
+  background-color: #fff;
+}
+
 .restaurant section.order-table .order-item {
   border-radius: 4px;
 }
@@ -416,6 +420,17 @@ section.top-view {
   100% {
     opacity: 1;
   }
+}
+
+section.top-view .img {
+  height: 100vh;
+}
+
+section.top-view .img img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 section.top-view img {
