@@ -2,11 +2,9 @@
 
 # Beanstalk
 
-Technique:
+Technology:
 
-- AWS lightsail(Ubuntu + Apache + gunicorn + Django)
-- Pipenv
-- MySQL
+- App Engine
 
 To go into virtual environment with Pipfile,
 
