@@ -151,6 +151,16 @@ html {
   }
 }
 
+.error-img {
+  height: 200px;
+  width: auto;
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 // unique default
 $blue: #257cff;
 $turquoise: #aae2d1;

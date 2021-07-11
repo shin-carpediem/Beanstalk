@@ -2,9 +2,11 @@
 {% load static %}
 
 {% block content %}
-<div class="m-auto p-auto">
+<div class="text-center p-5">
   <p>ご不便をおかけし申し訳ありません</p>
-  <img class="my-3" src="{% static 'img/common/error_404.svg' %}" alt="404_Error">
+  <div class="error-img">
+    <img class="my-3" src="{% static 'img/common/error_404.svg' %}" alt="404_Error">
+  </div>
   <button class="btn btn__blue px-3 py-2" onclick="history.back(); return false;">
     戻る
   </button>

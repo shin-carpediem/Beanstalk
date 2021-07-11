@@ -193,10 +193,23 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
 # Use a in-memory sqlite3 database when testing in CI systems
 # TODO: (glasnt) CHECK IF THIS IS REQUIRED because we're setting a val above
 # if os.getenv("TRAMPOLINE_CI", None):
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#     }
+# }
+DB_PATH = os.path.join(BASE_DIR, 'db.sqlite3')
+try:
+    from shutil import copyfile
+    DB_PATH = "/tmp/db.sqlite3"
+    copyfile(os.path.join(BASE_DIR, 'db.sqlite3'), DB_PATH)
+except:
+    pass
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DB_PATH,
     }
 }
 
