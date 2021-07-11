@@ -1,6 +1,10 @@
 {% extends 'customer/base__next.html' %}
 {% load static %}
 
+{% block custom__header %}
+  <title>beanstalk</title>
+{% endblock %}
+
 {% block content %}
 <section class="w-100 top-view">
   <div class="img">
@@ -14,10 +18,10 @@
     </form>
 
     <form class="px-auto mt-5 pt-5" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
-      <p class="text__small mb-4">ブラウザを閉じてしまった方はこちらから</p>
+      <p class="text__small mb-4">追加のオーダーはこちらから</p>
       <!-- hidden -->
       <input type="hidden" name="table" value="{{ table_num }}">
-      <button type="submit" class="btn__glass w-50 btn shadow">復元</button>
+      <button type="submit" class="btn__glass w-50 btn shadow">戻る</button>
     </form>
   </div>
 </section>

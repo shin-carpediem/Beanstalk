@@ -20,19 +20,20 @@ def index(request):
 
 
 def table(request):
-    # 新規の客かどうかをセッションで判断する
-    if 'nonloginuser_uuid' in request.session:
-        messages.info(request, f'すでに使用中の場合は、画面下の「復元」ボタンを押してください')
-        return redirect('customer:index')
-    else:
+    user = request.user
+
+    # print(request.session)
+    # 新規/既存をセッションで判断する
+    # 新規
+    if not 'nonloginuser_uuid' in request.session:
 
         try:
+            # TODO: be careful of id, client id should be 3.
             restaurant = User.objects.get(id=3)
         except:
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
-        user = request.user
         if user.is_authenticated:
             return redirect('restaurant:logout')
         else:
@@ -44,6 +45,10 @@ def table(request):
             }
 
             return render(request, 'customer/table.html', ctx)
+    # 既存
+    else:
+        messages.info(request, f'追加のオーダーの際は画面下の「戻る」ボタンを押してください')
+        return redirect('customer:index')
 
 
 def menu(request):
@@ -51,8 +56,10 @@ def menu(request):
 
     categories = Category.objects.defer('created_at').order_by('id')
     first_category = Category(id=1)
-    menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
+    menus = Menu.objects.defer('created_at').filter(
+        category=first_category).order_by('-id')
     allergies = Allergy.objects.all().order_by('id')
+
     try:
         restaurant = User.objects.get(id=3)
     except:
@@ -64,35 +71,35 @@ def menu(request):
     else:
         random_code = non_login_user_random_code(50)
 
+        # TODO:
         # 新規の客かどうかをセッションで判断する
-        # 新規の客
+        # 新規
         if not 'nonloginuser_uuid' in request.session:
-            table_num = request.POST.get('table')
-            print(table_num)
-            print("hoge")
+
             try:
                 table_num = request.POST.get('table')
-                newuser = nonLoginUser(table=table_num,)
-                newuser.save()
             except:
-                messages.info(request, f'まだ一度もメニュー画面にたどり着いていないようです')
+                messages.info(request, f'申し訳ございません。再度「始める」を押してください')
                 return redirect('customer:index')
 
+            newuser = nonLoginUser(table=table_num,)
+            newuser.save()
             uuid = str(newuser.uuid)
-            # userid = newuser.table
+
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {1: uuid}
             # テーブル番号のセッションを作成
             request.session['table'] = {1: table_num}
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
-        # 既存の客
+        # 既存
         else:
-            print(request.session['table'])
+
+            # print(request.session['table']['1'])
             try:
                 table_num = request.session['table']['1']
             except:
-                messages.info(request, f'すでに使用中の場合は、画面下の「復元」ボタンを押してください')
+                messages.info(request, f'申し訳ございません。再度「戻る」を押してください')
                 return redirect('customer:index')
 
     if user.is_authenticated:
@@ -125,8 +132,10 @@ def filter(request):
 
     category_id = Category.objects.get(name=category_name)
     categories = Category.objects.defer('created_at').order_by('id')
-    menus = Menu.objects.defer('created_at').filter(category=category_id).order_by('-id')
+    menus = Menu.objects.defer('created_at').filter(
+        category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
+
     try:
         restaurant = User.objects.get(id=3)
     except:
@@ -242,6 +251,7 @@ def cart(request):
         None
 
     if request.POST.get('direct') == 'direct':
+
         try:
             restaurant = User.objects.get(id=3)
         except:
@@ -264,7 +274,8 @@ def cart(request):
 
         return render(request, 'customer/menu.html', ctx)
     else:
-        carts = Cart.objects.defer('created_at').filter(customer=uuid).order_by('-id')
+        carts = Cart.objects.defer('created_at').filter(
+            customer=uuid).order_by('-id')
 
         ctx = {
             'random_code': random_code,
@@ -321,11 +332,13 @@ def order(request):
 
     categories = Category.objects.defer('created_at').order_by('id')
     first_category = Category(id=1)
-    menus = Menu.objects.defer('created_at').filter(category=first_category).order_by('-id')
+    menus = Menu.objects.defer('created_at').filter(
+        category=first_category).order_by('-id')
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
     else:
+
         try:
             restaurant = User.objects.get(id=3)
         except:
@@ -345,7 +358,8 @@ def order(request):
 
         try:
             from .models import Cart, Order
-            users_cart = Cart.objects.defer('created_at').filter(customer=uuid).order_by('-id')
+            users_cart = Cart.objects.defer('created_at').filter(
+                customer=uuid).order_by('-id')
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
             # cartからorderにコピー
@@ -396,8 +410,10 @@ def history(request):
 
         from .models import Cart, Order
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        carts = Cart.objects.defer('created_at').filter(customer=user_uuid).order_by('-id')
-        orders = Order.objects.defer('created_at').filter(customer=user_uuid).order_by('-id')
+        carts = Cart.objects.defer('created_at').filter(
+            customer=user_uuid).order_by('-id')
+        orders = Order.objects.defer('created_at').filter(
+            customer=user_uuid).order_by('-id')
         # _orders = Order.objects.filter(
         #     (Q(status='キャンセル') | Q(status='済')), customer=user)
 

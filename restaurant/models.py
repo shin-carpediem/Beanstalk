@@ -9,7 +9,7 @@ class Category(models.Model):
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):
-        return str(self.name) + "__" + str(self.created_at)
+        return str(self.name)
 
 
 class Allergy(models.Model):

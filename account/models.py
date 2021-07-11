@@ -69,4 +69,4 @@ class nonLoginUser(models.Model):
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):
-        return str(self.table) + str(self.created_at)
+        return str(self.uuid)

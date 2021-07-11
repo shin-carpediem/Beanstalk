@@ -20,7 +20,7 @@
         <div class="pl-5">
           <img src="{% static 'img/common/logo.png' %}" alt="Logo" class="logo shadow">
         </div>
-        <h5 class="m-auto">beanstalk</h5>
+        <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
       <form method="POST"
        {% if request.path == '/manage/login/' %}
@@ -30,13 +30,8 @@
         {% endif %}>{% csrf_token %}
         <label>メールアドレス</label><br>
         <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2"><br>
-        <!-- <label>パスワード</label><br>
-        <input type="password" name="password" class="px-3 mb-3"> -->
-        <!-- <div>
-          <input type="checkbox" name="keep-login">ログイン状態を保持する
-        </div> -->
         <div class="pt-5">
-          <button type="submit" class="px-4 btn btn__blue shadow">確認メールの送信</button>
+          <button type="submit" class="px-4 btn btn__blue shadow">認証コードを受け取る</button>
         </div>
       </form>
     </div>
@@ -44,13 +39,13 @@
       <div class="col-sm-6 col-12">
         {% if request.path == '/login/' %}
           <a href="{% url 'restaurant:manage_login' %}">メニューを作成・管理する*</a>
-          <p class="pl-3">*最初にログインを要求されます</p>
+          <p class="pl-3">*最初にログインを求められます</p>
         {% elif request.path == '/manage/login/' %}
           <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
         {% endif %}
       </div>
       <div class="col-sm-6 col-12 text-sm-right pt-sm-0 pt-5">
-        <a href="{% url 'customer:index' %}">お客様用ページを確認する</a>
+        <a href="{% url 'customer:index' %}">お客様から見える画面を確認する</a>
       </div>
     </div>
   </div>

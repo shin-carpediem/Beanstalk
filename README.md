@@ -5,6 +5,7 @@
 Technology:
 
 - App Engine
+- Cloud SQL/MySQL
 - Cloud Storage
 
 To go into virtual environment with Pipfile,
@@ -56,9 +57,19 @@ To exit from MySQL,
 > exit
 ```
 
-To check the Apache log
+To check the Apache log,
 
 ```
 $ /opt/bitnami/apache2/logs/access_log
 $ /opt/bitnami/apache2/logs/error_log
+```
+
+## Google Cloud Platform
+
+https://cloud.google.com/python/django/appengine?hl=ja#creating_a_cloud_sql_instance
+To deploy,
+
+```
+$ python manage.py collectstatic
+$ gcloud app deploy
 ```

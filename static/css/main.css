@@ -311,6 +311,10 @@ a:hover {
   height: 50px;
 }
 
+.message {
+  background-color: #f1f1f1;
+}
+
 .full__wrapper {
   position: relative;
 }

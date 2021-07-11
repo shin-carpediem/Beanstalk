@@ -28,13 +28,13 @@
     {% if request.path == '/' or request.path == '/menu/' or request.path == '/manage/menu/' %}
       {{ restaurant_name }}
     {% elif request.path == '/cart/' %}
-      ご注文
+      ご注文予定
     {% elif request.path == '/history/' %}
       ご注文履歴
     {% endif %}
   </h5>
 
-  {% if request.path != '/' %}
+  {% if request.path != '/table/' %}
     <p class="col-4 my-auto text__bold">テーブル番号: {{ table_num }}</p>
   {% endif %}
 
