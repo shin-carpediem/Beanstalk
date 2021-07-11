@@ -229,16 +229,11 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 
-# STATIC_ROOT = 'static'
-# if DEBUG:
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-# else:
-#     STATIC_ROOT = 'staticfiles'
-#     STATICFILES_DIRS = []
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
