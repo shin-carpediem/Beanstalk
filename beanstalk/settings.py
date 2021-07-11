@@ -67,7 +67,7 @@ SECRET_KEY = env("SECRET_KEY")
 # TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
@@ -154,31 +154,31 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
 
 # [END gaestd_py_django_database_config]
 
-if os.getenv('GAE_APPLICATION', None):
+# if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': env("DB-HOST"),
-            'USER': env("DB-USERNAME"),
-            'PASSWORD': env("DB-PASSWORD"),
-            'NAME': env("DB-NAME"),
-        }
-    }
-else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'HOST': env("DB-HOST"),
+#             'USER': env("DB-USERNAME"),
+#             'PASSWORD': env("DB-PASSWORD"),
+#             'NAME': env("DB-NAME"),
+#         }
+#     }
+# else:
     # Running locally so connect to either a local MySQL instance or connect to
     # Cloud SQL via the proxy. To start the proxy via command line:
     #
     #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
     #
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    DATABASES = {
-        'default': {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
-    }
+    # DATABASES = {
+    #     'default': {
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    #     }
+    # }
     # DATABASES = {
     #     'default': {
     #         'ENGINE': 'django.db.backends.mysql',
@@ -193,12 +193,12 @@ else:
 # Use a in-memory sqlite3 database when testing in CI systems
 # TODO: (glasnt) CHECK IF THIS IS REQUIRED because we're setting a val above
 # if os.getenv("TRAMPOLINE_CI", None):
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
 
 # [END db_setup]
 

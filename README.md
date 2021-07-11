@@ -1,6 +1,6 @@
 <img src="https://img.shields.io/badge/-Django-092E20.svg?logo=django&style=flat"> <img src="https://img.shields.io/badge/-Bootstrap-563D7C.svg?logo=bootstrap&style=flat"> <img src="https://img.shields.io/badge/-Sass-CC6699.svg?logo=sass&style=flat"> <img src="https://img.shields.io/badge/-Google%20Cloud-EEE.svg?logo=google-cloud&style=flat">
 
-# Beanstalk
+# beanstalk
 
 Technology:
 
@@ -64,7 +64,7 @@ $ /opt/bitnami/apache2/logs/access_log
 $ /opt/bitnami/apache2/logs/error_log
 ```
 
-## Google Cloud Platform
+### Google Cloud Platform
 
 https://cloud.google.com/python/django/appengine?hl=ja#creating_a_cloud_sql_instance
 To deploy,
