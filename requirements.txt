@@ -17,6 +17,7 @@ google-cloud-secret-manager==2.5.0
 googleapis-common-protos==1.53.0
 grpc-google-iam-v1==0.12.3
 grpcio==1.38.1
+gunicorn==20.1.0
 idna==2.10
 libcst==0.3.19
 Markdown==3.3.4
@@ -31,6 +32,7 @@ psycopg2==2.8.6
 psycopg2-binary==2.9.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
+PyMySQL==1.0.2
 pyparsing==2.4.7
 pytz==2021.1
 PyYAML==5.4.1

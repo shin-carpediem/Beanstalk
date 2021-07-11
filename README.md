@@ -5,6 +5,7 @@
 Technology:
 
 - App Engine
+- Cloud Storage
 
 To go into virtual environment with Pipfile,
 
