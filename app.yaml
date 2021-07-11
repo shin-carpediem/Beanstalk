@@ -36,6 +36,6 @@ handlers:
   secure: always
 
 # This is imports the WSGI-compatible object of your Django app
-# entrypoint: gunicorn -b :$PORT beanstalk.wsgi
+entrypoint: gunicorn -b :$PORT beanstalk.wsgi
 # [END gaestd_py_django_app_yaml]
 # [END django_app]
