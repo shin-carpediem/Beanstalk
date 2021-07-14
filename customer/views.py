@@ -113,7 +113,6 @@ def menu(request):
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
-            'first_category': first_category,
             'menus': menus,
             'allergies': allergies,
         }
@@ -123,7 +122,6 @@ def menu(request):
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
-            'first_category': first_category,
             'menus': menus,
             'allergies': allergies,
         }
@@ -183,6 +181,7 @@ def filter(request):
     return render(request, 'customer/menu.html', ctx)
 
 
+@require_POST
 def menu_detail(request, menu_id):
     user = request.user
     random_code = request.POST.get('random_code')
