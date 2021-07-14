@@ -22,7 +22,7 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 # default
 table_num = '管理者'
 categories = Category.objects.defer('created_at').order_by('id')
-first_category = Category(id=1)
+first_category = Category(id=0)
 menus = Menu.objects.defer('created_at').filter(
     category=first_category).order_by('-id')
 allergies = Allergy.objects.all().order_by('id')
@@ -213,6 +213,7 @@ def category_add(request):
     if Category.objects.filter(name=name).count() == 0:
         category = Category(name=name)
         category.save()
+        messages.success(request, f"カテゴリーに{name}を追加しました。")
     else:
         messages.warning(request, f"同じ名前のカテゴリは作成できません。")
 
@@ -227,6 +228,7 @@ def category_ch(request):
     category = Category.objects.get(name=name)
     category.name = required_name
     category.save()
+    messages.success(request, f"カテゴリーの名前を{name}から{required_name}に変更しました。")
 
     return redirect('customer:menu')
 
@@ -238,6 +240,7 @@ def category_del(request):
     try:
         category = Category.objects.get(name=name)
         category.delete()
+        messages.success(request, f"カテゴリーから{name}を削除しました。")
     except:
         messages.warning(request, f"削除に失敗しました。")
 
@@ -249,7 +252,7 @@ def category_del(request):
 def menu_add(request):
     name = request.POST.get('name')
     if Menu.objects.filter(name=name).count() != 0:
-        messages.warning(request, f"全く同じ名前のメニューは作れません。")
+        messages.warning(request, f"同一の名前のメニューは作れません。")
     else:
         category = request.POST.get('category')
         # foreign_key
@@ -267,6 +270,7 @@ def menu_add(request):
             menu.allergies.add(allergy_query)
 
         menu.save()
+        messages.success(request, f"{category}に{name}を追加しました。")
 
     return redirect('customer:menu')
 
@@ -277,6 +281,7 @@ def menu_del(request):
     required_menu = request.POST.get('menu')
     menu = Menu.objects.get(name=required_menu)
     menu.delete()
+    messages.success(request, f"{required_menu}をメニューから削除しました。")
 
     return redirect('customer:menu')
 
@@ -293,6 +298,8 @@ def menu_img_manage(request):
 
     menu.img = menu_img
     menu.save()
+    name = menu.name
+    messages.success(request, f"{name}の写真を変更しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -305,6 +312,7 @@ def menu_name_manage(request):
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()
+    messages.success(request, f"{menu_name}に名前を変更しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -317,6 +325,8 @@ def menu_price_manage(request):
     menu = Menu.objects.get(id=menu_id)
     menu.price = menu_price
     menu.save()
+    name = menu.name
+    messages.success(request, f"{name}の金額を{menu_price}円に変更しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -362,6 +372,7 @@ def allergy_add(request):
     menu = Menu.objects.get(id=menu_id)
     menu.allergies.create(ingredient=get_allergy)
     menu.save()
+    messages.success(request, f"{get_allergy}をアレルギー項目一覧に追加しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -374,5 +385,6 @@ def allergy_del(request):
     menu = Menu.objects.get(id=menu_id)
     allergy = Allergy.objects.get(ingredient=get_allergy)
     allergy.delete()
+    messages.success(request, f"{get_allergy}をアレルギー項目一覧から削除しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)

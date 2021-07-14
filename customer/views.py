@@ -30,7 +30,11 @@ def table(request):
         try:
             # TODO: be careful of id, client id should be 3.
             restaurant = User.objects.get(id=3)
-        except:
+        except Exception:
+            # たかこうのアカウントID
+            restaurant = User.objects.get(id=2)
+        else:
+            # 青木のアカウントID
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
@@ -55,14 +59,16 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = Category(id=1)
+    first_category = Category(id=0)
     menus = Menu.objects.defer('created_at').filter(
         category=first_category).order_by('-id')
     allergies = Allergy.objects.all().order_by('id')
 
     try:
         restaurant = User.objects.get(id=3)
-    except:
+    except Exception:
+        restaurant = User.objects.get(id=2)
+    else:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
@@ -107,6 +113,7 @@ def menu(request):
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
+            'first_category': first_category,
             'menus': menus,
             'allergies': allergies,
         }
@@ -116,6 +123,7 @@ def menu(request):
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
+            'first_category': first_category,
             'menus': menus,
             'allergies': allergies,
         }
@@ -138,7 +146,9 @@ def filter(request):
 
     try:
         restaurant = User.objects.get(id=3)
-    except:
+    except Exception:
+        restaurant = User.objects.get(id=2)
+    else:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
@@ -254,12 +264,14 @@ def cart(request):
 
         try:
             restaurant = User.objects.get(id=3)
-        except:
+        except Exception:
+            restaurant = User.objects.get(id=2)
+        else:
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
         categories = Category.objects.defer('created_at').order_by('id')
-        first_category = Category(id=1)
+        first_category = Category(id=0)
         menus = Menu.objects.filter(category=first_category).order_by('-id')
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
@@ -331,7 +343,7 @@ def order(request):
     uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = Category(id=1)
+    first_category = Category(id=0)
     menus = Menu.objects.defer('created_at').filter(
         category=first_category).order_by('-id')
 
@@ -341,7 +353,9 @@ def order(request):
 
         try:
             restaurant = User.objects.get(id=3)
-        except:
+        except Exception:
+            restaurant = User.objects.get(id=2)
+        else:
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
