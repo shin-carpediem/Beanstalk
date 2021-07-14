@@ -336,7 +336,7 @@ a:hover {
   position: relative;
 }
 
-.full__wrapper .loading_icon {
+.full__wrapper #loading_icon {
   position: absolute;
   z-index: 100;
   top: 50%;

@@ -28,7 +28,7 @@
   {% if user.is_authenticated %}
     <!-- webpush用のmetaタグとスクリプトの読み込み -->
     {% webpush_header %}
-  {% endblock %}
+  {% endif %}
 
   {% block custom__header %}
   {% endblock %}
