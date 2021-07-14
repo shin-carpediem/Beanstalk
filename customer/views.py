@@ -59,7 +59,7 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = Category(id=0)
+    first_category = Category.objects.get(id=1)
     menus = Menu.objects.defer('created_at').filter(
         category=first_category).order_by('-id')
     allergies = Allergy.objects.all().order_by('id')
@@ -225,7 +225,6 @@ def cart(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    # uuid = request.session['nonloginuser_uuid'][table_num]
     uuid = request.session['nonloginuser_uuid']['1']
 
     if user.is_authenticated:
@@ -342,7 +341,6 @@ def order(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    # uuid = request.session['nonloginuser_uuid'][table_num]
     uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
