@@ -100,6 +100,10 @@ select {
   cursor: pointer;
 }
 
+.el__hide {
+  display: none;
+}
+
 .focus.focus, .focus:focus {
   outline: none;
   -webkit-box-shadow: none;
@@ -321,6 +325,21 @@ a:hover {
   border-radius: 50%;
   width: 50px;
   height: 50px;
+}
+
+.full__wrapper {
+  position: relative;
+}
+
+.full__wrapper .loading_icon {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 
 .message {

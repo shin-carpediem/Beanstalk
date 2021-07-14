@@ -70,7 +70,9 @@
         <input type="hidden" name="random_code" value="{{ random_code }}">
         <input type="hidden" name="table" value="{{ table_num }}">
         <input type="hidden" name="direct" value="direct">
-        <button type="submit" class="btn btn__orange btn__fixed-righter shadow">追加</button>
+        <button type="submit" class="btn btn__orange btn__fixed-righter shadow" onclick="loading_show()">
+          追加
+        </button>
       </form>
     {% endif %}
   </div>

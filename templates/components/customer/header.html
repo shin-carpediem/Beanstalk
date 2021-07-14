@@ -18,7 +18,9 @@
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
-          <button type="submit" class="m-auto back focus pl-2">戻る</button>
+          <button type="submit" class="m-auto back focus pl-2" onclick="loading_show()">
+            戻る
+          </button>
         </form>
       {% endif %}
     </div>
@@ -44,7 +46,7 @@
         <!-- hidden -->
         <input type="hidden" name="random_code" value="{{ random_code }}">
         <input type="hidden" name="table" value="{{ table_num }}">
-        <button class="focus" type="submit" style="padding:0;border:0">
+        <button class="focus" type="submit" style="padding:0;border:0" onclick="loading_show()">
           <i class="clipboard fas fa-clipboard-list"></i>
         </button>
       </form>

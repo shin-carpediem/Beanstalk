@@ -1,6 +1,13 @@
 "use strict";
 
 lazyload();
+
+const loading_icon = document.getElementById("loading_icon");
+const loading_show = () => {
+  loading_icon.classList.remove("prop_hide");
+};
+loading_show();
+
 let path = window.location.href;
 
 if (path == "/order_manage/") {

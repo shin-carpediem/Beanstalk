@@ -10,9 +10,9 @@
         <form action="{% url 'customer:filter' %}" method="POST">{% csrf_token %}
           <!--TODO: 現在のカテゴリの時に色が付いた状態にする -->
           {% if category.name == "{{ category_name }}" %}
-            <button type="submit" style="background-color: #ffd79a;" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}">
+            <button type="submit" style="background-color: #ffd79a;" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">
           {% else %}
-            <button type="submit" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}">
+            <button type="submit" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">
           {% endif %}
               {{ category.name }}
             </button>
@@ -29,7 +29,7 @@
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
       <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
-        <button type="submit" class="w-100 h-100 p-0 focus">
+        <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           {% if menu.formatted_img %}
             <img class="m-0 lazyload" data-src="{{ menu.formatted_img.url }}" alt="Menu">
           {% endif %}
@@ -55,7 +55,7 @@
       <!-- hidden -->
       <input type="hidden" name="random_code" value="{{ random_code }}">
       <input type="hidden" name="table" value="{{ table_num }}">
-      <button type="submit" class="btn btn__orange btn__fixed shadow">
+      <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文内容を見る
       </button>
     </form>

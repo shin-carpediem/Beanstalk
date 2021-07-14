@@ -41,7 +41,9 @@
         <input type="hidden" name="order_id" value='{{ order.id }}'>
         <div class="modal-footer">
           <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
-          <button type="submit" class="px-4 py-2 btn btn__blue mx-auto">実行</button>
+          <button type="submit" class="px-4 py-2 btn btn__blue mx-auto" onclick="loading_show()">
+            実行
+          </button>
         </div>
       </form>
     </div>

@@ -26,7 +26,9 @@
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_add' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__orange py-1">追加</p>
             <input class="col-4" name="add_category_form" type="text" required>
-            <button type="submit" class="col-3 btn btn__orange">保存</button>
+            <button type="submit" class="col-3 btn btn__orange" onclick="loading_show()">
+              保存
+            </button>
           </form>
           <hr>
 
@@ -42,7 +44,9 @@
               <p class="mb-1">変更後の名前</p>
               <input type="text" name="ch_category_form" required>
             </div>
-            <button type="submit" class="col-3 btn btn__light-orange">実行</button>
+            <button type="submit" class="col-3 btn btn__light-orange" onclick="loading_show()">
+              実行
+            </button>
           </form>
           <hr>
 
@@ -53,7 +57,9 @@
                 <option value="{{ category.name }}">{{ category.name }}</option>
               {% endfor %}
             </select>
-            <button type="submit" class="col-3 btn btn__grey">実行</button>
+            <button type="submit" class="col-3 btn btn__grey" onclick="loading_show()">
+              実行
+            </button>
           </form>
         </div>
       </div>
