@@ -28,7 +28,7 @@ def table(request):
     if not 'nonloginuser_uuid' in request.session:
 
         try:
-            # TODO: be careful of id, client id should be 3.
+            # MEMO: be careful of id, client id should be 3.
             restaurant = User.objects.get(id=3)
         except Exception:
             # たかこうのアカウントID
@@ -77,7 +77,6 @@ def menu(request):
     else:
         random_code = non_login_user_random_code(50)
 
-        # TODO:
         # 新規の客かどうかをセッションで判断する
         # 新規
         if not 'nonloginuser_uuid' in request.session:
@@ -94,14 +93,16 @@ def menu(request):
 
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {1: uuid}
+            request.session['nonloginuser_uuid'].set_expiry(32400)  # 客のセッションは以下全て9時間とする
             # テーブル番号のセッションを作成
             request.session['table'] = {1: table_num}
+            request.session['table'].set_expiry(32400)
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
+            request.session['nonloginuser'].set_expiry(32400)
         # 既存
         else:
 
-            # print(request.session['table']['1'])
             try:
                 table_num = request.session['table']['1']
             except:
@@ -158,12 +159,12 @@ def filter(request):
 
         try:
             # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            # if random_code == request.session['nonloginuser'][table_num]:
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -202,6 +203,7 @@ def menu_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -237,6 +239,7 @@ def cart(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
             else:
                 None
         except:
@@ -318,6 +321,7 @@ def cart_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -365,6 +369,7 @@ def order(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -415,8 +420,11 @@ def history(request):
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
+                print(random_code)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
+                request.session['nonloginuser'].set_expiry(32400)
+                print(request.session['nonloginuser'].get_expiry())
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
