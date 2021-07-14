@@ -2,11 +2,24 @@
 
 lazyload();
 
-const loading_icon = document.getElementById("loading_icon");
+// loading
 const loading_show = () => {
+  const loading_icon = document.getElementById("loading_icon");
+  const fullWrapper = document.getElementById("fullWrapper");
+
   loading_icon.classList.remove("prop_hide");
+  fullWrapper.classList.add("el__deactivate");
 };
 loading_show();
+
+const loading_hide = () => {
+  const loading_icon = document.getElementById("loading_icon");
+  const fullWrapper = document.getElementById("fullWrapper");
+
+  loading_icon.classList.add("prop_hide");
+  fullWrapper.classList.remove("el__deactivate");
+};
+loading_hide();
 
 let path = window.location.href;
 

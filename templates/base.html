@@ -27,16 +27,16 @@
 
 <body>
 
-  <div class="w-100 full__wrapper">
-      <div
-        {% if user.is_authenticated %}
-          class="spinner-grow text-primary loading_icon el__hide"
-        {% else %}
-          class="spinner-grow text-warning loading_icon el__hide"
-        {% endif %}
-          role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+  <div class="w-100 full__wrapper" id="fullWrapper">
+    <div
+      {% if user.is_authenticated %}
+        class="spinner-grow text-primary loading_icon el__hide"
+      {% else %}
+        class="spinner-grow text-warning loading_icon el__hide"
+      {% endif %}
+        role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
 
     {% if user.is_authenticated %}
       {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}

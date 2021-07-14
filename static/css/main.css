@@ -104,6 +104,11 @@ select {
   display: none;
 }
 
+.el__dactivate {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 .focus.focus, .focus:focus {
   outline: none;
   -webkit-box-shadow: none;

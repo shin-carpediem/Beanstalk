@@ -106,6 +106,10 @@ select {
 .el__hide {
   display: none;
 }
+.el__dactivate {
+  pointer-events: none;
+  opacity: 0.7;
+}
 
 .focus {
   &.focus,
