@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     'account',
     'customer',
     'restaurant',
+    'webpush',
 ]
 
 NUMBER_GROUPING = 3
@@ -217,6 +218,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa: 501
     },
 ]
+
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": env("VAPID_PUBLIC_KEY"),
+   "VAPID_PRIVATE_KEY": env("VAPID_PRIVATE_KEY"),
+   "VAPID_ADMIN_EMAIL": env("EMAIL_HOST_USER")
+}
 
 # Internationalization
 

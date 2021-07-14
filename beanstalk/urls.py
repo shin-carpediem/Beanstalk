@@ -31,6 +31,7 @@ urlpatterns = [
     path('', include('customer.urls')),
     path('', include('restaurant.urls')),
     url(r'^api/', include(api_router.urls)),
+    url(r'^webpush/', include('webpush.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

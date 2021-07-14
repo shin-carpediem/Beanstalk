@@ -2,6 +2,8 @@
 
 lazyload();
 
+let path = window.location.href;
+
 // loading
 const loading_show = () => {
   const loading_icon = document.getElementById("loading_icon");
@@ -20,8 +22,6 @@ const loading_hide = () => {
   fullWrapper.classList.remove("el__deactivate");
 };
 loading_hide();
-
-let path = window.location.href;
 
 if (path == "/order_manage/") {
   const manageMenuConfirm = () => {

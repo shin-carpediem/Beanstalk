@@ -1,4 +1,6 @@
 {% load static %}
+<!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
+{% load webpush_notifications %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -21,6 +23,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- webpush用のmetaタグとスクリプトの読み込み -->
+  {% webpush_header %}
+
   {% block custom__header %}
   {% endblock %}
 </head>
@@ -30,11 +35,11 @@
   <div class="w-100 full__wrapper" id="fullWrapper">
     <div
       {% if user.is_authenticated %}
-        class="spinner-grow text-primary loading_icon el__hide"
+        class="spinner-grow text-primary el__hide"
       {% else %}
-        class="spinner-grow text-warning loading_icon el__hide"
+        class="spinner-grow text-warning el__hide"
       {% endif %}
-        role="status">
+        role="status" id="loading_icon">
       <span class="sr-only">Loading...</span>
     </div>
 
@@ -45,6 +50,9 @@
         </div>
       {% endif %}
     {% endif %}
+
+    <!-- push通知の購読ボタン -->
+    {% webpush_button %}
 
     {% for message in messages %}
       <div class="message-{{ message.tags }} message text-center">

@@ -61,7 +61,7 @@ def confirm(request):
     TO = email
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = '【beanstalk】6ケタの数字をログイン画面に入力してください'
+    msg['Subject'] = '【注文・メニュー管理システム】6ケタの数字をログイン画面に入力してください'
     msg['From'] = EMAIL
     msg['To'] = TO
 

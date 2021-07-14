@@ -93,13 +93,12 @@ def menu(request):
 
             # テーブル番号と客のuuidのセットになったセッションを作成
             request.session['nonloginuser_uuid'] = {1: uuid}
-            request.session['nonloginuser_uuid'].set_expiry(32400)  # 客のセッションは以下全て9時間とする
             # テーブル番号のセッションを作成
             request.session['table'] = {1: table_num}
-            request.session['table'].set_expiry(32400)
             # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
             request.session['nonloginuser'] = {1: random_code}
-            request.session['nonloginuser'].set_expiry(32400)
+            # 客のセッションは以下全て9時間とする
+            request.session.set_expiry(32400)
         # 既存
         else:
 
@@ -164,7 +163,6 @@ def filter(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -203,7 +201,6 @@ def menu_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -238,7 +235,6 @@ def cart(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
             else:
                 None
         except:
@@ -320,7 +316,6 @@ def cart_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -367,7 +362,6 @@ def order(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
@@ -386,6 +380,15 @@ def order(request):
 
             # コピーし終わったcartは削除
             users_cart.delete()
+        except:
+            None
+
+        try:
+            from webpush import send_user_notification
+            payload = {"head": "注文がきました！",
+                       "body": "{table_num}番テーブルから『{order.name}』の注文です"}
+            send_user_notification(user=restaurant, payload=payload, ttl=1000)
+            print(payload)
         except:
             None
 
@@ -418,11 +421,8 @@ def history(request):
             if random_code == request.session['nonloginuser']['1']:
 
                 random_code = non_login_user_random_code(50)
-                print(random_code)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-                request.session['nonloginuser'].set_expiry(32400)
-                print(request.session['nonloginuser'].get_expiry())
         except:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
