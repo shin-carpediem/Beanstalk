@@ -67,7 +67,7 @@ SECRET_KEY = env("SECRET_KEY")
 # TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = False
+DEBUG = True
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
@@ -184,22 +184,22 @@ else:
     #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
 
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    # DATABASES = {
-    #     'default': {
-    #         "ENGINE": "django.db.backends.sqlite3",
-    #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    #     }
-    # }
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-            'NAME': env("DB_NAME"),
-            'USER': env("DB_USERNAME"),
-            'PASSWORD': env("DB_PASSWORD"),
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.mysql',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '3306',
+    #         'NAME': env("DB_NAME"),
+    #         'USER': env("DB_USERNAME"),
+    #         'PASSWORD': env("DB_PASSWORD"),
+    #     }
+    # }
 # [END db_setup]
 
 # Password validation

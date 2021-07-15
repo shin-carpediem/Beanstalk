@@ -4,16 +4,16 @@
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
       {% if request.path == '/' %}
-        <img src="{% static 'img/common/logo.png' %}" alt="Logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo">
       {% elif request.path == '/menu/' or request.path == '/manage/menu/' %}
         {% if request.user.img %}
           <img src="{{ request.user.img.url }}" alt="Restaurant Logo">
         {% else %}
-          <img src="{% static 'img/common/logo.png' %}" alt="Logo">
+          <img src="{% static 'img/logo.png' %}" alt="Logo">
         {% endif %}
       {% elif request.path == '/table/' %}
         <div class="d-flex justify-content-center align-items-center">
-          <a href="{% url 'customer:index' %}" class="text__underline-none">戻る</a>
+          <a href="{% url 'customer:index' %}" class="ml-2 text__underline-none">戻る</a>
         </div>
       {% else %}
         <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}

@@ -22,7 +22,6 @@ def index(request):
 def table(request):
     user = request.user
 
-    # print(request.session)
     # 新規/既存をセッションで判断する
     # 新規
     if not 'nonloginuser_uuid' in request.session:

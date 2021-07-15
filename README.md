@@ -61,16 +61,45 @@ To check the Apache log,
 
 ```
 $ /opt/bitnami/apache2/logs/access_log
+```
+
+```
 $ /opt/bitnami/apache2/logs/error_log
 ```
 
 ### Google Cloud Platform
 
 https://cloud.google.com/python/django/appengine?hl=ja#creating_a_cloud_sql_instance
-To deploy,
+To deploy, access to the CloudSQL/MySQL from local
 
 ```
 $ python manage.py collectstatic
+```
+
+```
+$ ./cloud_sql_proxy -instances="hoge:hoge:hoge"=tcp:3306
+```
+
+debug=False and switch database from SQlite3 to MySQL, then
+
+```
+$ python manage.py makemigrations
+```
+
+```
+$ python manage.py migrate
+```
+
+```
 $ gcloud app deploy
+```
+
+```
 $ gcloud app browse
+```
+
+To exit from CloudSQL/MySQL,
+
+```
+> quit
 ```
