@@ -56,7 +56,7 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = Category.objects.get(id=1)
+    first_category = categories[0]
     menus = Menu.objects.defer('created_at').filter(
         category=first_category).order_by('-id')
     allergies = Allergy.objects.all().order_by('id')
@@ -265,7 +265,7 @@ def cart(request):
         restaurant_name = restaurant.name
 
         categories = Category.objects.defer('created_at').order_by('id')
-        first_category = Category(id=0)
+        first_category = categories[0]
         menus = Menu.objects.filter(category=first_category).order_by('-id')
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
@@ -336,7 +336,7 @@ def order(request):
     uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = Category(id=0)
+    first_category = categories[0]
     menus = Menu.objects.defer('created_at').filter(
         category=first_category).order_by('-id')
 
@@ -380,15 +380,6 @@ def order(request):
         except:
             None
 
-        try:
-            from webpush import send_user_notification
-            payload = {"head": "注文がきました！",
-                       "body": "{table_num}番テーブルから『{order.name}』の注文です"}
-            send_user_notification(user=restaurant, payload=payload, ttl=1000)
-            print(payload)
-        except:
-            None
-
         ctx = {
             'random_code': random_code,
             'restaurant_name': restaurant_name,
@@ -396,7 +387,6 @@ def order(request):
             'categories': categories,
             'menus': menus,
         }
-
         messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
         return render(request, 'customer/menu.html', ctx)
