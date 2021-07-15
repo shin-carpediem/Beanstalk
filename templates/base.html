@@ -1,8 +1,4 @@
 {% load static %}
-{% if user.is_authenticated %}
-  <!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
-  {% load webpush_notifications %}
-{% endif %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -24,11 +20,6 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  {% if user.is_authenticated %}
-    <!-- webpush用のmetaタグとスクリプトの読み込み -->
-    {% webpush_header %}
-  {% endif %}
 
   {% block custom__header %}
   {% endblock %}
@@ -53,9 +44,6 @@
           <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
         </div>
       {% endif %}
-
-      <!-- push通知の購読ボタン -->
-      {% webpush_button %}
     {% endif %}
 
     {% for message in messages %}

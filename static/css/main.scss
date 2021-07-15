@@ -418,6 +418,9 @@ section.top-view {
       opacity: 1;
     }
   }
+}
+section.top-view,
+section.table {
   .img {
     height: 100vh;
     img {
@@ -447,7 +450,21 @@ section.top-view {
     }
   }
 }
-
+section.table {
+  .choose-table {
+    label {
+      color: $white;
+    }
+    input {
+      color: $white;
+      font-size: 20px;
+      text-align: center;
+      background-color: transparent;
+      border-radius: 10px;
+      margin: 6px 0;
+    }
+  }
+}
 .board__customer {
   section.header__customer {
     .back {
@@ -456,15 +473,6 @@ section.top-view {
     }
     .clipboard {
       transform: scale(2.8);
-    }
-  }
-  .choose-table {
-    input {
-      font-size: 20px;
-      text-align: center;
-      background-color: $light-orange;
-      border-radius: 10px;
-      margin: 6px 0;
     }
   }
   section.menu-list {

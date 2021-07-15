@@ -469,22 +469,26 @@ section.top-view {
   }
 }
 
-section.top-view .img {
+section.top-view .img,
+section.table .img {
   height: 100vh;
 }
 
-section.top-view .img img {
+section.top-view .img img,
+section.table .img img {
   -o-object-fit: cover;
      object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
-section.top-view img {
+section.top-view img,
+section.table img {
   position: relative;
 }
 
-section.top-view .forms {
+section.top-view .forms,
+section.table .forms {
   position: absolute;
   z-index: 2;
   top: 50%;
@@ -494,12 +498,27 @@ section.top-view .forms {
   -ms-transform: translate(-50%, -50%);
 }
 
-section.top-view .forms h1 {
+section.top-view .forms h1,
+section.table .forms h1 {
   color: #fff;
 }
 
-section.top-view .forms form p {
+section.top-view .forms form p,
+section.table .forms form p {
   color: #fff;
+}
+
+section.table .choose-table label {
+  color: #fff;
+}
+
+section.table .choose-table input {
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  background-color: transparent;
+  border-radius: 10px;
+  margin: 6px 0;
 }
 
 .board__customer section.header__customer .back {
@@ -510,14 +529,6 @@ section.top-view .forms form p {
 .board__customer section.header__customer .clipboard {
   -webkit-transform: scale(2.8);
           transform: scale(2.8);
-}
-
-.board__customer .choose-table input {
-  font-size: 20px;
-  text-align: center;
-  background-color: #ffd79a;
-  border-radius: 10px;
-  margin: 6px 0;
 }
 
 .board__customer section.menu-list .category {

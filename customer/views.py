@@ -7,7 +7,6 @@ import random
 import string
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu
-from .forms import ChooseTableForm
 
 
 # Create your views here.
@@ -40,10 +39,9 @@ def table(request):
         if user.is_authenticated:
             return redirect('restaurant:logout')
         else:
-            choose_table_form = ChooseTableForm(request.POST or None)
+            None
 
             ctx = {
-                'choose_table_form': choose_table_form,
                 'restaurant_name': restaurant_name,
             }
 
