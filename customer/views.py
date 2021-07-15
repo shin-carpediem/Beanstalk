@@ -80,11 +80,12 @@ def menu(request):
 
             try:
                 table_num = request.POST.get('table')
+                newuser = nonLoginUser(table=table_num,)
+
             except:
                 messages.info(request, f'申し訳ございません。再度「始める」を押してください')
                 return redirect('customer:index')
 
-            newuser = nonLoginUser(table=table_num,)
             newuser.save()
             uuid = str(newuser.uuid)
 

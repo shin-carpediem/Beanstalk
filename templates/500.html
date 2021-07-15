@@ -3,11 +3,11 @@
 
 {% block content %}
 <div class="text-center p-5">
-  <p>ご不便をおかけし申し訳ありません</p>
-  <div class="error-img">
-    <img class="my-3" src="{% static 'img/error_500.svg' %}" alt="500_Error">
+  <h5>ご不便をおかけし申し訳ありません</h5>
+  <div class="error-img w-100">
+    <img class="my-3 p-sm-5 p-3" src="{% static 'img/error_500.svg' %}" alt="500_Error">
   </div>
-  <button class="btn btn__blue px-3 py-2 my-3" onclick="history.back(); return false;">
+  <button class="btn btn__blue px-5 py-3 my-3" onclick="history.back(); return false;">
     戻る
   </button>
 </div>

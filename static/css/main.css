@@ -157,11 +157,6 @@ html body {
   }
 }
 
-.error-img {
-  height: 400px;
-  width: auto;
-}
-
 .error-img img {
   -o-object-fit: cover;
      object-fit: cover;
