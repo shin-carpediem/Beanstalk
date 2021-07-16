@@ -21,16 +21,16 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 # Create your views here.
 # default
 table_num = '管理者'
-# categories = Category.objects.defer('created_at').order_by('id')
-# first_category = Category(id=0)
-# menus = Menu.objects.defer('created_at').filter(
-#     category=first_category).order_by('-id')
-# allergies = Allergy.objects.all().order_by('id')
+categories = Category.objects.defer('created_at').order_by('id')
+first_category = categories[0]
+menus = Menu.objects.defer('created_at').filter(
+    category=first_category).order_by('-id')
+allergies = Allergy.objects.all().order_by('id')
 ctx = {
     'table_num': table_num,
-    # 'categories': categories,
-    # 'menus': menus,
-    # 'allergies': allergies,
+    'categories': categories,
+    'menus': menus,
+    'allergies': allergies,
 }
 
 
@@ -98,6 +98,7 @@ def confirm(request):
 
 
 def order_manage(request):
+    # ログインから
     if request.method == 'POST':
         email = request.POST.get('username')
         passcode = request.POST.get('passcode')
@@ -112,8 +113,9 @@ def order_manage(request):
             messages.info(
                 request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
             return render(request, 'restaurant/login.html')
+    # いきなりこの画面(多くの店がこの想定)
     else:
-        user = User.objects.get(id=request.user.id)
+        user = request.user
         formatted_logo = user.formatted_logo
         name = user.name
 

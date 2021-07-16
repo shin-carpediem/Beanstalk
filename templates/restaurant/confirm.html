@@ -9,12 +9,18 @@
 <div class="wrapper w-100 restaurant">
   <div class="inner__wrapper m-auto py-5 px-sm-0 px-3">
     <div class="board shadow beautify text-center my-5 py-4 px-5">
-      <h4 class="text__bold">注文・メニュー管理</h4>
+      <h4 class="text__bold">
+        {% if request.path == '/login/' %}
+          ログイン画面
+        {% elif request.path == '/manage/login/' %}
+          メニュー管理
+        {% endif %}
+      </h4>
       <div class="d-flex p-5 mx-sm-5">
         <div class="pl-5">
           <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo shadow">
         </div>
-        <h5 class="m-auto">beanstalk</h5>
+        <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
       <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
         <label>メールアドレス</label><br>
@@ -22,7 +28,9 @@
         <label>6ケタの数字</label><br>
         <input name="passcode" class="px-3 mb-3 w-50 py-2 text-center text__bold text__large"><br>
         <div class="pt-5">
-          <button type="submit" class="px-5 py-3 btn btn__blue shadow" onclick="loading_show()">ログイン</button>
+          <button type="submit" class="px-5 py-3 btn btn__blue shadow" onclick="loading_show()">
+            ログイン
+          </button>
         </div>
       </form>
     </div>
