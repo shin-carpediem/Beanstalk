@@ -347,6 +347,18 @@ a {
     .board {
       background-color: $white;
       border-radius: 10px;
+      .webpush-btn {
+        button {
+          background-color: transparent;
+          border: transparent;
+          width: 100%;
+          text-align: center;
+          font-size: larger;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
 }
@@ -372,6 +384,12 @@ a {
     .clipboard {
       color: $white;
       transform: scale(2);
+    }
+  }
+  .restraurant-collapse {
+    background-color: $blue;
+    .nav-list {
+      background-color: $blue;
     }
   }
   section.order-table {

@@ -371,6 +371,18 @@ a:hover {
   border-radius: 10px;
 }
 
+.wrapper .inner__wrapper .board .webpush-btn button {
+  background-color: transparent;
+  border: transparent;
+  width: 100%;
+  text-align: center;
+  font-size: larger;
+}
+
+.wrapper .inner__wrapper .board .webpush-btn button:hover {
+  text-decoration: underline;
+}
+
 .restaurant section.header {
   min-width: 400px;
   position: fixed;
@@ -395,6 +407,14 @@ a:hover {
   color: #fff;
   -webkit-transform: scale(2);
           transform: scale(2);
+}
+
+.restaurant .restraurant-collapse {
+  background-color: #257cff;
+}
+
+.restaurant .restraurant-collapse .nav-list {
+  background-color: #257cff;
 }
 
 .restaurant section.order-table {
