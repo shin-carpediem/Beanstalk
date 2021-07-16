@@ -12,16 +12,10 @@
   </div>
   <div class="forms">
     <h1 class="text__bold text-center">メニュー表</h1>
-    <form class="px-auto mt-4 mb-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
-      <!-- hidden -->
-      <button type="submit" class="btn__glass w-100 btn shadow mb-5 text__bold text__large" onclick="loading_show()">始める</button>
-    </form>
-
-    <form class="px-auto mt-5 pt-5" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
-      <p class="text__small mb-4">追加のオーダーはこちらから</p>
-      <!-- hidden -->
-      <input type="hidden" name="table" value="{{ table_num }}">
-      <button type="submit" class="btn__glass w-50 btn shadow" onclick="loading_show()">戻る</button>
+    <form class="px-auto my-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}
+      <button type="submit" class="btn__glass w-100 btn shadow mb-5 text__bold text__large" onclick="loading_show()">
+        タップ
+      </button>
     </form>
   </div>
 </section>

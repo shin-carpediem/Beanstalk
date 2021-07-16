@@ -13,12 +13,12 @@
   <div class="forms">
     <form class="px-auto" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
       <div class="text__bold text-center choose-table mx-auto">
-        <label class="text__bold text__large">テーブル番号</label>
+        <label class="text__bold text__large pb-5">テーブル番号</label>
         <input type="number" min="1" name="table" required>
         <p>*半角で入力してください</p>
       </div>
       <div class="pt-5 text-center">
-        <button type="submit" class="w-50 px-4 btn btn__glass shadow mb-5" onclick="loading_show()">登録</button>
+        <button type="submit" class="w-50 px-5 py-3 btn btn__glass shadow mb-5" onclick="loading_show()">登録</button>
       </div>
     </form>
   </div>

@@ -48,8 +48,7 @@ def table(request):
             return render(request, 'customer/table.html', ctx)
     # 既存
     else:
-        messages.info(request, f'追加のオーダーの際は画面下の「戻る」ボタンを押してください')
-        return redirect('customer:index')
+        return redirect('customer:menu')
 
 
 def menu(request):
