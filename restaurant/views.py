@@ -108,14 +108,19 @@ def order_manage(request):
             user = User.objects.get(email=email)
             login(request, user)
 
+            # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
+            email = user.email
+            request.session['user_email'] = {email: email}
+
             return render(request, 'restaurant/order_manage.html', ctx)
         else:
             messages.info(
                 request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
             return render(request, 'restaurant/login.html')
     # いきなりこの画面(多くの店がこの想定)
-    else:
-        user = request.user
+    elif 'user_email' in request.session:
+        user_email = request.session['user_email'][1]
+        user = User.objects.get(email=user_email)
         formatted_logo = user.formatted_logo
         name = user.name
 
@@ -126,6 +131,10 @@ def order_manage(request):
         ctx['order_list'] = order_list
 
         return render(request, 'restaurant/order_manage.html', ctx)
+    else:
+        messages.info(
+            request, f"ログインの有効期限が切れました。お手数ですが再度ログインしてください。")
+        return render(request, 'restaurant/login.html')
 
 
 @login_required
