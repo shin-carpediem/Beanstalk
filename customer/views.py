@@ -28,13 +28,12 @@ def table(request):
         try:
             # MEMO: be careful of id, client id should be 3.
             restaurant = User.objects.get(id=3)
+            restaurant_name = restaurant.name
         except Exception:
-            # たかこうのアカウントID
-            restaurant = User.objects.get(id=2)
-        except Exception:
-            # 青木のアカウントID
             restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
+            restaurant_name = restaurant.name
+        except Exception:
+            restaurant_name = None
 
         if user.is_authenticated:
             return redirect('restaurant:logout')
@@ -55,18 +54,22 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = categories[0]
-    menus = Menu.objects.defer('created_at').filter(
-        category=first_category).order_by('-id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except Exception:
+        pass
     allergies = Allergy.objects.all().order_by('id')
 
     try:
         restaurant = User.objects.get(id=3)
-    except Exception:
-        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
     except Exception:
         restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant_name = None
 
     if user.is_authenticated:
         table_num = '管理者'
@@ -141,11 +144,12 @@ def filter(request):
 
     try:
         restaurant = User.objects.get(id=3)
-    except Exception:
-        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
     except Exception:
         restaurant = User.objects.get(id=1)
-    restaurant_name = restaurant.name
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant_name = None
 
     # 店側から
     if user.is_authenticated:
@@ -251,21 +255,25 @@ def cart(request):
         cart.save()
     # メニュー画面から見るルート
     except:
-        None
+        pass
 
     if request.POST.get('direct') == 'direct':
 
         try:
             restaurant = User.objects.get(id=3)
-        except Exception:
-            restaurant = User.objects.get(id=2)
+            restaurant_name = restaurant.name
         except Exception:
             restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
+            restaurant_name = restaurant.name
+        except Exception:
+            restaurant_name = None
 
         categories = Category.objects.defer('created_at').order_by('id')
-        first_category = categories[0]
-        menus = Menu.objects.filter(category=first_category).order_by('-id')
+        try:
+            first_category = categories[0]
+            menus = Menu.objects.filter(category=first_category).order_by('-id')
+        except Exception:
+            menus = None
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
         ctx = {
@@ -335,9 +343,12 @@ def order(request):
     uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
-    first_category = categories[0]
-    menus = Menu.objects.defer('created_at').filter(
-        category=first_category).order_by('-id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except Exception:
+        pass
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
