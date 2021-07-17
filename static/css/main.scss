@@ -316,7 +316,9 @@ body {
   position: relative;
   .loading_icon {
     position: absolute;
-    z-index: 30000;
+    z-index: 20001;
+    width: 20vw;
+    height: auto;
     top: 50%;
     left: 50%;
     transform: translateY(-50%);
@@ -505,6 +507,9 @@ section.table {
         p {
           color: $grey;
         }
+      }
+      .focused {
+        background-color: $light-orange;
       }
       .blighten {
         background-color: $light-orange;

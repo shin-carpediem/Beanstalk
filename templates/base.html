@@ -26,12 +26,11 @@
 </head>
 
 <body>
+  <div class="w-100">
+    <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="el__hide loading_icon" id="loading_icon">
+  </div>
 
   <div class="w-100 full__wrapper">
-    <div>
-      <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="el__hide loading_icon" id="loading_icon">
-    </div>
-
     {% if user.is_authenticated %}
       {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}
         <div class="d-flex logout">

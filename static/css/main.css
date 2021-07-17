@@ -333,7 +333,9 @@ body {
 
 body .loading_icon {
   position: absolute;
-  z-index: 30000;
+  z-index: 20001;
+  width: 20vw;
+  height: auto;
   top: 50%;
   left: 50%;
   -webkit-transform: translateY(-50%);
@@ -562,6 +564,10 @@ section.table .choose-table input {
 
 .board__customer section.menu-list .category .category-btn p {
   color: #9c9c9c;
+}
+
+.board__customer section.menu-list .category .focused {
+  background-color: #ffd79a;
 }
 
 .board__customer section.menu-list .category .blighten {
