@@ -7,7 +7,7 @@
         {% if request.path == '/order_manage/' %}
           <img src="{% static 'img/logo.png' %}" alt="Logo">
         {% else %}
-          <a href="{% url 'restaurant:order_manage' %}" class="m-auto back focus">戻る</a>
+          <a href="{% url 'restaurant:order_manage' %}" class="m-auto back focus" onclick="loading_show()">戻る</a>
         {% endif %}
       </div>
       <div class="title my-auto text__bold pl-3 d-flex align-items-center">

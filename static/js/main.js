@@ -29,18 +29,27 @@ if (path.indexOf("login") > -1) {
   loginBtnDisable();
 }
 
-if (path == "/order_manage/") {
-  const manageMenuConfirm = () => {
-    const manageMenu = document.getElementById("manageMenu");
+if (path.indexOf("order_manage") > -1) {
+  const statusChange = () => {
+    const cooking = document.getElementById("cooking");
+    const chancel = document.getElementById("chancel");
+    const done = document.getElementById("done");
 
-    manageMenu.addEventListener("click", () => {
-      const answer = confirm("この画面から離れますが問題ありませんか？");
-      if (answer) {
-        window.location.href = "/manage/menu/";
-      }
+    const cookingRadio = document.getElementById("cookingRadio");
+    const chancelRadio = document.getElementById("chancelRadio");
+    const doneRadio = document.getElementById("doneRadio");
+
+    cooking.addEventListener("click", () => {
+      cookingRadio.click();
+    });
+    chancel.addEventListener("click", () => {
+      chancelRadio.click();
+    });
+    done.addEventListener("click", () => {
+      doneRadio.click();
     });
   };
-  manageMenuConfirm();
+  statusChange();
 }
 
 // customer

@@ -1,4 +1,4 @@
-<!-- static letter -->
+<!-- MEMO: static letter -->
 　<button type="button" class="order-item-card w-100 d-flex align-items-center justify-content-between focus" data-toggle="modal" data-target="#order-modal__ModalCenter">
     <div class="d-flex align-items-center justify-content-between">
       {% if order.status == '調理中' %}
@@ -32,9 +32,9 @@
         </div>
         <div class="modal-body mx-auto">
           <div class="py-3 d-flex justify-content-around align-items-center">
-            <input type="radio" name="order_status" value="調理中" checked><p class="badge__orange ml-3 mr-4 px-3 py-2 text__bold">オーダー</p>
-            <input type="radio" name="order_status" value="キャンセル"><p class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p>
-            <input type="radio" name="order_status" value="済"><p class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
+            <input type="radio" name="order_status" value="調理中" checked id="cookingRadio"><p id="cooking" class="badge__orange ml-3 mr-4 px-3 py-2 text__bold">オーダー</p>
+            <input type="radio" name="order_status" value="キャンセル" id="chancelRadio"><p id="chancel" class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p>
+            <input type="radio" name="order_status" value="済" id="doneRadio"><p id="done" class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
           </div>
         </div>
         <!-- hidden -->
