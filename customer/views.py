@@ -31,7 +31,7 @@ def table(request):
         except Exception:
             # たかこうのアカウントID
             restaurant = User.objects.get(id=2)
-        else:
+        except Exception:
             # 青木のアカウントID
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
@@ -64,7 +64,7 @@ def menu(request):
         restaurant = User.objects.get(id=3)
     except Exception:
         restaurant = User.objects.get(id=2)
-    else:
+    except Exception:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
@@ -81,7 +81,7 @@ def menu(request):
                 table_num = request.POST.get('table')
                 newuser = nonLoginUser(table=table_num,)
 
-            except:
+            except Exception:
                 messages.info(request, f'申し訳ございません。再度「始める」を押してください')
                 return redirect('customer:index')
 
@@ -101,7 +101,7 @@ def menu(request):
 
             try:
                 table_num = request.session['table']['1']
-            except:
+            except Exception:
                 messages.info(request, f'申し訳ございません。再度「戻る」を押してください')
                 return redirect('customer:index')
 
@@ -143,7 +143,7 @@ def filter(request):
         restaurant = User.objects.get(id=3)
     except Exception:
         restaurant = User.objects.get(id=2)
-    else:
+    except Exception:
         restaurant = User.objects.get(id=1)
     restaurant_name = restaurant.name
 
@@ -198,7 +198,7 @@ def menu_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-        except:
+        except Exception:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
@@ -234,7 +234,7 @@ def cart(request):
                 request.session['nonloginuser'] = {1: random_code}
             else:
                 None
-        except:
+        except Exception:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
@@ -260,7 +260,7 @@ def cart(request):
             restaurant = User.objects.get(id=3)
         except Exception:
             restaurant = User.objects.get(id=2)
-        else:
+        except Exception:
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
@@ -313,7 +313,7 @@ def cart_detail(request, menu_id):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-        except:
+        except Exception:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
@@ -348,7 +348,7 @@ def order(request):
             restaurant = User.objects.get(id=3)
         except Exception:
             restaurant = User.objects.get(id=2)
-        else:
+        except Exception:
             restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
 
@@ -359,7 +359,7 @@ def order(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-        except:
+        except Exception:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
@@ -384,7 +384,7 @@ def order(request):
             from webpush import send_user_notification
             payload = {"head": "新しい注文がきました", "body": "{order}"}
             send_user_notification(user=user, payload=payload, ttl=1000)
-        except:
+        except Exception:
             None
 
         ctx = {
@@ -417,7 +417,7 @@ def history(request):
                 random_code = non_login_user_random_code(50)
                 # セッションに保存されているランダムコードの更新
                 request.session['nonloginuser'] = {1: random_code}
-        except:
+        except Exception:
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 

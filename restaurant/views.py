@@ -88,7 +88,7 @@ def confirm(request):
         s.quit()
         messages.info(
             request, f"入力したメールアドレス宛てに6ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
-    except:
+    except Exception:
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
         return render(request, 'restaurant/login.html')
 
@@ -252,7 +252,7 @@ def category_del(request):
         category = Category.objects.get(name=name)
         category.delete()
         messages.success(request, f"カテゴリーから{name}を削除しました。")
-    except:
+    except Exception:
         messages.warning(request, f"削除に失敗しました。")
 
     return redirect('customer:menu')
