@@ -327,13 +327,13 @@ a:hover {
   height: 50px;
 }
 
-.full__wrapper {
+body {
   position: relative;
 }
 
-.full__wrapper #loading_icon {
+body .loading_icon {
   position: absolute;
-  z-index: 100;
+  z-index: 30000;
   top: 50%;
   left: 50%;
   -webkit-transform: translateY(-50%);

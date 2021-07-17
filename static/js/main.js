@@ -1,28 +1,24 @@
 "use strict";
 
+// common
 lazyload();
 
 let path = window.location.href;
 
 // loading
-const loading_show = () => {
-  const loading_icon = document.getElementById("loading_icon");
-  const fullWrapper = document.getElementById("fullWrapper");
+const loading_icon = document.getElementById("loading_icon");
 
-  loading_icon.classList.remove("prop_hide");
-  fullWrapper.classList.add("el__deactivate");
+const loading_show = () => {
+  loading_icon.classList.remove("el__hide");
 };
 loading_show();
 
 const loading_hide = () => {
-  const loading_icon = document.getElementById("loading_icon");
-  const fullWrapper = document.getElementById("fullWrapper");
-
-  loading_icon.classList.add("prop_hide");
-  fullWrapper.classList.remove("el__deactivate");
+  loading_icon.classList.add("el__hide");
 };
 loading_hide();
 
+// restaurant
 if (path == "/order_manage/") {
   const manageMenuConfirm = () => {
     const manageMenu = document.getElementById("manageMenu");
@@ -37,6 +33,7 @@ if (path == "/order_manage/") {
   manageMenuConfirm();
 }
 
+// customer
 if (path.indexOf("detail") > -1) {
   let cartPlusMinus = () => {
     let cartNum = document.getElementById("cartNum");

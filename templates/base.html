@@ -27,15 +27,9 @@
 
 <body>
 
-  <div class="w-100 full__wrapper" id="fullWrapper">
-    <div
-      {% if user.is_authenticated %}
-        class="spinner-grow text-primary el__hide"
-      {% else %}
-        class="spinner-grow text-warning el__hide"
-      {% endif %}
-        role="status" id="loading_icon">
-      <span class="sr-only">Loading...</span>
+  <div class="w-100 full__wrapper">
+    <div>
+      <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="el__hide loading_icon" id="loading_icon">
     </div>
 
     {% if user.is_authenticated %}

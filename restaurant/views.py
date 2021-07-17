@@ -110,7 +110,7 @@ def order_manage(request):
 
             # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
             email = user.email
-            request.session['user_email'] = {email: email}
+            request.session['user_email'] = {1: email}
 
             return render(request, 'restaurant/order_manage.html', ctx)
         else:
@@ -119,7 +119,7 @@ def order_manage(request):
             return render(request, 'restaurant/login.html')
     # いきなりこの画面(多くの店がこの想定)
     elif 'user_email' in request.session:
-        user_email = request.session['user_email'][1]
+        user_email = request.session['user_email']['1']
         user = User.objects.get(email=user_email)
         formatted_logo = user.formatted_logo
         name = user.name
