@@ -24,10 +24,10 @@ table_num = '管理者'
 categories = Category.objects.defer('created_at').order_by('id')
 try:
     first_category = categories[0]
+    menus = Menu.objects.defer('created_at').filter(
+        category=first_category).order_by('-id')
 except:
-    first_category = None
-menus = Menu.objects.defer('created_at').filter(
-    category=first_category).order_by('-id')
+    menus = None
 allergies = Allergy.objects.all().order_by('id')
 ctx = {
     'table_num': table_num,
