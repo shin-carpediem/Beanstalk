@@ -79,6 +79,10 @@ $ python manage.py collectstatic
 ```
 
 ```
+$ gcloud sql instances describe hogehoge
+```
+
+```
 $ ./cloud_sql_proxy -instances="hoge:hoge:hoge"=tcp:3306
 ```
 

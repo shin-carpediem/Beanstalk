@@ -177,7 +177,6 @@ def filter(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-@require_POST
 def menu_detail(request, menu_id):
     user = request.user
     random_code = request.POST.get('random_code')

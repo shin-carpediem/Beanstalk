@@ -144,9 +144,6 @@ static/vid/
 #vs code files
 .vscode/
 
-# virtual environment
-env-atom/
-
 # collectstatic
 /assets/
 /staticfiles/
@@ -179,6 +176,8 @@ env
 
 # environment variables
 .env
+prod.env
+dev.env
 
 # code runner
 tempCodeRunnerFile.py
