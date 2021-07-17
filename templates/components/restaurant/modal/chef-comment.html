@@ -1,0 +1,30 @@
+{% if user.is_authenticated %}
+  <button type="button" class="menu-chef-comment-manage-btn btn btn__blue shadow px-3" data-toggle="modal" data-target="#menu-chef-comment-manage-btn__ModalCenter">
+    <i class="fas fa-pencil-alt"></i>
+  </button>
+
+  <div class="modal fade" id="menu-chef-comment-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="menu-chef-comment-manage-btn__ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <form class="modal-content" action="{% url 'restaurant:menu_chef_comment_manage' %}" method="POST">{% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="menu-chef-comment-manage-btn__ModalCenterTitle">表示名を変更する</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- TODO: テキストエリアにする -->
+          <input class="text-center" type="text" name="menu_name" value="{{ menu.name }}">
+          <!-- hidden -->
+          <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
+          <button type="submit" class="px-4 py-2 btn btn__blue" onclick="loading_show()">
+            保存
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endif %}

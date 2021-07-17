@@ -22,7 +22,10 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 # default
 table_num = '管理者'
 categories = Category.objects.defer('created_at').order_by('id')
-first_category = categories[0]
+try:
+    first_category = categories[0]
+except:
+    first_category = None
 menus = Menu.objects.defer('created_at').filter(
     category=first_category).order_by('-id')
 allergies = Allergy.objects.all().order_by('id')
@@ -397,5 +400,36 @@ def allergy_del(request):
     allergy = Allergy.objects.get(ingredient=get_allergy)
     allergy.delete()
     messages.success(request, f"{get_allergy}をアレルギー項目一覧から削除しました。")
+
+    return redirect('customer:menu_detail', menu_id=menu.id)
+
+
+@login_required
+@require_POST
+def menu_chef_img_manage(request):
+    # menu_img = request.FILES.get('menu_img')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+
+    # # 以前のファイルは削除
+    # menu.img.delete(False)
+
+    # menu.img = menu_img
+    # menu.save()
+    # name = menu.name
+    # messages.success(request, f"{name}の写真を変更しました。")
+
+    return redirect('customer:menu_detail', menu_id=menu.id)
+
+
+@login_required
+@require_POST
+def menu_chef_comment_manage(request):
+    # menu_name = request.POST.get('menu_name')
+    menu_id = request.POST.get('menu_id')
+    menu = Menu.objects.get(id=menu_id)
+    # menu.name = menu_name
+    # menu.save()
+    # messages.success(request, f"{menu_name}に名前を変更しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
