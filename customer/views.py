@@ -356,11 +356,12 @@ def order(request):
 
         try:
             restaurant = User.objects.get(id=3)
-        except Exception:
-            restaurant = User.objects.get(id=2)
+            restaurant_name = restaurant.name
         except Exception:
             restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
+            restaurant_name = restaurant.name
+        except Exception:
+            restaurant_name = None
 
         try:
 
@@ -395,7 +396,7 @@ def order(request):
             payload = {"head": "新しい注文がきました", "body": "{table_num}番テーブルからの注文です"}
             send_user_notification(user=restaurant, payload=payload, ttl=1000)
         except Exception:
-            None
+            pass
 
         ctx = {
             'random_code': random_code,
