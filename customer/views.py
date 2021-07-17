@@ -379,11 +379,11 @@ def order(request):
             users_cart.delete()
 
             # push notification
-            from django.contrib.auth.models import User
-            user = User.objects.get(id=1)
+            # from django.contrib.auth.models import User
+            # user = User.objects.get(id=1)
             from webpush import send_user_notification
-            payload = {"head": "新しい注文がきました", "body": "{order}"}
-            send_user_notification(user=user, payload=payload, ttl=1000)
+            payload = {"head": "新しい注文がきました", "body": "{table_num}番テーブルからの注文です"}
+            send_user_notification(user=restaurant, payload=payload, ttl=1000)
         except Exception:
             None
 

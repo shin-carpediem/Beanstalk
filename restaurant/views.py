@@ -90,7 +90,7 @@ def confirm(request):
             request, f"入力したメールアドレス宛てに6ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
     except Exception:
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
-        return render(request, 'restaurant/login.html')
+        return redirect(request, 'restaurant:login')
 
     ctx['email'] = email
 
@@ -116,7 +116,7 @@ def order_manage(request):
         else:
             messages.info(
                 request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
-            return render(request, 'restaurant/login.html')
+            return redirect(request, 'restaurant:login')
     # いきなりこの画面(多くの店がこの想定)
     elif 'user_email' in request.session:
         user_email = request.session['user_email']['1']
@@ -134,7 +134,7 @@ def order_manage(request):
     else:
         messages.info(
             request, f"ログインの有効期限が切れました。お手数ですが再度ログインしてください。")
-        return render(request, 'restaurant/login.html')
+        return redirect(request, 'restaurant:login')
 
 
 @login_required

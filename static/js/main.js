@@ -31,23 +31,27 @@ if (path.indexOf("login") > -1) {
 
 if (path.indexOf("order_manage") > -1) {
   const statusChange = () => {
-    const cooking = document.getElementById("cooking");
-    const chancel = document.getElementById("chancel");
-    const done = document.getElementById("done");
+    try {
+      const cooking = document.getElementById("cooking");
+      const chancel = document.getElementById("chancel");
+      const done = document.getElementById("done");
 
-    const cookingRadio = document.getElementById("cookingRadio");
-    const chancelRadio = document.getElementById("chancelRadio");
-    const doneRadio = document.getElementById("doneRadio");
+      const cookingRadio = document.getElementById("cookingRadio");
+      const chancelRadio = document.getElementById("chancelRadio");
+      const doneRadio = document.getElementById("doneRadio");
 
-    cooking.addEventListener("click", () => {
-      cookingRadio.click();
-    });
-    chancel.addEventListener("click", () => {
-      chancelRadio.click();
-    });
-    done.addEventListener("click", () => {
-      doneRadio.click();
-    });
+      cooking.addEventListener("click", () => {
+        cookingRadio.click();
+      });
+      chancel.addEventListener("click", () => {
+        chancelRadio.click();
+      });
+      done.addEventListener("click", () => {
+        doneRadio.click();
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
   statusChange();
 }
