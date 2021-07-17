@@ -19,6 +19,16 @@ const loading_hide = () => {
 loading_hide();
 
 // restaurant
+if (path.indexOf("login") > -1) {
+  const loginBtnDisable = () => {
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.addEventListener("click", () => {
+      loginBtn.classList.add("el__dactivate");
+    });
+  };
+  loginBtnDisable();
+}
+
 if (path == "/order_manage/") {
   const manageMenuConfirm = () => {
     const manageMenu = document.getElementById("manageMenu");
