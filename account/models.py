@@ -66,6 +66,7 @@ class nonLoginUser(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
+    active = models.BooleanField("食事中", default=False, blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):

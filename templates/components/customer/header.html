@@ -31,8 +31,6 @@
   <h5 class="col-4 my-auto text__bold">
     {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/manage/menu/' %}
       {{ restaurant_name }}
-    {% elif request.path == '/cart/' %}
-      ご注文予定
     {% elif request.path == '/history/' %}
       ご注文履歴
     {% endif %}

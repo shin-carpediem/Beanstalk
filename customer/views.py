@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum
 import random
 import string
+from itertools import chain
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu
 
@@ -88,6 +89,7 @@ def menu(request):
                 messages.info(request, f'申し訳ございません。再度「始める」を押してください')
                 return redirect('customer:index')
 
+            newuser.active = True
             newuser.save()
             uuid = str(newuser.uuid)
 
@@ -243,7 +245,7 @@ def cart(request):
 
     from .models import Cart
 
-    # メニューの詳細から見るルート
+    # Cartデータの保存
     try:
         menu_id = request.POST.get('menu_id')
 
@@ -253,10 +255,10 @@ def cart(request):
 
         cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
         cart.save()
-    # メニュー画面から見るルート
     except:
         pass
 
+    # メニュー詳細(/detail/)から見るルート
     if request.POST.get('direct') == 'direct':
 
         try:
@@ -271,7 +273,8 @@ def cart(request):
         categories = Category.objects.defer('created_at').order_by('id')
         try:
             first_category = categories[0]
-            menus = Menu.objects.filter(category=first_category).order_by('-id')
+            menus = Menu.objects.filter(
+                category=first_category).order_by('-id')
         except Exception:
             menus = None
         allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -286,9 +289,19 @@ def cart(request):
         }
 
         return render(request, 'customer/menu.html', ctx)
+    # それ以外のルート
     else:
-        carts = Cart.objects.defer('created_at').filter(
-            customer=uuid).order_by('-id')
+        carts = ''
+        # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
+
+        # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+        for same_user in same_user_table_list:
+            same_user_carts = Cart.objects.defer('created_at').filter(
+                customer=same_user.uuid).order_by('-id')
+
+            carts = list(chain(same_user_carts))
 
         ctx = {
             'random_code': random_code,
@@ -340,7 +353,6 @@ def order(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
     try:
@@ -376,18 +388,21 @@ def order(request):
 
         try:
             from .models import Cart, Order
-            users_cart = Cart.objects.defer('created_at').filter(
-                customer=uuid).order_by('-id')
-            user_uuid = nonLoginUser.objects.get(uuid=uuid)
+            # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+            same_user_table_list = nonLoginUser.objects.defer(
+                'created_at').filter(table=table_num, active=True)
 
-            # cartからorderにコピー
-            for each in users_cart:
-                order = Order(status='調理中', menu=each.menu,
-                              num=each.num, customer=user_uuid)
-                order.save()
+            # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+            for same_user in same_user_table_list:
+                same_user_carts = Cart.objects.defer('created_at').filter(
+                    customer=same_user.uuid).order_by('-id')
 
-            # コピーし終わったcartは削除
-            users_cart.delete()
+                for each in same_user_carts:
+                    order = Order(status='調理中', menu=each.menu,
+                                num=each.num, customer=each.customer)
+                    order.save()
+
+                same_user_carts.delete()
 
             # push notification
             # from django.contrib.auth.models import User
@@ -415,7 +430,6 @@ def history(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    uuid = request.session['nonloginuser_uuid']['1']
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
@@ -433,11 +447,21 @@ def history(request):
             return redirect('customer:index')
 
         from .models import Cart, Order
-        user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        carts = Cart.objects.defer('created_at').filter(
-            customer=user_uuid).order_by('-id')
-        orders = Order.objects.defer('created_at').filter(
-            customer=user_uuid).order_by('-id')
+        carts = ''
+        orders = ''
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
+
+        # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+        for same_user in same_user_table_list:
+            same_user_carts = Cart.objects.defer('created_at').filter(
+                customer=same_user.uuid).order_by('-id')
+            same_user_orders = Order.objects.defer('created_at').filter(
+                customer=same_user.uuid).order_by('-id')
+
+            carts = list(chain(same_user_carts))
+            orders = list(chain(same_user_orders))
+
         # _orders = Order.objects.filter(
         #     (Q(status='キャンセル') | Q(status='済')), customer=user)
 
