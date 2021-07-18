@@ -16,7 +16,6 @@
               {{ category.name }}
             </button>
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="category_name" value="{{ category.name }}">
           <input type="hidden" name="nomiho_or_not" value="{{ category.nomiho }}">
@@ -29,7 +28,7 @@
 
   <!-- 飲み放題プランの表示箇所 -->
   {% if nomihos %}
-    {% if nomiho_is_started == 'False' %}
+    {% if user_uuid.nomiho == False %}
       {% for nomiho in nomihos %}
         <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
           <div>
@@ -38,11 +37,9 @@
             <p>{{ nomiho.comment }}</p>
           </div>
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
-          <input type="hidden" name="nomiho_is_not_started" value="False">
           <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
-          <button type="submit" class="btn btn__orange shadow w-50 my-4">
+          <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
             開始する
           </button>
         </form>
@@ -70,7 +67,6 @@
             <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
           </div>
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
@@ -84,7 +80,6 @@
   {% else %}
     <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
       <!-- hidden -->
-      <input type="hidden" name="random_code" value="{{ random_code }}">
       <input type="hidden" name="table" value="{{ table_num }}">
       <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文予定を見る

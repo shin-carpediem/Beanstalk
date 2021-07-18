@@ -93,3 +93,16 @@ if (path.indexOf("history") > -1) {
   };
   orderStopConfirm();
 }
+
+if (path.indexOf("filter") > -1) {
+  const startNomihoConfirm = () => {
+    const startNomihoConfirm = document.getElementById("startNomiho");
+    startNomihoConfirm.addEventListener("click", () => {
+      const answer = confirm("飲み放題を開始しますか？");
+      if (answer) {
+        window.location.href = "/nomiho/";
+      }
+    });
+  };
+  startNomihoConfirm();
+}

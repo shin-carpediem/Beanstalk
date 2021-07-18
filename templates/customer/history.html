@@ -16,7 +16,6 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <p class="py-2 px-3 badge badge__orange">注文予定</p>
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="curr_num" value="{{ cart.num }}">
           <input type="hidden" name="cart_id" value="{{ cart.id }}">
@@ -39,7 +38,6 @@
             <p class="py-2 px-3 badge badge__grey">済</p>
           {% endif %}
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
@@ -55,6 +53,9 @@
     <div class="col-4">
       <p class="py-2 px-3 badge badge__grey">注文済</p>
       <p>¥ {{ orders_in_order }}</p>
+      {% if user_uuid.price != 0 %}
+        <p class="pt-2">（内 {{ user_uuid.nomiho_name }} ¥ {{ user_uuid.nomiho_price }}）</p>
+      {% endif %}
     </div>
     <div class="col-4">
       <p class="py-2 px-3 badge badge__yellow">合計</p>

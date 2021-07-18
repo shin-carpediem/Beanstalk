@@ -45,6 +45,15 @@
       </div>
     {% endfor %}
 
+    <!-- 飲み放題のタイムリミット -->
+    {% if nomiho_query %}
+      <div class="text-center nomiho-limit py-2 d-flex align-items-center justify-content-center">
+        <p class="text__bold pr-2">『{{ nomiho_query.name }}』</p>
+        <!-- TODO: -->
+        <p class="text__bold pl-2">残り時間 {{ nomiho_query.duration }}　分</p>
+      </div>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
   </div>

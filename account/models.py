@@ -66,8 +66,11 @@ class nonLoginUser(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
-    price = models.PositiveIntegerField("お会計金額", blank=True, null=True)
+    price = models.PositiveIntegerField("お会計金額", default=0, blank=True, null=True)
     active = models.BooleanField("食事中", default=False, blank=True, null=True)
+    nomiho = models.BooleanField("飲み放題中", default=False, blank=True, null=True)
+    nomiho_name = models.CharField("飲み放題プラン名", max_length=256, blank=True, null=True)
+    nomiho_price = models.PositiveIntegerField("飲み放題の合計金額", default=0, blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):

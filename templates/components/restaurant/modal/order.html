@@ -1,10 +1,9 @@
-<!-- MEMO: static letter -->
 　<button type="button" class="order-item-card w-100 d-flex align-items-center justify-content-between focus" data-toggle="modal" data-target="#order-modal__ModalCenter">
     <div class="d-flex align-items-center justify-content-between">
       {% if order.status == '調理中' %}
         <p class="badge__orange text__bold text__large px-sm-3 py-sm-2">注文</p>
-      {% elif order.status == 'キャンセル' %}
-        <p class="badge__blue text__bold text__large px-sm-1 py-sm-2">{{ order.status }}</p>
+      <!-- {% elif order.status == 'キャンセル' %}
+        <p class="badge__blue text__bold text__large px-sm-1 py-sm-2">{{ order.status }}</p> -->
       {% elif order.status == '済' %}
         <p class="badge__grey text__bold text__large px-sm-3 py-sm-2">{{ order.status }}</p>
       {% endif %}

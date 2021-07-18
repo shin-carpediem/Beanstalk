@@ -3,18 +3,12 @@ from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum
-import random
-import string
 from itertools import chain
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 
 
 # Create your views here.
-def non_login_user_random_code(n):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
-
-
 def index(request):
     return render(request, 'customer/index.html')
 
@@ -76,7 +70,6 @@ def menu(request):
     if user.is_authenticated:
         table_num = '管理者'
     else:
-        random_code = non_login_user_random_code(50)
 
         # 新規の客かどうかをセッションで判断する
         # 新規
@@ -87,7 +80,7 @@ def menu(request):
                 newuser = nonLoginUser(table=table_num,)
 
             except Exception:
-                messages.info(request, f'申し訳ございません。再度「始める」を押してください')
+                messages.info(request, f'申し訳ございません。エラーが発生しました。')
                 return redirect('customer:index')
 
             newuser.active = True
@@ -98,10 +91,6 @@ def menu(request):
             request.session['nonloginuser_uuid'] = {1: uuid}
             # テーブル番号のセッションを作成
             request.session['table'] = {1: table_num}
-            # テーブル番号と客のランダムコード(ワンタイムパスワード)のセットになったセッションを作成
-            request.session['nonloginuser'] = {1: random_code}
-            # 客のセッションは以下全て5時間とする
-            request.session.set_expiry(18000)
         # 既存
         else:
             # TODO:
@@ -110,44 +99,33 @@ def menu(request):
             try:
                 table_num = request.session['table']['1']
             except Exception:
-                messages.info(request, f'申し訳ございません。再度「戻る」を押してください')
+                messages.info(request, f'申し訳ございません。エラーが発生しました。')
                 return redirect('customer:index')
 
-    if user.is_authenticated:
-        ctx = {
-            'restaurant_name': restaurant_name,
-            'table_num': table_num,
-            'categories': categories,
-            'category_name': category_name,
-            'menus': menus,
-            'allergies': allergies,
-        }
-    else:
-        ctx = {
-            'random_code': random_code,
-            'restaurant_name': restaurant_name,
-            'table_num': table_num,
-            'categories': categories,
-            'category_name': category_name,
-            'menus': menus,
-            'allergies': allergies,
-        }
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'category_name': category_name,
+        'menus': menus,
+        'allergies': allergies,
+    }
 
     return render(request, 'customer/menu.html', ctx)
 
 
 def filter(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     category_name = request.POST.get('category')
-    nomiho_or_not = request.POST.get('nomiho_or_not')
+    uuid = request.session['nonloginuser_uuid']['1']
 
     category_id = Category.objects.get(name=category_name)
     categories = Category.objects.defer('created_at').order_by('id')
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     try:
         restaurant = User.objects.get(id=3)
@@ -161,46 +139,30 @@ def filter(request):
     # 店側から
     if user.is_authenticated:
         table_num = "管理者"
-    # 客側から
-    else:
-
-        try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
 
     ctx = {
-        'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
+        'user_uuid': user_uuid,
     }
 
     # 飲み放題を選択した場合
-    if nomiho_or_not == 'True':
-        category_name = request.POST.get('category_name')
-        nomihos = Nomiho.objects.defer('created_at').order_by('-id')
-        ctx['nomihos'] = nomihos
-        ctx['category_name'] = category_name
-        ctx['nomiho_is_started'] = 'False'
+    category_name = request.POST.get('category_name')
+    nomihos = Nomiho.objects.defer('created_at').order_by('-id')
+    ctx['nomihos'] = nomihos
+    ctx['category_name'] = category_name
 
-        messages.info(request, f'このページは飲み放題用です')
+    messages.info(request, f'このページは飲み放題用です')
 
     return render(request, 'customer/menu.html', ctx)
 
 
 def menu_detail(request, menu_id):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     menu = get_object_or_404(Menu, pk=menu_id)
 
@@ -209,21 +171,8 @@ def menu_detail(request, menu_id):
 
     if user.is_authenticated:
         table_num = "管理者"
-    else:
-
-        try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
 
     ctx = {
-        'random_code': random_code,
         'menu': menu,
         'table_num': table_num,
         'allergies': allergies,
@@ -237,26 +186,11 @@ def menu_detail(request, menu_id):
 @require_POST
 def cart(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     uuid = request.session['nonloginuser_uuid']['1']
 
     if user.is_authenticated:
         table_num = "管理者"
-
-    else:
-        try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-            else:
-                None
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
 
     from .models import Cart
 
@@ -282,6 +216,7 @@ def cart(request):
             cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
             cart.save()
         except:
+            print("no..")
             pass
 
         categories = Category.objects.defer('created_at').order_by('id')
@@ -295,7 +230,6 @@ def cart(request):
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
         ctx = {
-            'random_code': random_code,
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
@@ -322,7 +256,6 @@ def cart(request):
             # 同じ商品は個数をまとめたい
 
         ctx = {
-            'random_code': random_code,
             'table_num': table_num,
             'carts': carts,
         }
@@ -332,7 +265,6 @@ def cart(request):
 
 def cart_detail(request, menu_id):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     curr_num = request.POST.get('curr_num')
     cart_id = request.POST.get('cart_id')
@@ -343,51 +275,37 @@ def cart_detail(request, menu_id):
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
-    else:
 
-        try:
+    # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
+    # from .models import Cart
+    # curr_num = 0
 
-            if random_code == request.session['nonloginuser']['1']:
+    # same_user_table_list = nonLoginUser.objects.defer(
+    #     'created_at').filter(table=table_num, active=True)
 
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
+    # # 同じテーブルでカートに追加された、同一の商品の全ての個数を表示
+    # for same_user in same_user_table_list:
+    #     same_user_carts = Cart.objects.defer('created_at').filter(menu=menu,
+    #                                                               customer=same_user.uuid).order_by('-id')
 
-        # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
-        # from .models import Cart
-        # curr_num = 0
+    #     for each in same_user_carts:
+    #         curr_num += int(each.num)
 
-        # same_user_table_list = nonLoginUser.objects.defer(
-        #     'created_at').filter(table=table_num, active=True)
+    ctx = {
+        'table_num': table_num,
+        'menu': menu,
+        'allergies': allergies,
+        'has_allergies': has_allergies,
+        'curr_num': curr_num,
+        'cart_id': cart_id,
+    }
 
-        # # 同じテーブルでカートに追加された、同一の商品の全ての個数を表示
-        # for same_user in same_user_table_list:
-        #     same_user_carts = Cart.objects.defer('created_at').filter(menu=menu,
-        #                                                               customer=same_user.uuid).order_by('-id')
-
-        #     for each in same_user_carts:
-        #         curr_num += int(each.num)
-
-        ctx = {
-            'randcom_code': random_code,
-            'table_num': table_num,
-            'menu': menu,
-            'allergies': allergies,
-            'has_allergies': has_allergies,
-            'curr_num': curr_num,
-            'cart_id': cart_id,
-        }
-
-        return render(request, 'customer/cart_detail.html', ctx)
+    return render(request, 'customer/cart_detail.html', ctx)
 
 
 @require_POST
 def cart_ch(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
@@ -403,20 +321,6 @@ def cart_ch(request):
 
     if user.is_authenticated:
         table_num = "管理者"
-
-    else:
-        try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-            else:
-                None
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
 
     from .models import Cart
 
@@ -448,7 +352,6 @@ def cart_ch(request):
         carts = list(chain(same_user_carts))
 
     ctx = {
-        'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
         'carts': carts,
@@ -460,7 +363,6 @@ def cart_ch(request):
 @require_POST
 def order(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
 
     categories = Category.objects.defer('created_at').order_by('id')
@@ -486,17 +388,6 @@ def order(request):
             restaurant_name = None
 
         try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
-
-        try:
             from .models import Cart, Order
             # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
             same_user_table_list = nonLoginUser.objects.defer(
@@ -507,10 +398,15 @@ def order(request):
                 same_user_carts = Cart.objects.defer('created_at').filter(
                     customer=same_user.uuid).order_by('-id')
 
+                cart_price = 0
+
                 for each in same_user_carts:
                     order = Order(status='調理中', menu=each.menu,
                                   num=each.num, customer=each.customer)
                     order.save()
+                    cart_price = cart_price + (each.menu.price * each.num)
+
+                same_user.price += int(cart_price)
 
                 same_user_carts.delete()
 
@@ -524,7 +420,6 @@ def order(request):
             pass
 
         ctx = {
-            'random_code': random_code,
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
@@ -540,12 +435,11 @@ def order(request):
 @require_POST
 def nomiho(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     nomiho_type = request.POST.get('nomiho_type')
 
-    # category_name = request.POST.get('category_name')
     category_id = Category.objects.defer('created_at').filter(nomiho='True')[0]
+    category_name = category_id.name
     categories = Category.objects.defer('created_at').order_by('id')
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
@@ -567,34 +461,31 @@ def nomiho(request):
     # 客側から
     else:
 
-        try:
-            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました')
-            return redirect('customer:index')
-
-        # 同じテーブルのそれぞれのお客さんの合計金額に加算する
+        # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
         if nomiho_query != None:
             same_user_table_list = nonLoginUser.objects.defer(
                 'created_at').filter(table=table_num, active=True)
 
             for same_user in same_user_table_list:
-                same_user.price += nomiho_query.price
+                same_user.price = int(same_user.price) + \
+                    int(nomiho_query.price)
+                same_user.nomiho = True
+                same_user.nomiho_name = nomiho_query.name
+                same_user.nomiho_price += int(nomiho_query.price)
                 same_user.save()
 
+        time = nomiho_query.duration
+
+        messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
+
     ctx = {
-        'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
-        # 'category_name': category_name,
+        'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
+        'nomiho_query': nomiho_query,
     }
 
     return render(request, 'customer/menu.html', ctx)
@@ -602,23 +493,14 @@ def nomiho(request):
 
 def history(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
+    uuid = request.session['nonloginuser_uuid']['1']
+
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
     else:
-
-        try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-            return redirect('customer:index')
 
         from .models import Cart, Order
         carts = ''
@@ -642,44 +524,35 @@ def history(request):
             for each in same_user_carts:
                 orders_in_cart += int(each.menu.price) * int(each.num)
             for each in same_user_orders:
-                orders_in_order += int(each.menu.price) * int(each.num)
+                same_user.price += int(each.menu.price) * int(each.num)
+
+            same_user.price += same_user.nomiho_price
+            orders_in_order += same_user.price
 
         total_price = orders_in_cart + orders_in_order
 
         ctx = {
-            'random_code': random_code,
             'table_num': table_num,
             'carts': carts,
             'orders': orders,
             'orders_in_cart': orders_in_cart,
             'orders_in_order': orders_in_order,
+            'user_uuid': user_uuid,
             'total_price': total_price,
         }
 
         return render(request, 'customer/history.html', ctx)
 
 
+# TODO:
 def stop(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     total_price = request.POST.get('total_price')
 
     if user.is_authenticated:
         return redirect('restaurant:logout')
     else:
-
-        try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(
-                request, f'申し訳ありませんが、アカウントの有効期限が切れました。')
-            return redirect('customer:index')
 
         try:
             # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -703,6 +576,7 @@ def stop(request):
 
                 same_user.active = False
                 same_user.save()
+                # ここまでは正常
 
                 user_uuid_list = list(chain(same_user))
             print(user_uuid_list)
@@ -712,7 +586,6 @@ def stop(request):
             return redirect('customer:history')
 
     ctx = {
-        'random_code': random_code,
         'table_num': table_num,
         'user_uuid_list': user_uuid_list,
         'total_price': total_price,
@@ -724,10 +597,10 @@ def stop(request):
     return render(request, 'customer/stop.html', ctx)
 
 
+#TODO:
 @require_POST
 def revert(request):
     user = request.user
-    random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     # TODO:
     user_uuid_list = request.POST.get('user_uuid_list')
@@ -746,18 +619,6 @@ def revert(request):
     else:
 
         try:
-
-            if random_code == request.session['nonloginuser']['1']:
-
-                random_code = non_login_user_random_code(50)
-                # セッションに保存されているランダムコードの更新
-                request.session['nonloginuser'] = {1: random_code}
-        except Exception:
-            messages.info(
-                request, f'申し訳ありませんが、アカウントの有効期限が切れました。')
-            return redirect('customer:index')
-
-        try:
             # TODO:
             # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
             if user_list != []:
@@ -770,7 +631,6 @@ def revert(request):
             return redirect('customer:stop')
 
     ctx = {
-        'random_code': random_code,
         'table_num': table_num,
     }
 

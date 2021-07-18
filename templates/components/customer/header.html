@@ -11,22 +11,26 @@
         {% else %}
           <img src="{% static 'img/logo.png' %}" alt="Logo">
         {% endif %}
-      {% else %}
-      <form onclick="history.back(); return false;" class="el__pointer m-auto">
-        <!-- <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %} -->
-          <!-- hidden -->
-          <!-- <input type="hidden" name="random_code" value="{{ random_code }}">
-          <input type="hidden" name="table" value="{{ table_num }}">
-          <button type="submit" class="m-auto back focus" onclick="loading_show()"> -->
+      {% elif request.path == '/filter/' %}
+        <form onclick="history.back(); return false;" class="el__pointer m-auto">
+          <button type="submit" class="m-auto back focus" onclick="loading_show()">
             戻る
-          <!-- </button> -->
+          </button>
+        </form>
+      {% else %}
+        <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}
+          <!-- hidden -->
+          <input type="hidden" name="table" value="{{ table_num }}">
+          <button type="submit" class="m-auto back focus" onclick="loading_show()">
+            戻る
+          </button>
         </form>
       {% endif %}
     </div>
   </div>
 
   <h5 class="col-4 my-auto text__bold">
-    {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/manage/menu/' %}
+    {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/nomiho/' or request.path == '/manage/menu/' %}
       {{ restaurant_name }}
     {% elif request.path == '/history/' %}
       ご注文履歴
@@ -35,15 +39,12 @@
     {% endif %}
   </h5>
 
-  {% if request.path != '/table/' %}
-    <p class="col-4 my-auto text__bold">テーブル番号: {{ table_num }}</p>
-  {% endif %}
+  <p class="col-4 my-auto text__bold">テーブル番号: {{ table_num }}</p>
 
-  {% if request.path == '/filter/' or request.path == '/cart/' or request.path == '/menu/' or request.path == '/order/' %}
+  {% if request.path == '/filter/' or request.path == '/cart/' or request.path == '/menu/' or request.path == '/order/' or request.path == '/nomiho/' %}
     {% if not user.is_authenticated %}
       <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="POST">{% csrf_token %}
         <!-- hidden -->
-        <input type="hidden" name="random_code" value="{{ random_code }}">
         <input type="hidden" name="table" value="{{ table_num }}">
         <button class="focus" type="submit" style="padding:0;border:0" onclick="loading_show()">
           <i class="clipboard fas fa-clipboard-list"></i>
