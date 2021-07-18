@@ -33,7 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'name', 'created_at')
+        fields = ('id', 'name', 'nomiho', 'created_at')
 
 
 class AllergySerializer(serializers.ModelSerializer):

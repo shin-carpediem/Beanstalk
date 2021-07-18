@@ -6,6 +6,7 @@ from imagekit.processors import ResizeToFill
 # Create your models here.
 class Category(models.Model):
     name = models.CharField("カテゴリ", max_length=256, blank=True, null=True)
+    nomiho = models.BooleanField("飲み放題用カテゴリ", default=False, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):

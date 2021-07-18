@@ -136,7 +136,6 @@ def menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-@require_POST
 def filter(request):
     user = request.user
     random_code = request.POST.get('random_code')
@@ -522,6 +521,57 @@ def order(request):
         messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
         return render(request, 'customer/menu.html', ctx)
+
+
+def nomihostart(request):
+    user = request.user
+    random_code = request.POST.get('random_code')
+    table_num = request.POST.get('table')
+    category_name = request.POST.get('category')
+
+    category_id = Category.objects.get(name=category_name)
+    categories = Category.objects.defer('created_at').order_by('id')
+    menus = Menu.objects.defer('created_at').filter(
+        category=category_id).order_by('-id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
+
+    try:
+        restaurant = User.objects.get(id=3)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant_name = None
+
+    # 店側から
+    if user.is_authenticated:
+        table_num = "管理者"
+    # 客側から
+    else:
+
+        try:
+            # hiddenで取得したランダムコードがセッションに保存されたものと一致しているかチェック
+            if random_code == request.session['nonloginuser']['1']:
+
+                random_code = non_login_user_random_code(50)
+                # セッションに保存されているランダムコードの更新
+                request.session['nonloginuser'] = {1: random_code}
+        except:
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
+
+    ctx = {
+        'random_code': random_code,
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'category_name': category_name,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
+    return render(request, 'customer/filter.html', ctx)
 
 
 def history(request):
