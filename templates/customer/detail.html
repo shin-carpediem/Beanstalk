@@ -4,58 +4,7 @@
 
 {% block inner__content %}
 <section class="menu-detail">
-  <div class="menu-top-view">
-    {% if menu.img %}
-      <img class="lazyload" height=420 data-src="{{ menu.img.url }}" alt="Menu">
-    {% endif %}
-
-    {% include 'components/restaurant/modal/img.html' %}
-
-    <div class="text-box px-sm-5 px-2 py-1">
-      <p class="text-left">{{ menu.name }}</p>
-      <p class="text-right">¥ {{ menu.price | intcomma }}</p>
-    </div>
-
-    {% include 'components/restaurant/modal/text.html' %}
-  </div>
-
-  <div class="px-2 py-3 menu-allergy">
-    <div class="d-flex">
-      <p class="text-left text__bold">アレルギー表示</p>
-      <div class="ml-5">
-        {% include 'components/restaurant/modal/allergy.html' %}
-      </div>
-    </div>
-    <hr/>
-    <div class="d-flex flex-wrap">
-      {% for allergy in allergies %}
-        {% if allergy in has_allergies %}
-          <div class="allergy-box-brighten py-1 px-3 mr-1 mb-1">
-            {{ allergy }}
-          </div>
-        {% else %}
-          <div class="allergy-box py-1 px-3 mr-1 mb-1">
-            {{ allergy }}
-          </div>
-        {% endif %}
-      {% endfor %}
-
-      {% include 'components/restaurant/modal/allergy_edit.html' %}
-    </div>
-
-    <!-- TODO: new feature -->
-
-    <!-- <p class="mt-5 text-left text__bold">シェフからのコメント</p>
-    <hr/>
-    <div class="row mx-auto">
-      <img class="col-4 shadow chef" src="#" alt="Comment from Chef">
-      <div class="col-8 shadow comment"></div>
-    </div>
-
-    <p class="mt-5 text-left text__bold">生産者からのメッセージ</p>
-    <hr/>
-    <div class="row mx-auto">
-    </div> -->
+  {% include 'components/customer/menu_detail.html' %}
 
     {% if not user.is_authenticated %}
       <form class="cart-form" action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}

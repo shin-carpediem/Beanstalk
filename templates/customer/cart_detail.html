@@ -1,0 +1,44 @@
+{% extends 'customer/base__next.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block inner__content %}
+<section class="menu-detail">
+  {% include 'components/customer/menu_detail.html' %}
+
+    {% if not user.is_authenticated %}
+    <div class="btn__fixed-wider ml-5 pl-5">
+      <form class="cart-form mb-4" action="{% url 'customer:cart_ch' %}" method="POST">{% csrf_token %}
+        <div class="d-flex input__fixed justify-content-center align-items-center">
+          <p class="text__bold plus-minus el__pointer" id="cartMinus">-</p>
+          <input type="number" name="cart_num" class="ml-4 mr-2 text__bold" value="{{ curr_num }}" id="cartNum" required readonly>
+          <p class="pt-2 text__bold text__large">個</p>
+          <p class="ml-4 text__bold plus-minus el__pointer" id="cartPlus">+</p>
+        </div>
+        <!-- hidden -->
+        <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <input type="hidden" name="table" value="{{ table_num }}">
+        <input type="hidden" name="cart_id" value="{{ cart_id }}">
+        <input type="hidden" name="type" value="change">
+        <button type="submit" class="px-5 btn btn__blue shadow" onclick="loading_show()">
+          注文する個数の変更
+        </button>
+      </form>
+
+      <form class="cart-form" action="{% url 'customer:cart_ch' %}" method="POST">{% csrf_token %}
+        <!-- hidden -->
+        <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        <input type="hidden" name="random_code" value="{{ random_code }}">
+        <input type="hidden" name="table" value="{{ table_num }}">
+        <input type="hidden" name="cart_id" value="{{ cart_id }}">
+        <input type="hidden" name="type" value="delete">
+        <button type="submit" class="btn btn__grey shadow" onclick="loading_show()">
+          注文予定からキャンセル
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

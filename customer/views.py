@@ -230,6 +230,11 @@ def cart(request):
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     uuid = request.session['nonloginuser_uuid']['1']
+    menu_id = request.POST.get('menu_id')
+    cart_num = request.POST.get('cart_num')
+
+    menu_instance = Menu.objects.get(id=menu_id)
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user.is_authenticated:
         table_num = "管理者"
@@ -252,12 +257,6 @@ def cart(request):
 
     # Cartデータの保存
     try:
-        menu_id = request.POST.get('menu_id')
-
-        menu_instance = Menu.objects.get(id=menu_id)
-        cart_num = request.POST.get('cart_num')
-        user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
         cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
         cart.save()
     except:
@@ -307,6 +306,8 @@ def cart(request):
                 customer=same_user.uuid).order_by('-id')
 
             carts = list(chain(same_user_carts))
+            # TODO:
+            # 同じ商品は個数をまとめたい
 
         ctx = {
             'random_code': random_code,
@@ -317,11 +318,12 @@ def cart(request):
         return render(request, 'customer/cart.html', ctx)
 
 
-@require_POST
 def cart_detail(request, menu_id):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
+    curr_num = request.POST.get('curr_num')
+    cart_id = request.POST.get('cart_id')
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -342,15 +344,105 @@ def cart_detail(request, menu_id):
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
+        # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
+        # from .models import Cart
+        # curr_num = 0
+
+        # same_user_table_list = nonLoginUser.objects.defer(
+        #     'created_at').filter(table=table_num, active=True)
+
+        # # 同じテーブルでカートに追加された、同一の商品の全ての個数を表示
+        # for same_user in same_user_table_list:
+        #     same_user_carts = Cart.objects.defer('created_at').filter(menu=menu,
+        #                                                               customer=same_user.uuid).order_by('-id')
+
+        #     for each in same_user_carts:
+        #         curr_num += int(each.num)
+
         ctx = {
             'randcom_code': random_code,
             'table_num': table_num,
             'menu': menu,
             'allergies': allergies,
             'has_allergies': has_allergies,
+            'curr_num': curr_num,
+            'cart_id': cart_id,
         }
 
-        return render(request, 'customer/detail.html', ctx)
+        return render(request, 'customer/cart_detail.html', ctx)
+
+
+@require_POST
+def cart_ch(request):
+    user = request.user
+    random_code = request.POST.get('random_code')
+    table_num = request.POST.get('table')
+    cart_id = request.POST.get('cart_id')
+    type = request.POST.get('type')
+
+    try:
+        restaurant = User.objects.get(id=3)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant_name = None
+
+    if user.is_authenticated:
+        table_num = "管理者"
+
+    else:
+        try:
+
+            if random_code == request.session['nonloginuser']['1']:
+
+                random_code = non_login_user_random_code(50)
+                # セッションに保存されているランダムコードの更新
+                request.session['nonloginuser'] = {1: random_code}
+            else:
+                None
+        except Exception:
+            messages.info(request, f'申し訳ありませんがエラーが発生しました')
+            return redirect('customer:index')
+
+    from .models import Cart
+
+    # Cartデータの更新
+    try:
+        cart = Cart.objects.defer('created_at').get(id=cart_id)
+
+        if type == 'change':
+            cart_num = request.POST.get('cart_num')
+            cart.num = cart_num
+            cart.save()
+        elif type == 'delete':
+            cart.delete()
+        else:
+            None
+    except:
+        pass
+
+    carts = ''
+    # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+    same_user_table_list = nonLoginUser.objects.defer(
+        'created_at').filter(table=table_num, active=True)
+
+    # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+    for same_user in same_user_table_list:
+        same_user_carts = Cart.objects.defer('created_at').filter(
+            customer=same_user.uuid).order_by('-id')
+
+        carts = list(chain(same_user_carts))
+
+    ctx = {
+        'random_code': random_code,
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'carts': carts,
+    }
+
+    return render(request, 'customer/cart.html', ctx)
 
 
 @require_POST
