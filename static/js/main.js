@@ -80,3 +80,16 @@ if (path.indexOf("detail") > -1) {
   };
   cartPlusMinus();
 }
+
+if (path.indexOf("history") > -1) {
+  const orderStopConfirm = () => {
+    const orderStopConfirm = document.getElementById("orderStopConfirm");
+    orderStopConfirm.addEventListener("click", () => {
+      const answer = confirm("オーダーストップしてお会計に移りますか？");
+      if (answer) {
+        window.location.href = "/stop/";
+      }
+    });
+  };
+  orderStopConfirm();
+}

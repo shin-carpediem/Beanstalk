@@ -75,7 +75,6 @@ select {
   outline: none;
 }
 
-/* Remove all animations and transitions for people that prefer not to see them */
 .text__bold {
   font-weight: bold;
 }
@@ -123,6 +122,14 @@ select {
 
 .btn__fixed {
   width: 183px;
+  position: fixed;
+  z-index: 10000;
+  left: 15vh;
+  bottom: 10px;
+}
+
+.btn__fixed-wider {
+  width: 250px;
   position: fixed;
   z-index: 10000;
   left: 15vh;

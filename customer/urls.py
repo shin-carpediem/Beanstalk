@@ -13,4 +13,6 @@ urlpatterns = [
     path('cart/<int:menu_id>/detail/', views.cart_detail, name='cart_detail'),
     path('order/', views.order, name='order'),
     path('history/', views.history, name='history'),
+    path('stop/', views.stop, name='stop'),
+    path('revert/', views.revert, name='revert'),
 ]

@@ -1,0 +1,47 @@
+{% extends 'customer/base__next.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block inner__content %}
+<section class="menu-list">
+  <div class="d-flex justify-content-center align-items-center my-5">
+    <p class="text__bold text__large">合計</p>
+    <p class="text__bold text__large ml-3">
+      {% if total_price %}
+        {{ total_price }}
+      {% else %}
+        0
+      {% endif %}
+        円
+    </p>
+  </div>
+  <hr>
+  <div class="p-2 m-2">
+    <table class="w-100">
+      <tr class="row pb-3">
+        <th class="col-6">料理名</th>
+        <th class="col-3">単価</th>
+        <th class="col-3">個数</th>
+      </tr>
+      {% for order in orders %}
+        <tr class="row">
+          <td class="col-6">{{ order.menu.name }}</td>
+          <td class="col-3">{{ order.menu.price }}</td>
+          <td class="col-3">{{ order.num }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <form action="{% url 'customer:revert' %}" method="POST">{% csrf_token %}
+    <!-- hidden -->
+    <input type="hidden" name="random_code" value="{{ random_code }}">
+    <input type="hidden" name="table" value="{{ table_num }}">
+    <input type="hidden" name="user_uuid_list" value="{{ user_uuid_list }}">
+    <input type="hidden" name="orders" value="{{ orders }}">
+    <button type="submit" class="btn btn__red btn__fixed shadow" onclick="loading_show()">
+      オーダーストップを取り消す
+    </button>
+  </form>
+</section>
+{% endblock %}

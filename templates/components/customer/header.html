@@ -5,7 +5,7 @@
     <div class="m-auto logo shadow d-flex align-items-center">
       {% if request.path == '/' %}
         <img src="{% static 'img/logo.png' %}" alt="Logo">
-      {% elif request.path == '/menu/' or request.path == '/manage/menu/' %}
+      {% elif request.path == '/menu/' or request.path == '/manage/menu/' or request.path == '/stop/' %}
         {% if request.user.img %}
           <img src="{{ request.user.img.url }}" alt="Restaurant Logo">
         {% else %}
@@ -33,6 +33,8 @@
       {{ restaurant_name }}
     {% elif request.path == '/history/' %}
       ご注文履歴
+    {% elif request.path == '/stop/' %}
+      お会計金額
     {% endif %}
   </h5>
 
