@@ -7,7 +7,7 @@ import random
 import string
 from itertools import chain
 from account.models import User, nonLoginUser
-from restaurant.models import Allergy, Category, Menu
+from restaurant.models import Allergy, Category, Menu, Nomiho
 
 
 # Create your views here.
@@ -141,6 +141,7 @@ def filter(request):
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     category_name = request.POST.get('category')
+    nomiho_or_not = request.POST.get('nomiho_or_not')
 
     category_id = Category.objects.get(name=category_name)
     categories = Category.objects.defer('created_at').order_by('id')
@@ -183,6 +184,16 @@ def filter(request):
         'menus': menus,
         'allergies': allergies,
     }
+
+    # 飲み放題を選択した場合
+    if nomiho_or_not == 'True':
+        category_name = request.POST.get('category_name')
+        nomihos = Nomiho.objects.defer('created_at').order_by('-id')
+        ctx['nomihos'] = nomihos
+        ctx['category_name'] = category_name
+        ctx['nomiho_is_started'] = 'False'
+
+        messages.info(request, f'このページは飲み放題用です')
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -229,11 +240,6 @@ def cart(request):
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
     uuid = request.session['nonloginuser_uuid']['1']
-    menu_id = request.POST.get('menu_id')
-    cart_num = request.POST.get('cart_num')
-
-    menu_instance = Menu.objects.get(id=menu_id)
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user.is_authenticated:
         table_num = "管理者"
@@ -254,13 +260,6 @@ def cart(request):
 
     from .models import Cart
 
-    # Cartデータの保存
-    try:
-        cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
-        cart.save()
-    except:
-        pass
-
     # メニュー詳細(/detail/)から見るルート
     if request.POST.get('direct') == 'direct':
 
@@ -273,11 +272,24 @@ def cart(request):
         except Exception:
             restaurant_name = None
 
+        # Cartデータの保存
+        menu_id = request.POST.get('menu_id')
+        cart_num = request.POST.get('cart_num')
+        menu_instance = Menu.objects.get(id=menu_id)
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
+
+        try:
+            cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
+            cart.save()
+        except:
+            pass
+
         categories = Category.objects.defer('created_at').order_by('id')
         try:
             first_category = categories[0]
             menus = Menu.objects.filter(
                 category=first_category).order_by('-id')
+            category_name = first_category.name
         except Exception:
             menus = None
         allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -287,12 +299,13 @@ def cart(request):
             'restaurant_name': restaurant_name,
             'table_num': table_num,
             'categories': categories,
+            'category_name': category_name,
             'menus': menus,
             'allergies': allergies,
         }
 
         return render(request, 'customer/menu.html', ctx)
-    # それ以外のルート
+    # メニューIDの情報を保持していない、一覧ページからのルート
     else:
         carts = ''
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -523,17 +536,21 @@ def order(request):
         return render(request, 'customer/menu.html', ctx)
 
 
-def nomihostart(request):
+# 飲み放題開始用のボタン
+@require_POST
+def nomiho(request):
     user = request.user
     random_code = request.POST.get('random_code')
     table_num = request.POST.get('table')
-    category_name = request.POST.get('category')
+    nomiho_type = request.POST.get('nomiho_type')
 
-    category_id = Category.objects.get(name=category_name)
+    # category_name = request.POST.get('category_name')
+    category_id = Category.objects.defer('created_at').filter(nomiho='True')[0]
     categories = Category.objects.defer('created_at').order_by('id')
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
+    nomiho_query = Nomiho.objects.get(id=nomiho_type)
 
     try:
         restaurant = User.objects.get(id=3)
@@ -561,17 +578,26 @@ def nomihostart(request):
             messages.info(request, f'申し訳ありませんがエラーが発生しました')
             return redirect('customer:index')
 
+        # 同じテーブルのそれぞれのお客さんの合計金額に加算する
+        if nomiho_query != None:
+            same_user_table_list = nonLoginUser.objects.defer(
+                'created_at').filter(table=table_num, active=True)
+
+            for same_user in same_user_table_list:
+                same_user.price += nomiho_query.price
+                same_user.save()
+
     ctx = {
         'random_code': random_code,
         'restaurant_name': restaurant_name,
         'table_num': table_num,
-        'category_name': category_name,
+        # 'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
     }
 
-    return render(request, 'customer/filter.html', ctx)
+    return render(request, 'customer/menu.html', ctx)
 
 
 def history(request):

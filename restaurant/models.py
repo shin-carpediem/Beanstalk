@@ -6,7 +6,8 @@ from imagekit.processors import ResizeToFill
 # Create your models here.
 class Category(models.Model):
     name = models.CharField("カテゴリ", max_length=256, blank=True, null=True)
-    nomiho = models.BooleanField("飲み放題用カテゴリ", default=False, blank=True, null=True)
+    nomiho = models.BooleanField(
+        "飲み放題用カテゴリ", default=False, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):
@@ -43,7 +44,8 @@ class Menu(models.Model):
 class Nomiho(models.Model):
     name = models.CharField("飲み放題プラン名", max_length=256, blank=True, null=True)
     price = models.PositiveIntegerField("価格", blank=True, null=True)
-    menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
+    duration = models.PositiveIntegerField("制限時間（分）", blank=True, null=True)
+    comment = models.CharField("一押しポイント", max_length=256, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):

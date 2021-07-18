@@ -18,6 +18,8 @@
           <!-- hidden -->
           <input type="hidden" name="random_code" value="{{ random_code }}">
           <input type="hidden" name="table" value="{{ table_num }}">
+          <input type="hidden" name="category_name" value="{{ category.name }}">
+          <input type="hidden" name="nomiho_or_not" value="{{ category.nomiho }}">
         </form>
       {% endfor %}
     </div>
@@ -25,9 +27,40 @@
     {% include 'components/restaurant/modal/category.html' %}
   </div>
 
+  <!-- 飲み放題プランの表示箇所 -->
+  {% if nomihos %}
+    {% if nomiho_is_started == 'False' %}
+      {% for nomiho in nomihos %}
+        <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
+          <div>
+            <h3 class="text__bold">プラン名： {{ nomiho.name }}</h3>
+            <h4 class="py-3 text__bold">料金：　¥　{{ nomiho.price }}</h4>
+            <p>{{ nomiho.comment }}</p>
+          </div>
+          <!-- hidden -->
+          <input type="hidden" name="random_code" value="{{ random_code }}">
+          <input type="hidden" name="table" value="{{ table_num }}">
+          <input type="hidden" name="nomiho_is_not_started" value="False">
+          <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
+          <button type="submit" class="btn btn__orange shadow w-50 my-4">
+            開始する
+          </button>
+        </form>
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+　
+  <!-- 飲み放題を開始していない場合は、選択できないようにする -->
+  <!-- 飲み放題を1つでも開始した場合、全て選択できるようにする -->
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
-      <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
+      <form
+      {% if nomihos and nomiho_is_started == 'False' %}
+        class="mx-auto my-1 menu-item shadow el__pointer el__dactivate"
+      {% else %}
+        class="mx-auto my-1 menu-item shadow el__pointer"
+      {% endif %}
+      action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           {% if menu.formatted_img %}
             <img class="m-0 lazyload" data-src="{{ menu.formatted_img.url }}" alt="Menu">

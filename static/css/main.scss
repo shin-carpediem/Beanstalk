@@ -516,6 +516,11 @@ section.table {
         z-index: 9999;
       }
     }
+    // 飲み放題コースの装飾
+    form.nomiho--1 {
+      background-color: $yellow;
+      border-radius: 10px;
+    }
     .menu-item {
       width: 174px;
       height: 195px;

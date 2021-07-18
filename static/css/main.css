@@ -588,6 +588,11 @@ section.table .choose-table input {
   z-index: 9999;
 }
 
+.board__customer section.menu-list form.nomiho--1 {
+  background-color: #ffe5be;
+  border-radius: 10px;
+}
+
 .board__customer section.menu-list .menu-item {
   width: 174px;
   height: 195px;

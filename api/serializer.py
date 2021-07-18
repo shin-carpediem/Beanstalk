@@ -47,9 +47,3 @@ class MenuSerializer(serializers.ModelSerializer):
         model = Menu
         fields = ('id', 'name', 'category', 'price',
                   'img', 'allergies', 'created_at')
-
-
-class NomihoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Menu
-        fields = ('id', 'name', 'price', 'menu', 'created_at')
