@@ -37,3 +37,13 @@ class Menu(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class Nomiho(models.Model):
+    name = models.CharField("飲み放題プラン名", max_length=256, blank=True, null=True)
+    price = models.PositiveIntegerField("価格", blank=True, null=True)
+    menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
+    created_at = models.DateTimeField("作成日", auto_now=True)
+
+    def __str__(self):
+        return str(self.name)

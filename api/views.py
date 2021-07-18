@@ -5,8 +5,8 @@ from django.views.generic import View
 from django.http import JsonResponse
 from account.models import User, nonLoginUser
 from customer.models import Cart, Order
-from restaurant.models import Category, Allergy, Menu
-from .serializer import UserSerializer, NonLoginUserSerializer, CartSerializer, OrderSerializer, CategorySerializer, AllergySerializer, MenuSerializer
+from restaurant.models import Category, Allergy, Menu, Nomiho
+from .serializer import UserSerializer, NonLoginUserSerializer, CartSerializer, OrderSerializer, CategorySerializer, AllergySerializer, MenuSerializer, NomihoSerializer
 
 
 # Create your views here.
@@ -43,3 +43,8 @@ class AllergyViewSet(viewsets.ModelViewSet):
 class MenuViewSet(viewsets.ModelViewSet):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+
+
+class NomihoViewSet(viewsets.ModelViewSet):
+    queryset = Nomiho.objects.all()
+    serializer_class = NomihoSerializer
