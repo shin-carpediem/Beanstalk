@@ -15,7 +15,6 @@
           </div>
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="curr_num" value="{{ cart.num }}">
           <input type="hidden" name="cart_id" value="{{ cart.id }}">
         </button>
@@ -27,7 +26,6 @@
     <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
       <!-- hidden -->
       <input type="hidden" name="menu_id" value="{{ menu.id }}">
-      <input type="hidden" name="table" value="{{ table_num }}">
       {% if carts %}
         <button class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
       {% else %}

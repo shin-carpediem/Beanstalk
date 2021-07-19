@@ -50,10 +50,9 @@ def confirm(request):
     if 'user' in request.session:
         del request.session['user']
 
-    # ランダムな6桁の文字列を生成
+    # ランダムな4桁の文字列を生成
     passcode = str(random.randrange(10)) + str(random.randrange(10)) + str(random.randrange(10)) + \
-        str(random.randrange(10)) + \
-        str(random.randrange(10)) + str(random.randrange(10))
+        str(random.randrange(10))
 
     # メールアドレスとパスコードのセットになったセッションを作成
     request.session['user'] = {email: passcode}
@@ -64,7 +63,7 @@ def confirm(request):
     TO = email
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = '【注文・メニュー管理システム】6ケタの数字をログイン画面に入力してください'
+    msg['Subject'] = '【注文・メニュー管理システム】4ケタの数字をログイン画面に入力してください'
     msg['From'] = EMAIL
     msg['To'] = TO
 
@@ -90,7 +89,7 @@ def confirm(request):
         s.sendmail(EMAIL, TO, msg.as_string())
         s.quit()
         messages.info(
-            request, f"入力したメールアドレス宛てに6ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
+            request, f"入力したメールアドレス宛てに4ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
     except Exception:
         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
         return redirect(request, 'restaurant:login')

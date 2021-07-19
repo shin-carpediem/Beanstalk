@@ -94,7 +94,7 @@ def menu(request):
         # 既存
         else:
             # TODO:
-            # 9時間以内に同じお客さんが再度来店した場合、active=Falseのままになるので改善必要
+            # 5時間以内に同じお客さんが再度来店した場合、active=Falseのままになるので改善必要
 
             try:
                 table_num = request.session['table']['1']
@@ -116,16 +116,20 @@ def menu(request):
 
 def filter(request):
     user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     category_name = request.POST.get('category')
-    uuid = request.session['nonloginuser_uuid']['1']
+    try:
+        uuid = request.session['nonloginuser_uuid']['1']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    # まだ1人もお客さんが使用していない初期設定時を想定
+    except Exception:
+        user_uuid = None
 
     category_id = Category.objects.get(name=category_name)
     categories = Category.objects.defer('created_at').order_by('id')
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     try:
         restaurant = User.objects.get(id=3)
@@ -151,10 +155,8 @@ def filter(request):
     }
 
     # 飲み放題を選択した場合
-    category_name = request.POST.get('category_name')
     nomihos = Nomiho.objects.defer('created_at').order_by('-id')
     ctx['nomihos'] = nomihos
-    ctx['category_name'] = category_name
 
     messages.info(request, f'このページは飲み放題用です')
 
@@ -163,7 +165,7 @@ def filter(request):
 
 def menu_detail(request, menu_id):
     user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -185,12 +187,8 @@ def menu_detail(request, menu_id):
 
 @require_POST
 def cart(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     uuid = request.session['nonloginuser_uuid']['1']
-
-    if user.is_authenticated:
-        table_num = "管理者"
 
     from .models import Cart
 
@@ -216,7 +214,6 @@ def cart(request):
             cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
             cart.save()
         except:
-            print("no..")
             pass
 
         categories = Category.objects.defer('created_at').order_by('id')
@@ -264,17 +261,13 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     curr_num = request.POST.get('curr_num')
     cart_id = request.POST.get('cart_id')
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
     has_allergies = menu.allergies.defer('created_at').order_by('id')
-
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
 
     # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
     # from .models import Cart
@@ -305,8 +298,7 @@ def cart_detail(request, menu_id):
 
 @require_POST
 def cart_ch(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
 
@@ -318,9 +310,6 @@ def cart_ch(request):
         restaurant_name = restaurant.name
     except Exception:
         restaurant_name = None
-
-    if user.is_authenticated:
-        table_num = "管理者"
 
     from .models import Cart
 
@@ -362,8 +351,7 @@ def cart_ch(request):
 
 @require_POST
 def order(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
 
     categories = Category.objects.defer('created_at').order_by('id')
     try:
@@ -374,68 +362,63 @@ def order(request):
     except Exception:
         pass
 
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
-    else:
+    try:
+        restaurant = User.objects.get(id=3)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        restaurant_name = None
 
-        try:
-            restaurant = User.objects.get(id=3)
-            restaurant_name = restaurant.name
-        except Exception:
-            restaurant = User.objects.get(id=1)
-            restaurant_name = restaurant.name
-        except Exception:
-            restaurant_name = None
+    try:
+        from .models import Cart, Order
+        # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
 
-        try:
-            from .models import Cart, Order
-            # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
-            same_user_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=table_num, active=True)
+        # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+        for same_user in same_user_table_list:
+            same_user_carts = Cart.objects.defer('created_at').filter(
+                customer=same_user.uuid).order_by('-id')
 
-            # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
-            for same_user in same_user_table_list:
-                same_user_carts = Cart.objects.defer('created_at').filter(
-                    customer=same_user.uuid).order_by('-id')
+            cart_price = 0
 
-                cart_price = 0
+            for each in same_user_carts:
+                order = Order(status='調理中', menu=each.menu,
+                                num=each.num, customer=each.customer)
+                order.save()
+                cart_price = cart_price + (each.menu.price * each.num)
 
-                for each in same_user_carts:
-                    order = Order(status='調理中', menu=each.menu,
-                                  num=each.num, customer=each.customer)
-                    order.save()
-                    cart_price = cart_price + (each.menu.price * each.num)
+            same_user.price += int(cart_price)
 
-                same_user.price += int(cart_price)
+            same_user_carts.delete()
 
-                same_user_carts.delete()
+        # push notification
+        # from django.contrib.auth.models import User
+        # user = User.objects.get(id=1)
+        from webpush import send_user_notification
+        payload = {"head": "新しい注文がきました", "body": "{table_num}番テーブルからの注文です"}
+        send_user_notification(user=restaurant, payload=payload, ttl=1000)
+    except Exception:
+        pass
 
-            # push notification
-            # from django.contrib.auth.models import User
-            # user = User.objects.get(id=1)
-            from webpush import send_user_notification
-            payload = {"head": "新しい注文がきました", "body": "{table_num}番テーブルからの注文です"}
-            send_user_notification(user=restaurant, payload=payload, ttl=1000)
-        except Exception:
-            pass
+    ctx = {
+        'restaurant_name': restaurant_name,
+        'table_num': table_num,
+        'categories': categories,
+        'category_name': category_name,
+        'menus': menus,
+    }
+    messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
-        ctx = {
-            'restaurant_name': restaurant_name,
-            'table_num': table_num,
-            'categories': categories,
-            'category_name': category_name,
-            'menus': menus,
-        }
-        messages.info(request, f"注文を承りました。今しばらくお待ちください")
-
-        return render(request, 'customer/menu.html', ctx)
+    return render(request, 'customer/menu.html', ctx)
 
 
 # 飲み放題開始用のボタン
 @require_POST
 def nomiho(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     nomiho_type = request.POST.get('nomiho_type')
 
     category_id = Category.objects.defer('created_at').filter(nomiho='True')[0]
@@ -455,28 +438,22 @@ def nomiho(request):
     except Exception:
         restaurant_name = None
 
-    # 店側から
-    if user.is_authenticated:
-        table_num = "管理者"
-    # 客側から
-    else:
+    # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
+    if nomiho_query != None:
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
 
-        # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
-        if nomiho_query != None:
-            same_user_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=table_num, active=True)
+        for same_user in same_user_table_list:
+            same_user.price = int(same_user.price) + \
+                int(nomiho_query.price)
+            same_user.nomiho = True
+            same_user.nomiho_name = nomiho_query.name
+            same_user.nomiho_price += int(nomiho_query.price)
+            same_user.save()
 
-            for same_user in same_user_table_list:
-                same_user.price = int(same_user.price) + \
-                    int(nomiho_query.price)
-                same_user.nomiho = True
-                same_user.nomiho_name = nomiho_query.name
-                same_user.nomiho_price += int(nomiho_query.price)
-                same_user.save()
+    time = nomiho_query.duration
 
-        time = nomiho_query.duration
-
-        messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
+    messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
 
     ctx = {
         'restaurant_name': restaurant_name,
@@ -492,98 +469,88 @@ def nomiho(request):
 
 
 def history(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     uuid = request.session['nonloginuser_uuid']['1']
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
-    else:
+    from .models import Cart, Order
+    carts = ''
+    orders = ''
+    orders_in_cart = 0
+    orders_in_order = 0
 
-        from .models import Cart, Order
-        carts = ''
-        orders = ''
-        orders_in_cart = 0
-        orders_in_order = 0
+    same_user_table_list = nonLoginUser.objects.defer(
+        'created_at').filter(table=table_num, active=True)
 
-        same_user_table_list = nonLoginUser.objects.defer(
-            'created_at').filter(table=table_num, active=True)
+    # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+    for same_user in same_user_table_list:
+        same_user_carts = Cart.objects.defer('created_at').filter(
+            customer=same_user.uuid).order_by('-id')
+        same_user_orders = Order.objects.defer('created_at').filter(
+            customer=same_user.uuid).order_by('-id')
 
-        # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
-        for same_user in same_user_table_list:
-            same_user_carts = Cart.objects.defer('created_at').filter(
-                customer=same_user.uuid).order_by('-id')
-            same_user_orders = Order.objects.defer('created_at').filter(
-                customer=same_user.uuid).order_by('-id')
+        carts = list(chain(same_user_carts))
+        orders = list(chain(same_user_orders))
 
-            carts = list(chain(same_user_carts))
-            orders = list(chain(same_user_orders))
+        for each in same_user_carts:
+            orders_in_cart += int(each.menu.price) * int(each.num)
+        for each in same_user_orders:
+            same_user.price += int(each.menu.price) * int(each.num)
 
-            for each in same_user_carts:
-                orders_in_cart += int(each.menu.price) * int(each.num)
-            for each in same_user_orders:
-                same_user.price += int(each.menu.price) * int(each.num)
+        same_user.price += same_user.nomiho_price
+        orders_in_order += same_user.price
 
-            same_user.price += same_user.nomiho_price
-            orders_in_order += same_user.price
+    total_price = orders_in_cart + orders_in_order
 
-        total_price = orders_in_cart + orders_in_order
+    ctx = {
+        'table_num': table_num,
+        'carts': carts,
+        'orders': orders,
+        'orders_in_cart': orders_in_cart,
+        'orders_in_order': orders_in_order,
+        'user_uuid': user_uuid,
+        'total_price': total_price,
+    }
 
-        ctx = {
-            'table_num': table_num,
-            'carts': carts,
-            'orders': orders,
-            'orders_in_cart': orders_in_cart,
-            'orders_in_order': orders_in_order,
-            'user_uuid': user_uuid,
-            'total_price': total_price,
-        }
-
-        return render(request, 'customer/history.html', ctx)
+    return render(request, 'customer/history.html', ctx)
 
 
 # TODO:
 def stop(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     total_price = request.POST.get('total_price')
 
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
-    else:
+    try:
+        # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
 
-        try:
-            # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
-            same_user_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=table_num, active=True)
+        from .models import Order
+        orders = ''
+        for same_user in same_user_table_list:
+            same_user_orders = Order.objects.defer('created_at').filter(
+                customer=same_user.uuid).order_by('-id')
 
-            from .models import Order
-            orders = ''
-            for same_user in same_user_table_list:
-                same_user_orders = Order.objects.defer('created_at').filter(
-                    customer=same_user.uuid).order_by('-id')
+            orders = list(chain(same_user_orders))
 
-                orders = list(chain(same_user_orders))
+        # TODO:
+        # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
+        user_uuid_list = ''
 
-            # TODO:
-            # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
-            user_uuid_list = ''
+        # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
+        for same_user in same_user_table_list:
 
-            # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-            for same_user in same_user_table_list:
+            same_user.active = False
+            same_user.save()
+            # ここまでは正常
 
-                same_user.active = False
-                same_user.save()
-                # ここまでは正常
+            user_uuid_list = list(chain(same_user))
+        print(user_uuid_list)
 
-                user_uuid_list = list(chain(same_user))
-            print(user_uuid_list)
-
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-            return redirect('customer:history')
+    except Exception:
+        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+        return redirect('customer:history')
 
     ctx = {
         'table_num': table_num,
@@ -600,8 +567,7 @@ def stop(request):
 #TODO:
 @require_POST
 def revert(request):
-    user = request.user
-    table_num = request.POST.get('table')
+    table_num = request.session['table']['1']
     # TODO:
     user_uuid_list = request.POST.get('user_uuid_list')
     print(user_uuid_list)
@@ -614,21 +580,17 @@ def revert(request):
         print(user_list)
     print(user_list)
 
-    if user.is_authenticated:
-        return redirect('restaurant:logout')
-    else:
+    try:
+        # TODO:
+        # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
+        if user_list != []:
+            for same_user in user_list:
+                same_user.active = True
+                same_user.save()
 
-        try:
-            # TODO:
-            # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-            if user_list != []:
-                for same_user in user_list:
-                    same_user.active = True
-                    same_user.save()
-
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-            return redirect('customer:stop')
+    except Exception:
+        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+        return redirect('customer:stop')
 
     ctx = {
         'table_num': table_num,

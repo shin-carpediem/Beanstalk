@@ -16,7 +16,6 @@
               {{ category.name }}
             </button>
           <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="category_name" value="{{ category.name }}">
           <input type="hidden" name="nomiho_or_not" value="{{ category.nomiho }}">
         </form>
@@ -37,11 +36,16 @@
             <p>{{ nomiho.comment }}</p>
           </div>
           <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
-          <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
-            開始する
-          </button>
+          {% if user.is_authenticated %}
+            <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
+              *お客様用のボタンです
+            </button>
+          {% else %}
+            <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
+              開始する
+            </button>
+          {% endif %}
         </form>
       {% endfor %}
     {% endif %}
@@ -66,8 +70,6 @@
             <p class="text-left pl-2">{{ menu.name }}</p>
             <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
           </div>
-          <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}
@@ -79,8 +81,6 @@
     </div>
   {% else %}
     <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
-      <!-- hidden -->
-      <input type="hidden" name="table" value="{{ table_num }}">
       <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文予定を見る
       </button>

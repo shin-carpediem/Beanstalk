@@ -16,7 +16,6 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <p class="py-2 px-3 badge badge__orange">注文予定</p>
           <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="curr_num" value="{{ cart.num }}">
           <input type="hidden" name="cart_id" value="{{ cart.id }}">
         </button>
@@ -37,8 +36,6 @@
           {% elif order.status == '済' %}
             <p class="py-2 px-3 badge badge__grey">済</p>
           {% endif %}
-          <!-- hidden -->
-          <input type="hidden" name="table" value="{{ table_num }}">
         </button>
       </form>
     {% endfor %}
@@ -71,8 +68,6 @@
         <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
           <!-- hidden -->
           <input type="hidden" name="menu_id" value="{{ menu.id }}">
-          <input type="hidden" name="random_code" value="{{ random_code }}">
-          <input type="hidden" name="table" value="{{ table_num }}">
           {% if carts %}
             <button class="btn btn__orange shadow px-5 text__bold" onclick="loading_show()">
           {% else %}
@@ -83,8 +78,6 @@
         </form>
         <form action="{% url 'customer:stop' %}" method="POST">{% csrf_token %}
           <!-- hidden -->
-          <input type="hidden" name="random_code" value="{{ random_code }}">
-          <input type="hidden" name="table" value="{{ table_num }}">
           <input type="hidden" name="total_price" value="{{ total_price }}">
           <button type="submit" style="color: #383636;" class="btn btn__turquoise shadow text__bold" id="orderStopConfirm">
             オーダーストップ

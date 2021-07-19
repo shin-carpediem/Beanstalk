@@ -35,7 +35,6 @@
 
   <form action="{% url 'customer:revert' %}" method="POST">{% csrf_token %}
     <!-- hidden -->
-    <input type="hidden" name="table" value="{{ table_num }}">
     <input type="hidden" name="user_uuid_list" value="{{ user_uuid_list }}">
     <input type="hidden" name="orders" value="{{ orders }}">
     <button type="submit" class="btn btn__red btn__fixed shadow" onclick="loading_show()">

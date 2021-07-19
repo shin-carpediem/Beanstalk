@@ -29,16 +29,15 @@
   <div class="w-100">
     <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="el__hide loading_icon" id="loading_icon">
   </div>
+  {% if user.is_authenticated %}
+    {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}
+      <div class="back-to-order-manage pt-2 pr-2 text-right">
+        <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
+      </div>
+    {% endif %}
+  {% endif %}
 
   <div class="w-100 full__wrapper">
-    {% if user.is_authenticated %}
-      {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}
-        <div class="d-flex logout">
-          <a href="{% url 'restaurant:order_manage' %}">注文管理画面に戻る</a>
-        </div>
-      {% endif %}
-    {% endif %}
-
     {% for message in messages %}
       <div class="message-{{ message.tags }} message text-center">
         <p class="py-2 text__bold">{{ message }}</p>
