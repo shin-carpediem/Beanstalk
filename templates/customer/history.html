@@ -2,6 +2,12 @@
 {% load static %}
 {% load humanize %}
 
+{% block custom__header %}
+  <!-- TODO: -->
+  <meta http-equiv="refresh" content="10; URL=">
+  <title>注文履歴</title>
+{% endblock %}
+
 {% block inner__content %}
 <section class="menu-list">
   <div class="d-flex flex-wrap">
@@ -16,6 +22,7 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <p class="py-2 px-3 badge badge__orange">注文予定</p>
           <!-- hidden -->
+          <input type="hidden" name="table_num" value="{{ table_num }}">
           <input type="hidden" name="curr_num" value="{{ cart.num }}">
           <input type="hidden" name="cart_id" value="{{ cart.id }}">
         </button>
@@ -37,6 +44,8 @@
             <p class="py-2 px-3 badge badge__grey">済</p>
           {% endif %}
         </button>
+        <!-- hidden -->
+        <input type="hidden" name="table_num" value="{{ table_num }}">
       </form>
     {% endfor %}
   </div>
@@ -67,6 +76,7 @@
       <div class="btn__fixed-wider d-flex justify-content-between">
         <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
           <!-- hidden -->
+          <input type="hidden" name="table_num" value="{{ table_num }}">
           <input type="hidden" name="menu_id" value="{{ menu.id }}">
           {% if carts %}
             <button class="btn btn__orange shadow px-5 text__bold" onclick="loading_show()">
@@ -78,6 +88,7 @@
         </form>
         <form action="{% url 'customer:stop' %}" method="POST">{% csrf_token %}
           <!-- hidden -->
+          <input type="hidden" name="table_num" value="{{ table_num }}">
           <input type="hidden" name="total_price" value="{{ total_price }}">
           <button type="submit" style="color: #383636;" class="btn btn__turquoise shadow text__bold" id="orderStopConfirm">
             オーダーストップ

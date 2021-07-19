@@ -18,38 +18,38 @@ def table(request):
 
     # 新規/既存をセッションで判断する
     # 新規
-    if not 'nonloginuser_uuid' in request.session:
+    # if not 'nonloginuser_uuid' in request.session:
 
-        restaurant_name = None
-        try:
-            restaurant = User.objects.get(id=1)
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
-        try:
-            restaurant = User.objects.get(id=2)
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
-        try:
-            restaurant = User.objects.get(id=3)  # MEMO: be careful of id, client id should be 3.
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=3)  # MEMO: be careful of id, client id should be 3.
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
 
-        if user.is_authenticated:
-            return redirect('restaurant:logout')
-        else:
-            None
-
-            ctx = {
-                'restaurant_name': restaurant_name,
-            }
-
-            return render(request, 'customer/table.html', ctx)
-    # 既存
+    if user.is_authenticated:
+        return redirect('restaurant:logout')
     else:
-        return redirect('customer:menu')
+        None
+
+        ctx = {
+            'restaurant_name': restaurant_name,
+        }
+
+        return render(request, 'customer/table.html', ctx)
+    # 既存
+    # else:
+    #     return redirect('customer:menu')
 
 
 def menu(request):
@@ -86,12 +86,17 @@ def menu(request):
         table_num = '管理者'
     else:
 
+        try:
+            table_num = request.POST.get('table')
+        except Exception:
+                messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+                return redirect('customer:table')
+
         # 新規の客かどうかをセッションで判断する
         # 新規
         if not 'nonloginuser_uuid' in request.session:
 
             try:
-                table_num = request.POST.get('table')
                 newuser = nonLoginUser(table=table_num,)
 
             except Exception:
@@ -102,17 +107,18 @@ def menu(request):
             newuser.save()
             uuid = str(newuser.uuid)
 
-            # テーブル番号と客のuuidのセットになったセッションを作成
-            request.session['nonloginuser_uuid'] = {1: uuid}
-            # テーブル番号のセッションを作成
-            request.session['table'] = {1: table_num}
+            # TODO:
+            # テーブル番号と客のuuidのセットになった、その客のブラウザに固有のセッションを作成
+            request.session['nonloginuser_uuid'] = {table_num: uuid}
+            # その客のブラウザに固有の、テーブル番号のセッションを作成
+            # request.session['table'] = {1: table_num}
         # 既存
         else:
             # TODO:
             # 5時間以内に同じお客さんが再度来店した場合、active=Falseのままになるので改善必要
 
             try:
-                table_num = request.session['table']['1']
+                uuid = request.session['nonloginuser_uuid'][table_num]
             except Exception:
                 messages.info(request, f'申し訳ございません。エラーが発生しました。')
                 return redirect('customer:index')
@@ -136,7 +142,20 @@ def filter(request):
         table_num = "管理者"
     # 客側から
     else:
-        table_num = request.session['table']['1']
+
+        # テーブル番号を基に既存の客の情報を引き出す為の準備
+        try:
+            table_num = request.POST.get('table_num')
+        except Exception:
+                messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+                return redirect('customer:table')
+
+        # テーブル番号を基に既存の客の情報を引き出す
+        try:
+            uuid = request.session['nonloginuser_uuid'][table_num]
+        except Exception:
+            messages.info(request, f'申し訳ございません。エラーが発生しました。')
+            return redirect('customer:index')
 
     try:
         category_name = request.POST.get('category')
@@ -197,7 +216,20 @@ def menu_detail(request, menu_id):
     if user.is_authenticated:
         table_num = "管理者"
     else:
-        table_num = request.session['table']['1']
+        # テーブル番号を基に既存の客の情報を引き出す為の準備
+        try:
+            table_num = request.POST.get('table_num')
+        except Exception:
+                messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+                return redirect('customer:table')
+
+        # テーブル番号を基に既存の客の情報を引き出す
+        try:
+            uuid = request.session['nonloginuser_uuid'][table_num]
+        except Exception:
+            messages.info(request, f'申し訳ございません。エラーが発生しました。')
+            return redirect('customer:index')
+
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -216,8 +248,19 @@ def menu_detail(request, menu_id):
 
 @require_POST
 def cart(request):
-    table_num = request.session['table']['1']
-    uuid = request.session['nonloginuser_uuid']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
 
     from .models import Cart
 
@@ -299,7 +342,20 @@ def cart(request):
 
 
 def cart_detail(request, menu_id):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
+
     curr_num = request.POST.get('curr_num')
     cart_id = request.POST.get('cart_id')
     menu = get_object_or_404(Menu, pk=menu_id)
@@ -336,7 +392,20 @@ def cart_detail(request, menu_id):
 
 @require_POST
 def cart_ch(request):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
+
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
 
@@ -397,7 +466,19 @@ def cart_ch(request):
 
 @require_POST
 def order(request):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
 
     categories = Category.objects.defer('created_at').order_by('id')
     try:
@@ -472,7 +553,20 @@ def order(request):
 # 飲み放題開始用のボタン
 @require_POST
 def nomiho(request):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
+
     nomiho_type = request.POST.get('nomiho_type')
 
     category_id = Category.objects.defer('created_at').filter(nomiho='True')[0]
@@ -531,8 +625,19 @@ def nomiho(request):
 
 
 def history(request):
-    table_num = request.session['table']['1']
-    uuid = request.session['nonloginuser_uuid']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
@@ -580,7 +685,20 @@ def history(request):
 
 # TODO:
 def stop(request):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
+
     total_price = request.POST.get('total_price')
 
     try:
@@ -633,7 +751,20 @@ def stop(request):
 #TODO:
 @require_POST
 def revert(request):
-    table_num = request.session['table']['1']
+    # テーブル番号を基に既存の客の情報を引き出す為の準備
+    try:
+        table_num = request.POST.get('table_num')
+    except Exception:
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
+
+    # テーブル番号を基に既存の客の情報を引き出す
+    try:
+        uuid = request.session['nonloginuser_uuid'][table_num]
+    except Exception:
+        messages.info(request, f'申し訳ございません。エラーが発生しました。')
+        return redirect('customer:index')
+
     # TODO:
     user_uuid_list = request.POST.get('user_uuid_list')
     print(user_uuid_list)
