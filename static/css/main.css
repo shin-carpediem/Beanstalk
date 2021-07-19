@@ -223,6 +223,12 @@ a:hover {
           transform: scale(0.9);
 }
 
+@media (max-width: 600px) {
+  .btn {
+    font-size: 1.2rem;
+  }
+}
+
 .btn__blue {
   background-color: #257cff;
 }
