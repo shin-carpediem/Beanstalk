@@ -24,17 +24,18 @@
         </div>
         <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
-      <form method="POST"
-       {% if request.path == '/manage/login/' %}
-        action="{% url 'restaurant:manage_menu' %}"
-        {% else %}
-        action="{% url 'restaurant:confirm' %}"
-        {% endif %}>{% csrf_token %}
+      <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
         <label>メールアドレス</label><br>
-        <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large"><br>
+        {% if email %}
+          <input name="username" value="{{ email }}" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large" readonly>
+        {% else %}
+          <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large">
+        {% endif %}
+        <br>
         <div class="pt-5">
           <button type="submit" class="px-5 py-3 btn btn__blue shadow" onclick="loading_show()" id="loginBtn">
-            認証コードを受け取る
+            <!-- 認証コードを受け取る -->
+            ログイン
           </button>
         </div>
       </form>
@@ -44,10 +45,7 @@
     </div>
     <div class="pt-3 admin row">
       <div class="col-sm-6 col-12">
-        {% if request.path == '/login/' %}
-          <a href="{% url 'restaurant:manage_login' %}" onclick="loading_show()">メニューを作成・管理する*</a>
-          <p class="pl-3">*最初にログインを求められます</p>
-        {% elif request.path == '/manage/login/' %}
+        {% if request.path == '/manage/login/' %}
           <a href="{% url 'restaurant:order_manage' %}" onclick="loading_show()">注文管理画面に戻る</a>
         {% endif %}
       </div>

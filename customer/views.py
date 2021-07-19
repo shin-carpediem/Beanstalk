@@ -20,15 +20,22 @@ def table(request):
     # 新規
     if not 'nonloginuser_uuid' in request.session:
 
+        restaurant_name = None
         try:
-            # MEMO: be careful of id, client id should be 3.
-            restaurant = User.objects.get(id=3)
-            restaurant_name = restaurant.name
-        except Exception:
             restaurant = User.objects.get(id=1)
             restaurant_name = restaurant.name
         except Exception:
-            restaurant_name = None
+            pass
+        try:
+            restaurant = User.objects.get(id=2)
+            restaurant_name = restaurant.name
+        except Exception:
+            pass
+        try:
+            restaurant = User.objects.get(id=3)  # MEMO: be careful of id, client id should be 3.
+            restaurant_name = restaurant.name
+        except Exception:
+            pass
 
         if user.is_authenticated:
             return redirect('restaurant:logout')
@@ -58,14 +65,22 @@ def menu(request):
         pass
     allergies = Allergy.objects.all().order_by('id')
 
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
     except Exception:
-        restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-    except Exception:
-        restaurant_name = None
+        pass
 
     if user.is_authenticated:
         table_num = '管理者'
@@ -116,7 +131,12 @@ def menu(request):
 
 def filter(request):
     user = request.user
-    table_num = request.session['table']['1']
+    # 店側から
+    if user.is_authenticated:
+        table_num = "管理者"
+    # 客側から
+    else:
+        table_num = request.session['table']['1']
     category_name = request.POST.get('category')
     try:
         uuid = request.session['nonloginuser_uuid']['1']
@@ -131,18 +151,22 @@ def filter(request):
         category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
 
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
     except Exception:
-        restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-    except Exception:
-        restaurant_name = None
-
-    # 店側から
-    if user.is_authenticated:
-        table_num = "管理者"
+        pass
 
     ctx = {
         'restaurant_name': restaurant_name,
@@ -165,14 +189,14 @@ def filter(request):
 
 def menu_detail(request, menu_id):
     user = request.user
-    table_num = request.session['table']['1']
+    if user.is_authenticated:
+        table_num = "管理者"
+    else:
+        table_num = request.session['table']['1']
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
     has_allergies = menu.allergies.all().order_by('id')
-
-    if user.is_authenticated:
-        table_num = "管理者"
 
     ctx = {
         'menu': menu,
@@ -195,14 +219,22 @@ def cart(request):
     # メニュー詳細(/detail/)から見るルート
     if request.POST.get('direct') == 'direct':
 
+        restaurant_name = None
+        try:
+            restaurant = User.objects.get(id=1)
+            restaurant_name = restaurant.name
+        except Exception:
+            pass
+        try:
+            restaurant = User.objects.get(id=2)
+            restaurant_name = restaurant.name
+        except Exception:
+            pass
         try:
             restaurant = User.objects.get(id=3)
             restaurant_name = restaurant.name
         except Exception:
-            restaurant = User.objects.get(id=1)
-            restaurant_name = restaurant.name
-        except Exception:
-            restaurant_name = None
+            pass
 
         # Cartデータの保存
         menu_id = request.POST.get('menu_id')
@@ -302,14 +334,22 @@ def cart_ch(request):
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
 
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
     except Exception:
-        restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-    except Exception:
-        restaurant_name = None
+        pass
 
     from .models import Cart
 
@@ -362,14 +402,22 @@ def order(request):
     except Exception:
         pass
 
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
     except Exception:
-        restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-    except Exception:
-        restaurant_name = None
+        pass
 
     try:
         from .models import Cart, Order
@@ -429,14 +477,22 @@ def nomiho(request):
     allergies = Allergy.objects.defer('created_at').order_by('id')
     nomiho_query = Nomiho.objects.get(id=nomiho_type)
 
+    restaurant_name = None
+    try:
+        restaurant = User.objects.get(id=1)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
+    try:
+        restaurant = User.objects.get(id=2)
+        restaurant_name = restaurant.name
+    except Exception:
+        pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
     except Exception:
-        restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-    except Exception:
-        restaurant_name = None
+        pass
 
     # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
     if nomiho_query != None:
@@ -539,14 +595,18 @@ def stop(request):
         user_uuid_list = ''
 
         # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-        for same_user in same_user_table_list:
+        try:
+            for same_user in same_user_table_list:
 
-            same_user.active = False
-            same_user.save()
-            # ここまでは正常
+                same_user.active = False
+                same_user.save()
+                # ここまでは正常
 
-            user_uuid_list = list(chain(same_user))
-        print(user_uuid_list)
+                user_uuid_list = list(chain(same_user))
+                print(user_uuid_list)
+        except Exception:
+            messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+            return redirect('customer:history')
 
     except Exception:
         messages.info(request, f'申し訳ありませんがエラーが発生しました。')

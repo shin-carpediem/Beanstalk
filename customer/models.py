@@ -10,6 +10,7 @@ class Cart(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
     num = models.PositiveIntegerField("個数", blank=True, null=True)
     customer = models.ForeignKey(nonLoginUser, on_delete=models.PROTECT)
+    curr = models.BooleanField("今回分か否か", default=False, blank=True, null=True)
     created_at = models.DateTimeField("カート追加時刻", auto_now=True)
 
     def __str__(self):
@@ -21,6 +22,7 @@ class Order(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
     num = models.PositiveIntegerField("個数", blank=True, null=True)
     customer = models.ForeignKey(nonLoginUser, on_delete=models.PROTECT)
+    curr = models.BooleanField("今回分か否か", default=False, blank=True, null=True)
     created_at = models.DateTimeField("オーダー発生時刻", auto_now=True)
 
     def __str__(self):

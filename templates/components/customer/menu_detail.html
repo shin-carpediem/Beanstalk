@@ -4,6 +4,8 @@
 <div class="menu-top-view">
   {% if menu.img %}
     <img class="lazyload" height=420 data-src="{{ menu.img.url }}" alt="Menu">
+  {% else %}
+    <img class="lazyload" height=420 data-src="{% static 'img/top-view.jpg' %}" alt="Default Img">
   {% endif %}
 
   {% include 'components/restaurant/modal/img.html' %}

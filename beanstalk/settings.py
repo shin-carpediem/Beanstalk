@@ -67,7 +67,7 @@ SECRET_KEY = env("SECRET_KEY")
 # TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
@@ -97,7 +97,7 @@ NUMBER_GROUPING = 3
 AUTH_USER_MODEL = 'account.User'
 LOGIN_URL = 'restaurant:login'
 LOGIN_REDIRECT_URL = 'restaurant:order_manage'
-LOGOUT_REDIRECT_URL = 'customer:index'
+LOGOUT_REDIRECT_URL = 'customer:login'
 
 EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_PORT = env("EMAIL_PORT")

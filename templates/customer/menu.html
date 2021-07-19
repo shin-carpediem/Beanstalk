@@ -27,7 +27,7 @@
 
   <!-- 飲み放題プランの表示箇所 -->
   {% if nomihos %}
-    {% if user_uuid.nomiho == False %}
+    {% if user_uuid.nomiho == False or user_uuid == None %}
       {% for nomiho in nomihos %}
         <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
           <div>

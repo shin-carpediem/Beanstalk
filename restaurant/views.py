@@ -38,88 +38,105 @@ ctx = {
 
 
 def login_as_user(request):
-    return render(request, 'restaurant/login.html')
-
-
-@require_POST
-def confirm(request):
-    # メールアドレスを取得
-    email = request.POST.get('username')
-
-    # セッションにすでにユーザがいれば削除
-    if 'user' in request.session:
-        del request.session['user']
-
-    # ランダムな4桁の文字列を生成
-    passcode = str(random.randrange(10)) + str(random.randrange(10)) + str(random.randrange(10)) + \
-        str(random.randrange(10))
-
-    # メールアドレスとパスコードのセットになったセッションを作成
-    request.session['user'] = {email: passcode}
-
-    # パスコードをメール送信
-    EMAIL = EMAIL_HOST_USER
-    PASSWORD = EMAIL_HOST_PASSWORD
-    TO = email
-
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = '【注文・メニュー管理システム】4ケタの数字をログイン画面に入力してください'
-    msg['From'] = EMAIL
-    msg['To'] = TO
-
-    html = """\
-    <html>
-      <head>
-      </head>
-      <body>
-        <p>{{ passcode }}</p>
-      </body>
-    </html>
-    """
-
-    html = Template(html)
-    context = Context({'passcode': passcode})
-    template = MIMEText(html.render(context=context), 'html')
-    msg.attach(template)
-
+    user = User.objects.get(id=1)
     try:
-        s = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
-        s.starttls()
-        s.login(EMAIL, PASSWORD)
-        s.sendmail(EMAIL, TO, msg.as_string())
-        s.quit()
-        messages.info(
-            request, f"入力したメールアドレス宛てに4ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
+        user = User.objects.get(id=2)
     except Exception:
-        messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
-        return redirect(request, 'restaurant:login')
+        pass
+    try:
+        user = User.objects.get(id=3)
+    except Exception:
+        pass
 
+    email = user.email
     ctx['email'] = email
 
-    return render(request, 'restaurant/confirm.html', ctx)
+    return render(request, 'restaurant/login.html', ctx)
+
+
+# @require_POST
+# def confirm(request):
+#     # メールアドレスを取得
+#     email = request.POST.get('username')
+
+#     # セッションにすでにユーザがいれば削除
+#     if 'user' in request.session:
+#         del request.session['user']
+
+#     # ランダムな4桁の文字列を生成
+#     passcode = str(random.randrange(10)) + str(random.randrange(10)) + str(random.randrange(10)) + \
+#         str(random.randrange(10))
+
+#     # メールアドレスとパスコードのセットになったセッションを作成
+#     request.session['user'] = {email: passcode}
+
+#     # パスコードをメール送信
+#     EMAIL = EMAIL_HOST_USER
+#     PASSWORD = EMAIL_HOST_PASSWORD
+#     TO = email
+
+#     msg = MIMEMultipart('alternative')
+#     msg['Subject'] = '【注文・メニュー管理システム】4ケタの数字をログイン画面に入力してください'
+#     msg['From'] = EMAIL
+#     msg['To'] = TO
+
+#     html = """\
+#     <html>
+#       <head>
+#       </head>
+#       <body>
+#         <p>{{ passcode }}</p>
+#       </body>
+#     </html>
+#     """
+
+#     html = Template(html)
+#     context = Context({'passcode': passcode})
+#     template = MIMEText(html.render(context=context), 'html')
+#     msg.attach(template)
+
+#     try:
+#         s = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
+#         s.starttls()
+#         s.login(EMAIL, PASSWORD)
+#         s.sendmail(EMAIL, TO, msg.as_string())
+#         s.quit()
+#         messages.info(
+#             request, f"入力したメールアドレス宛てに4ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
+#     except Exception:
+#         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+#         return redirect(request, 'restaurant:login')
+
+#     ctx['email'] = email
+
+#     return render(request, 'restaurant/confirm.html', ctx)
 
 
 def order_manage(request):
     # ログインから
     if request.method == 'POST':
         email = request.POST.get('username')
-        passcode = request.POST.get('passcode')
+        # passcode = request.POST.get('passcode')
 
         # 入力されたパスコードがセッションに保持されたパスコードと一致するならログインを許可
-        if passcode == request.session['user'][email]:
+        # if passcode == request.session['user'][email]:
+        try:
             user = User.objects.get(email=email)
             login(request, user)
-
-            # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
-            email = user.email
-            request.session['user_email'] = {1: email}
-
-            return render(request, 'restaurant/order_manage.html', ctx)
-        else:
-            messages.info(
-                request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+        except Exception:
+            messages.info(request, f"メールアドレスが異なります。")
             return redirect(request, 'restaurant:login')
-    # いきなりこの画面(多くの店がこの想定)
+
+        # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
+        email = user.email
+        request.session['user_email'] = {1: email}
+
+        return render(request, 'restaurant/order_manage.html', ctx)
+        # else:
+        #     messages.info(
+        #         request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+        #     return redirect(request, 'restaurant:login')
+    # いきなりこの画面から＆メニュー編集画面から戻ってくるパターン(多くの店がこの想定)
     elif 'user_email' in request.session:
         user_email = request.session['user_email']['1']
         user = User.objects.get(email=user_email)
