@@ -137,7 +137,15 @@ def filter(request):
     # 客側から
     else:
         table_num = request.session['table']['1']
-    category_name = request.POST.get('category')
+
+    try:
+        category_name = request.POST.get('category')
+        category_id = Category.objects.get(name=category_name)
+        menus = Menu.objects.defer('created_at').filter(
+            category=category_id).order_by('-id')
+    except Exception:
+        menus = None
+
     try:
         uuid = request.session['nonloginuser_uuid']['1']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -145,10 +153,7 @@ def filter(request):
     except Exception:
         user_uuid = None
 
-    category_id = Category.objects.get(name=category_name)
     categories = Category.objects.defer('created_at').order_by('id')
-    menus = Menu.objects.defer('created_at').filter(
-        category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
 
     restaurant_name = None
@@ -251,10 +256,11 @@ def cart(request):
         categories = Category.objects.defer('created_at').order_by('id')
         try:
             first_category = categories[0]
+            category_name = first_category.name
             menus = Menu.objects.filter(
                 category=first_category).order_by('-id')
-            category_name = first_category.name
         except Exception:
+            category_name = None
             menus = None
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
