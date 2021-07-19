@@ -97,7 +97,7 @@ NUMBER_GROUPING = 3
 AUTH_USER_MODEL = 'account.User'
 LOGIN_URL = 'restaurant:login'
 LOGIN_REDIRECT_URL = 'restaurant:order_manage'
-LOGOUT_REDIRECT_URL = 'customer:login'
+LOGOUT_REDIRECT_URL = 'restaurant:login'
 
 EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_PORT = env("EMAIL_PORT")
