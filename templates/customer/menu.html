@@ -8,7 +8,7 @@
     <div class="d-flex ml-3">
       {% for category in categories %}
         <form action="{% url 'customer:filter' %}" method="POST">{% csrf_token %}
-          {% if category.name == category_name %}
+          {% if category.name == request.session.category_name %}
             <button type="submit" class="category-btn focus focused p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">
           {% else %}
             <button type="submit" class="category-btn focus p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">

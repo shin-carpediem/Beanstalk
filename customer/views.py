@@ -56,13 +56,6 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-        category_name = first_category.name
-    except Exception:
-        pass
     allergies = Allergy.objects.all().order_by('id')
 
     restaurant_name = None
@@ -116,9 +109,24 @@ def menu(request):
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
 
+    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
+    if not 'category_name' in request.session:
+
+        try:
+            # カテゴリーIDのセッションを作成
+            first_category = categories[0].id
+            request.session['category_name'] = first_category
+            menus = Menu.objects.defer('created_at').filter(
+                category=first_category).order_by('-id')
+        except Exception:
+            menus = None
+    else:
+        category = request.session['category_name']
+        menus = Menu.objects.defer('created_at').filter(
+                category=category).order_by('-id')
+
     ctx = {
         'categories': categories,
-        'category_name': category_name,
         'menus': menus,
         'allergies': allergies,
     }
@@ -141,8 +149,7 @@ def filter(request):
                 return redirect('customer:table')
 
     try:
-        category_name = request.POST.get('category')
-        category_id = Category.objects.get(name=category_name)
+        category_id = request.session['category_name']
         menus = Menu.objects.defer('created_at').filter(
             category=category_id).order_by('-id')
     except Exception:
@@ -159,7 +166,6 @@ def filter(request):
     allergies = Allergy.objects.defer('created_at').order_by('id')
 
     ctx = {
-        'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
@@ -230,18 +236,15 @@ def cart(request):
 
         categories = Category.objects.defer('created_at').order_by('id')
         try:
-            first_category = categories[0]
-            category_name = first_category.name
+            category_id = request.session['category_name']
             menus = Menu.objects.filter(
-                category=first_category).order_by('-id')
+                category=category_id).order_by('-id')
         except Exception:
-            category_name = None
             menus = None
         allergies = Allergy.objects.defer('created_at').order_by('id')
 
         ctx = {
             'categories': categories,
-            'category_name': category_name,
             'menus': menus,
             'allergies': allergies,
         }
@@ -369,10 +372,9 @@ def order(request):
 
     categories = Category.objects.defer('created_at').order_by('id')
     try:
-        first_category = categories[0]
+        category_id = request.session['category_name']
         menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-        category_name = first_category.name
+            category=category_id).order_by('-id')
     except Exception:
         pass
 
@@ -400,18 +402,11 @@ def order(request):
 
             same_user_carts.delete()
 
-        # push notification
-        # from django.contrib.auth.models import User
-        # user = User.objects.get(id=1)
-        from webpush import send_user_notification
-        payload = {"head": "新しい注文がきました", "body": "{table_num}番テーブルからの注文です"}
-        send_user_notification(user=restaurant, payload=payload, ttl=1000)
     except Exception:
         pass
 
     ctx = {
         'categories': categories,
-        'category_name': category_name,
         'menus': menus,
     }
     messages.info(request, f"注文を承りました。今しばらくお待ちください")
@@ -430,8 +425,7 @@ def nomiho(request):
 
     nomiho_type = request.POST.get('nomiho_type')
 
-    category_id = Category.objects.defer('created_at').filter(nomiho='True')[0]
-    category_name = category_id.name
+    category_id = request.session['category_name']
     categories = Category.objects.defer('created_at').order_by('id')
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
@@ -459,7 +453,6 @@ def nomiho(request):
     messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
 
     ctx = {
-        'category_name': category_name,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
