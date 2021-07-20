@@ -179,10 +179,11 @@ def filter(request):
     }
 
     # 飲み放題を選択した場合
-    nomihos = Nomiho.objects.defer('created_at').order_by('-id')
-    ctx['nomihos'] = nomihos
+    if category_id.nomiho == True:
+        nomihos = Nomiho.objects.defer('created_at').order_by('-id')
+        ctx['nomihos'] = nomihos
 
-    messages.info(request, f'このページは飲み放題用です')
+        messages.info(request, f'このページは飲み放題用です')
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -436,12 +437,13 @@ def nomiho(request):
     menus = Menu.objects.defer('created_at').filter(
         category=category_id).order_by('-id')
     allergies = Allergy.objects.defer('created_at').order_by('id')
-    nomiho_query = Nomiho.objects.get(id=nomiho_type)
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
-    if nomiho_query != None:
+    try:
+        nomiho_query = Nomiho.objects.get(id=nomiho_type)
+
         table_num = request.session['table']
         same_user_table_list = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True)
@@ -449,14 +451,22 @@ def nomiho(request):
         for same_user in same_user_table_list:
             same_user.price = int(same_user.price) + \
                 int(nomiho_query.price)
+            # 各々の「飲み放題」ステータス：yes/noをyesにする
             same_user.nomiho = True
+            same_user.save()
             same_user.nomiho_name = nomiho_query.name
+            same_user.save()
             same_user.nomiho_price += int(nomiho_query.price)
             same_user.save()
 
-    time = nomiho_query.duration
+            nomiho_is_started = same_user.nomiho
 
-    messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
+            time = nomiho_query.duration
+
+            messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
+
+    except Exception:
+        nomiho_query = None
 
     ctx = {
         'categories': categories,
@@ -464,6 +474,7 @@ def nomiho(request):
         'allergies': allergies,
         'nomiho_query': nomiho_query,
         'user_uuid': user_uuid,
+        'nomiho_is_started': nomiho_is_started,
     }
 
     return render(request, 'customer/menu.html', ctx)
