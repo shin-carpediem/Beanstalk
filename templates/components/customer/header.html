@@ -13,6 +13,8 @@
         {% endif %}
       {% elif request.path == '/filter/' %}
         <form onclick="history.back(); return false;" class="el__pointer m-auto">
+          <!-- hidden -->
+          <input type="hidden" name="table_num" value="{{ table_num }}">
           <button type="submit" class="m-auto back focus" onclick="loading_show()">
             戻る
           </button>
