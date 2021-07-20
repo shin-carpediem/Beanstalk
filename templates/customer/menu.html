@@ -16,7 +16,6 @@
               {{ category.name }}
             </button>
           <!-- hidden -->
-          <input type="hidden" name="table_num" value="{{ table_num }}">
           <input type="hidden" name="category_name" value="{{ category.name }}">
           <input type="hidden" name="nomiho_or_not" value="{{ category.nomiho }}">
         </form>
@@ -37,7 +36,6 @@
             <p>{{ nomiho.comment }}</p>
           </div>
           <!-- hidden -->
-          <input type="hidden" name="table_num" value="{{ table_num }}">
           <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
           {% if user.is_authenticated %}
             <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
@@ -73,8 +71,6 @@
             <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
           </div>
         </button>
-        <!-- hidden -->
-        <input type="hidden" name="table_num" value="{{ table_num }}">
       </form>
     {% endfor %}
   </div>
@@ -88,8 +84,6 @@
       <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文予定を見る
       </button>
-      <!-- hidden -->
-      <input type="hidden" name="table_num" value="{{ table_num }}">
     </form>
   {% endif %}
 </section>

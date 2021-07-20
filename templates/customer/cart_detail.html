@@ -16,7 +16,6 @@
           <p class="ml-4 text__bold plus-minus el__pointer" id="cartPlus">+</p>
         </div>
         <!-- hidden -->
-        <input type="hidden" name="table_num" value="{{ table_num }}">
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         <input type="hidden" name="cart_id" value="{{ cart_id }}">
         <input type="hidden" name="type" value="change">
@@ -27,7 +26,6 @@
 
       <form class="cart-form" action="{% url 'customer:cart_ch' %}" method="POST">{% csrf_token %}
         <!-- hidden -->
-        <input type="hidden" name="table_num" value="{{ table_num }}">
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         <input type="hidden" name="cart_id" value="{{ cart_id }}">
         <input type="hidden" name="type" value="delete">

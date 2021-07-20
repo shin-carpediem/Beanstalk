@@ -18,7 +18,7 @@ def table(request):
 
     # 新規/既存をセッションで判断する
     # 新規
-    if not 'nonloginuser_uuid' in request.session:
+    if not request.session.session_key:
 
         restaurant_name = None
         try:
@@ -94,7 +94,6 @@ def menu(request):
 
         # 新規の客かどうかをセッションで判断する
         # 新規
-        # if not 'nonloginuser_uuid' in request.session:
         if not request.session.session_key:
 
             try:
@@ -108,31 +107,15 @@ def menu(request):
             newuser.save()
             uuid = str(newuser.uuid)
 
-            # TODO:
             # セッション開始
             request.session.create()
-            session_key = request.session.session_key
-            # テーブル番号と客のuuidのセットになった、その客のブラウザに固有のセッションを作成
-            # request.session['nonloginuser_uuid'] = {table_num: uuid}
-            # print(request.session['nonloginuser_uuid'])
             # テーブル番号のセッションを作成
             request.session['table'] = table_num
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
-        # 既存
-        # else:
-            # TODO:
-            # 5時間以内に同じお客さんが再度来店した場合、active=Falseのままになるので改善必要
-
-            # try:
-            #     uuid = request.session['nonloginuser_uuid'][table_num]
-            # except Exception:
-            #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-            #     return redirect('customer:index')
 
     ctx = {
         'restaurant_name': restaurant_name,
-        'table_num': table_num,
         'categories': categories,
         'category_name': category_name,
         'menus': menus,
@@ -152,19 +135,10 @@ def filter(request):
 
         # テーブル番号を基に既存の客の情報を引き出す為の準備
         try:
-            # table_num = request.POST.get('table_num')
             table_num = request.session['table']
         except Exception:
-                # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
                 messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
                 return redirect('customer:table')
-
-        # テーブル番号を基に既存の客の情報を引き出す
-        # try:
-        #     uuid = request.session['nonloginuser_uuid'][table_num]
-        # except Exception:
-        #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-        #     return redirect('customer:index')
 
     try:
         category_name = request.POST.get('category')
@@ -203,7 +177,6 @@ def filter(request):
 
     ctx = {
         'restaurant_name': restaurant_name,
-        'table_num': table_num,
         'category_name': category_name,
         'categories': categories,
         'menus': menus,
@@ -227,19 +200,10 @@ def menu_detail(request, menu_id):
     else:
         # テーブル番号を基に既存の客の情報を引き出す為の準備
         try:
-            # table_num = request.POST.get('table_num')
             table_num = request.session['table']
         except Exception:
-                # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
                 messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
                 return redirect('customer:table')
-
-        # テーブル番号を基に既存の客の情報を引き出す
-        # try:
-        #     uuid = request.session['nonloginuser_uuid'][table_num]
-        # except Exception:
-        #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-        #     return redirect('customer:index')
 
     menu = get_object_or_404(Menu, pk=menu_id)
 
@@ -248,7 +212,6 @@ def menu_detail(request, menu_id):
 
     ctx = {
         'menu': menu,
-        'table_num': table_num,
         'allergies': allergies,
         'has_allergies': has_allergies,
         'add_cart': "direct",
@@ -261,19 +224,10 @@ def menu_detail(request, menu_id):
 def cart(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     from .models import Cart
 
@@ -323,7 +277,6 @@ def cart(request):
 
         ctx = {
             'restaurant_name': restaurant_name,
-            'table_num': table_num,
             'categories': categories,
             'category_name': category_name,
             'menus': menus,
@@ -348,7 +301,6 @@ def cart(request):
             # 同じ商品は個数をまとめたい
 
         ctx = {
-            'table_num': table_num,
             'carts': carts,
         }
 
@@ -358,19 +310,10 @@ def cart(request):
 def cart_detail(request, menu_id):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     curr_num = request.POST.get('curr_num')
     cart_id = request.POST.get('cart_id')
@@ -395,7 +338,6 @@ def cart_detail(request, menu_id):
     #         curr_num += int(each.num)
 
     ctx = {
-        'table_num': table_num,
         'menu': menu,
         'allergies': allergies,
         'has_allergies': has_allergies,
@@ -410,19 +352,10 @@ def cart_detail(request, menu_id):
 def cart_ch(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
@@ -475,7 +408,6 @@ def cart_ch(request):
 
     ctx = {
         'restaurant_name': restaurant_name,
-        'table_num': table_num,
         'carts': carts,
     }
 
@@ -486,19 +418,10 @@ def cart_ch(request):
 def order(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     categories = Category.objects.defer('created_at').order_by('id')
     try:
@@ -560,7 +483,6 @@ def order(request):
 
     ctx = {
         'restaurant_name': restaurant_name,
-        'table_num': table_num,
         'categories': categories,
         'category_name': category_name,
         'menus': menus,
@@ -575,19 +497,10 @@ def order(request):
 def nomiho(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     nomiho_type = request.POST.get('nomiho_type')
 
@@ -635,7 +548,6 @@ def nomiho(request):
 
     ctx = {
         'restaurant_name': restaurant_name,
-        'table_num': table_num,
         'category_name': category_name,
         'categories': categories,
         'menus': menus,
@@ -649,19 +561,10 @@ def nomiho(request):
 def history(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -712,19 +615,10 @@ def history(request):
 def stop(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     total_price = request.POST.get('total_price')
 
@@ -764,7 +658,6 @@ def stop(request):
         return redirect('customer:history')
 
     ctx = {
-        'table_num': table_num,
         'user_uuid_list': user_uuid_list,
         'total_price': total_price,
         'orders': orders,
@@ -780,19 +673,10 @@ def stop(request):
 def revert(request):
     # テーブル番号を基に既存の客の情報を引き出す為の準備
     try:
-        # table_num = request.POST.get('table_num')
         table_num = request.session['table']
     except Exception:
-            # messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
-
-    # テーブル番号を基に既存の客の情報を引き出す
-    # try:
-    #     uuid = request.session['nonloginuser_uuid'][table_num]
-    # except Exception:
-    #     messages.info(request, f'申し訳ございません。エラーが発生しました。')
-    #     return redirect('customer:index')
 
     # TODO:
     user_uuid_list = request.POST.get('user_uuid_list')
@@ -819,7 +703,6 @@ def revert(request):
         return redirect('customer:stop')
 
     ctx = {
-        'table_num': table_num,
     }
 
     return render(request, 'customer/history.html', ctx)
