@@ -236,7 +236,7 @@ def cart(request):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         try:
-            cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid)
+            cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid, curr=True)
             cart.save()
         except Exception:
             pass
@@ -401,7 +401,7 @@ def order(request):
 
             for each in same_user_carts:
                 order = Order(status='調理中', menu=each.menu,
-                                num=each.num, customer=each.customer)
+                                num=each.num, customer=each.customer, curr=True)
                 order.save()
                 cart_price = cart_price + (each.menu.price * each.num)
 
