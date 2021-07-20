@@ -113,9 +113,11 @@ def menu(request):
     if not 'category_name' in request.session:
 
         try:
-            # カテゴリーIDのセッションを作成
+
             first_category = categories[0].id
+            # カテゴリーIDのセッションを作成
             request.session['category_name'] = first_category
+
             menus = Menu.objects.defer('created_at').filter(
                 category=first_category).order_by('-id')
         except Exception:
@@ -149,9 +151,13 @@ def filter(request):
                 return redirect('customer:table')
 
     try:
-        category_id = request.session['category_name']
+        category = request.POST.get('category_name')
+        category_id = Category.objects.get(name=category)
         menus = Menu.objects.defer('created_at').filter(
             category=category_id).order_by('-id')
+
+        # カテゴリーのセッションを更新
+        request.session['category_name'] = category_id.id
     except Exception:
         menus = None
 

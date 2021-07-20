@@ -11,12 +11,12 @@
         {% else %}
           <img src="{% static 'img/logo.png' %}" alt="Logo">
         {% endif %}
-      {% elif request.path == '/filter/' %}
-        <form onclick="history.back(); return false;" class="el__pointer m-auto">
+      {# % elif request.path == '/filter/' % #}
+        <!-- <form onclick="history.back(); return false;" class="el__pointer m-auto">
           <button type="submit" class="m-auto back focus" onclick="loading_show()">
             戻る
           </button>
-        </form>
+        </form> -->
       {% else %}
         <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}
           <button type="submit" class="m-auto back focus" onclick="loading_show()">
