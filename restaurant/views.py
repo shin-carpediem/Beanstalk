@@ -238,10 +238,45 @@ def manage_menu(request):
 
 @login_required
 @require_POST
+def company_logo(request):
+    user = request.user
+    company_img = request.FILES.get('company_img')
+
+    # 以前のファイルは削除
+    user.logo.delete(False)
+
+    user.logo = company_img
+    user.save()
+    messages.success(request, f"ロゴ画像を変更しました。")
+
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
+def company_name(request):
+    user = request.user
+    company_name = request.POST.get('company_name')
+
+    user.name = company_name
+    user.save()
+    messages.success(request, f"表示するお店の名前を{company_name}に変更しました。")
+
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
 def category_add(request):
     name = request.POST.get('add_category_form')
+
+    try:
+        nomiho = request.POST.get('nomiho')
+    except Exception:
+        nomiho = False
+
     if Category.objects.filter(name=name).count() == 0:
-        category = Category(name=name)
+        category = Category(name=name, nomiho=nomiho)
         category.save()
         messages.success(request, f"カテゴリーに{name}を追加しました。")
     else:

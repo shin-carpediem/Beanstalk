@@ -497,6 +497,27 @@ section.table {
       transform: scale(2.8);
     }
   }
+  section.header__customer {
+    position: relative;
+    .company-img-manage-btn {
+      position: absolute;
+      z-index: 200;
+      top: -20px;
+      left: 50px;
+    }
+  }
+  section.header__customer {
+    position: relative;
+    .company-name-manage-btn {
+      position: absolute;
+      z-index: 200;
+      top: -40px;
+      left: 120px;
+      @media (max-width: 600px) {
+        left: 80px;
+      }
+    }
+  }
   section.menu-list {
     .category {
       border-bottom: 1px solid $grey;

@@ -569,6 +569,34 @@ section.table .choose-table input {
           transform: scale(2.8);
 }
 
+.board__customer section.header__customer {
+  position: relative;
+}
+
+.board__customer section.header__customer .company-img-manage-btn {
+  position: absolute;
+  z-index: 200;
+  top: -20px;
+  left: 50px;
+}
+
+.board__customer section.header__customer {
+  position: relative;
+}
+
+.board__customer section.header__customer .company-name-manage-btn {
+  position: absolute;
+  z-index: 200;
+  top: -40px;
+  left: 120px;
+}
+
+@media (max-width: 600px) {
+  .board__customer section.header__customer .company-name-manage-btn {
+    left: 80px;
+  }
+}
+
 .board__customer section.menu-list .category {
   border-bottom: 1px solid #9c9c9c;
   position: relative;

@@ -25,16 +25,24 @@
         </form>
       {% endif %}
     </div>
+
+    {% include 'components/restaurant/modal/company-img.html' %}
   </div>
 
   <h5 class="col-4 my-auto text__bold">
     {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/nomiho/' or request.path == '/manage/menu/' %}
-      {{ request.session.restaurant_name }}
+      {% if user.is_authenticated %}
+        {{ request.user.name }}
+      {% else %}
+        {{ request.session.restaurant_name }}
+      {% endif %}
     {% elif request.path == '/history/' %}
       ご注文履歴
     {% elif request.path == '/stop/' %}
       お会計金額
     {% endif %}
+
+    {% include 'components/restaurant/modal/company-name.html' %}
   </h5>
 
   <p class="col-4 my-auto text__bold">テーブル番号: {{ request.session.table }}</p>
