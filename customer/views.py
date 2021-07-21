@@ -111,8 +111,6 @@ def menu(request):
             newuser.save()
             uuid = str(newuser.uuid)
 
-            # セッション開始
-            request.session.create()
             # レストラン名のセッションを作成
             request.session['restaurant_name'] = restaurant_name
             # テーブル番号のセッションを作成
