@@ -3,20 +3,12 @@
 <section class="pt-3 px-2 header__customer row">
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
-      {% if request.path == '/' %}
-        <img src="{% static 'img/logo.png' %}" alt="Logo">
-      {% elif request.path == '/menu/' or request.path == '/manage/menu/' or request.path == '/stop/' %}
-        {% if request.user.img %}
-          <img src="{{ request.user.img.url }}" alt="Restaurant Logo">
+      {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/nomiho/' or request.path == '/manage/menu/' %}
+        {% if request.user.logo.url %}
+          <img src="{{ request.user.logo.url }}" alt="Restaurant Logo">
         {% else %}
-          <img src="{% static 'img/logo.png' %}" alt="Logo">
+          <img src="{% static 'img/logo.png' %}" alt="Default Logo">
         {% endif %}
-      {# % elif request.path == '/filter/' % #}
-        <!-- <form onclick="history.back(); return false;" class="el__pointer m-auto">
-          <button type="submit" class="m-auto back focus" onclick="loading_show()">
-            戻る
-          </button>
-        </form> -->
       {% else %}
         <form action="{% url 'customer:menu' %}" method="POST" class="el__pointer m-auto">{% csrf_token %}
           <button type="submit" class="m-auto back focus" onclick="loading_show()">

@@ -20,24 +20,23 @@ from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST,
 
 # Create your views here.
 # default
-table_num = '管理者'
-categories = Category.objects.defer('created_at').order_by('id')
-try:
-    first_category = categories[0]
-    menus = Menu.objects.defer('created_at').filter(
-        category=first_category).order_by('-id')
-except:
-    menus = None
-allergies = Allergy.objects.all().order_by('id')
-ctx = {
-    'table_num': table_num,
-    'categories': categories,
-    'menus': menus,
-    'allergies': allergies,
-}
-
-
 def login_as_user(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     user = User.objects.get(id=1)
     try:
         user = User.objects.get(id=2)
@@ -56,6 +55,22 @@ def login_as_user(request):
 
 # @require_POST
 # def confirm(request):
+    # table_num = '管理者'
+    # categories = Category.objects.defer('created_at').order_by('id')
+    # try:
+    #     first_category = categories[0]
+    #     menus = Menu.objects.defer('created_at').filter(
+    #         category=first_category).order_by('-id')
+    # except:
+    #     menus = None
+    # allergies = Allergy.objects.all().order_by('id')
+    # ctx = {
+    #     'table_num': table_num,
+    #     'categories': categories,
+    #     'menus': menus,
+    #     'allergies': allergies,
+    # }
+
 #     # メールアドレスを取得
 #     email = request.POST.get('username')
 
@@ -113,6 +128,22 @@ def login_as_user(request):
 
 
 def order_manage(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     # ログインから
     if request.method == 'POST':
         email = request.POST.get('username')
@@ -169,6 +200,22 @@ def order_status_ch(request):
 
 @login_required
 def history(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     user = User.objects.get(id=request.user.id)
     name = user.name
 
@@ -182,6 +229,22 @@ def history(request):
 
 @login_required
 def total(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     dt_now = datetime.datetime.now()
     # 同日日時、あるいは昨日に作られた注文のみを抽出
     orders = Order.objects.filter(Q(created_at__date=datetime.date(
@@ -195,6 +258,22 @@ def total(request):
 
 @login_required
 def daily(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     orders = Order.objects.filter(status='済').order_by('-id')
 
     total_price = 0
@@ -223,11 +302,43 @@ def daily(request):
 
 # for manageing customer screen
 def manage_login(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     return render(request, 'restaurant/login.html', ctx)
 
 
 @login_required
 def manage_menu(request):
+    table_num = '管理者'
+    categories = Category.objects.defer('created_at').order_by('id')
+    try:
+        first_category = categories[0]
+        menus = Menu.objects.defer('created_at').filter(
+            category=first_category).order_by('-id')
+    except:
+        menus = None
+    allergies = Allergy.objects.all().order_by('id')
+    ctx = {
+        'table_num': table_num,
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+    }
+
     user = request.user
     restaurant_name = user.name
 
