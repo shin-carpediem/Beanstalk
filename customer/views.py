@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.sessions.models import Session
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum
@@ -30,23 +29,23 @@ def table(request):
     # 新規
     if not request.session.session_key:
 
-        restaurant_name = None
-        try:
-            restaurant = User.objects.get(id=1)
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
-        try:
-            restaurant = User.objects.get(id=2)
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
-        try:
-            # MEMO: be careful of id, client id should be 3.
-            restaurant = User.objects.get(id=3)
-            restaurant_name = restaurant.name
-        except Exception:
-            pass
+        # restaurant_name = None
+        # try:
+        #     restaurant = User.objects.get(id=1)
+        #     restaurant_name = restaurant.name
+        # except Exception:
+        #     pass
+        # try:
+        #     restaurant = User.objects.get(id=2)
+        #     restaurant_name = restaurant.name
+        # except Exception:
+        #     pass
+        # try:
+        #     # MEMO: be careful of id, client id should be 3.
+        #     restaurant = User.objects.get(id=3)
+        #     restaurant_name = restaurant.name
+        # except Exception:
+        #     pass
 
         if user.is_authenticated:
             return redirect('restaurant:logout')
@@ -54,7 +53,7 @@ def table(request):
             None
 
             ctx = {
-                'restaurant_name': restaurant_name,
+                # 'restaurant_name': restaurant_name,
             }
 
             return render(request, 'customer/table.html', ctx)
@@ -70,19 +69,23 @@ def menu(request):
     allergies = Allergy.objects.all().order_by('id')
 
     restaurant_name = None
+    restaurant_logo = None
     try:
         restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
+        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
     try:
         restaurant = User.objects.get(id=2)
         restaurant_name = restaurant.name
+        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
     try:
         restaurant = User.objects.get(id=3)
         restaurant_name = restaurant.name
+        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
 
@@ -113,6 +116,8 @@ def menu(request):
 
             # レストラン名のセッションを作成
             request.session['restaurant_name'] = restaurant_name
+            # レストランのロゴのセッションを作成
+            request.session['restaurant_logo'] = restaurant_logo
             # テーブル番号のセッションを作成
             request.session['table'] = table_num
             # uuidのセッションを作成
@@ -171,6 +176,7 @@ def filter(request):
 
         # カテゴリーのセッションを更新
         request.session['category_name'] = category_id.id
+        print(request.session['category_name'])
         menus = Menu.objects.defer('created_at').filter(
             category=category_id).order_by('-id')
     except Exception:
@@ -197,6 +203,11 @@ def filter(request):
     if category_id.nomiho == True:
         nomihos = Nomiho.objects.defer('created_at').order_by('-id')
         ctx['nomihos'] = nomihos
+
+        if category_id.nomiho == True:
+            ctx['nomiho_category'] = "Yes"
+        else:
+            ctx['nomiho_category'] = "No"
 
         messages.info(request, f'このページは飲み放題用です')
 
@@ -287,6 +298,7 @@ def cart(request):
                 customer=same_user.uuid).order_by('-id')
 
             carts = list(chain(same_user_carts))
+            print(carts)
             # TODO:
             # 同じ商品は個数をまとめたい
 
@@ -622,7 +634,8 @@ def revert(request):
     user_list = ''
 
     for each in user_uuid_list:
-        each_user = nonLoginUser.objects.defer('created_at').filter(uuid=each.uuid)
+        each_user = nonLoginUser.objects.defer(
+            'created_at').filter(uuid=each.uuid)
         user_list = list(chain(each_user))
         # user_list.append(each_user)
         print(user_list)

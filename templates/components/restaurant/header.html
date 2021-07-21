@@ -5,7 +5,11 @@
     <div class="d-flex px-3">
       <div class="m-auto logo shadow d-flex align-items-center">
         {% if request.path == '/order_manage/' %}
-          <img src="{% static 'img/logo.png' %}" alt="Logo">
+          {% if request.user.logo.url %}
+            <img src="{{ request.user.logo.url }}" alt="Restaurant Logo">
+          {% else %}
+            <img src="{% static 'img/logo.png' %}" alt="Default Logo">
+          {% endif %}
         {% else %}
           <a href="{% url 'restaurant:order_manage' %}" class="m-auto back focus" onclick="loading_show()">戻る</a>
         {% endif %}

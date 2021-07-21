@@ -14,6 +14,7 @@
 
 import io
 import os
+from re import T
 
 import environ
 from google.cloud import secretmanager
@@ -67,7 +68,7 @@ SECRET_KEY = env("SECRET_KEY")
 # TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = False
+DEBUG = True
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django

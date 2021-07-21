@@ -6,20 +6,18 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Q
-from django.template import Context, Template
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-import random
+# from django.template import Context, Template
+# from email.mime.multipart import MIMEMultipart
+# from email.mime.text import MIMEText
+# import smtplib
 import datetime
 from itertools import groupby
 from .models import Category, Allergy, Menu
 from account.models import User, nonLoginUser
-from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
+# from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
 
 # Create your views here.
-# default
 def login_as_user(request):
     table_num = '管理者'
     categories = Category.objects.defer('created_at').order_by('id')
