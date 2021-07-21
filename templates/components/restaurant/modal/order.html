@@ -1,20 +1,26 @@
 　<button type="button" class="order-item-card w-100 d-flex align-items-center justify-content-between focus" data-toggle="modal" data-target="#order-modal__ModalCenter">
     <div class="d-flex align-items-center justify-content-between">
       {% if order.status == '調理中' %}
-        <p class="badge__orange text__bold text__large px-sm-3 py-sm-2">注文</p>
-      <!-- {% elif order.status == 'キャンセル' %}
-        <p class="badge__blue text__bold text__large px-sm-1 py-sm-2">{{ order.status }}</p> -->
+        <div class="badge__orange px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1">
+          <p class="text__bold text__large">注文</p>
+        </div>
+      {# % elif order.status == 'キャンセル' % #}
+        <!-- <div>
+        <p class="badge__blue text__bold text__large">{{ order.status }}</p>
+        </div> -->
       {% elif order.status == '済' %}
-        <p class="badge__grey text__bold text__large px-sm-3 py-sm-2">{{ order.status }}</p>
+        <div class="badge__grey px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1">
+          <p class="text__bold text__large">{{ order.status }}</p>
+        </div>
       {% endif %}
-      <p class="mt-3 ml-sm-5 table text__bold icon icon_yellow text__large">{{ order.customer.table }}</p>
+      <p class="mt-3 ml-sm-5 ml-3 table text__bold icon icon_yellow text__large">{{ order.customer.table }}</p>
     </div>
 
-    <div class="text-center">
+    <div>
       <p class="name text__bold">{{ order.menu.name }}</p>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mr-sm-5 mr-3">
+    <div class="d-flex justify-content-between align-items-center mr-sm-5 mr-2">
       <p class="num mr-sm-5 mr-3 text__bold text__large icon icon__red">{{ order.num }}</p>
       <p class="created_at text__large text__bold">{{ order.created_at | time }}</p>
     </div>
@@ -32,7 +38,7 @@
         <div class="modal-body mx-auto">
           <div class="py-3 d-flex justify-content-around align-items-center">
             <input type="radio" name="order_status" value="調理中" checked id="cookingRadio"><p id="cooking" class="badge__orange ml-3 mr-4 px-3 py-2 text__bold">オーダー</p>
-            <input type="radio" name="order_status" value="キャンセル" id="chancelRadio"><p id="chancel" class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p>
+            <!-- <input type="radio" name="order_status" value="キャンセル" id="chancelRadio"><p id="chancel" class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p> -->
             <input type="radio" name="order_status" value="済" id="doneRadio"><p id="done" class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
           </div>
         </div>

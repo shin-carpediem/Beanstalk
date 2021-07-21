@@ -4,11 +4,21 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum
 from itertools import chain
+import time
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 
 
 # Create your views here.
+def stop_nomiho(request, duration):
+    uuid = request.session['nonloginuser_uuid']
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+
+    time.sleep(int(duration)*60)
+    user_uuid.nomiho = False
+    user_uuid.save()
+
+
 def index(request):
     return render(request, 'customer/index.html')
 
@@ -32,7 +42,8 @@ def table(request):
         except Exception:
             pass
         try:
-            restaurant = User.objects.get(id=3)  # MEMO: be careful of id, client id should be 3.
+            # MEMO: be careful of id, client id should be 3.
+            restaurant = User.objects.get(id=3)
             restaurant_name = restaurant.name
         except Exception:
             pass
@@ -82,8 +93,8 @@ def menu(request):
         try:
             table_num = request.POST.get('table')
         except Exception:
-                messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
-                return redirect('customer:table')
+            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
+            return redirect('customer:table')
 
         # 新規の客かどうかをセッションで判断する
         # 新規
@@ -108,6 +119,12 @@ def menu(request):
             request.session['table'] = table_num
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
+        # 既存
+        else:
+            uuid = request.session['nonloginuser_uuid']
+            user_uuid = nonLoginUser.objects.get(uuid=uuid)
+            user_uuid.active = True
+            user_uuid.save()
 
     # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
     if not 'category_name' in request.session:
@@ -125,7 +142,7 @@ def menu(request):
     else:
         category = request.session['category_name']
         menus = Menu.objects.defer('created_at').filter(
-                category=category).order_by('-id')
+            category=category).order_by('-id')
 
     ctx = {
         'categories': categories,
@@ -147,17 +164,17 @@ def filter(request):
         try:
             request.session.session_key
         except Exception:
-                messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-                return redirect('customer:table')
+            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+            return redirect('customer:table')
 
     try:
         category = request.POST.get('category_name')
         category_id = Category.objects.get(name=category)
-        menus = Menu.objects.defer('created_at').filter(
-            category=category_id).order_by('-id')
 
         # カテゴリーのセッションを更新
         request.session['category_name'] = category_id.id
+        menus = Menu.objects.defer('created_at').filter(
+            category=category_id).order_by('-id')
     except Exception:
         menus = None
 
@@ -197,8 +214,8 @@ def menu_detail(request, menu_id):
         try:
             request.session.session_key
         except Exception:
-                messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-                return redirect('customer:table')
+            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+            return redirect('customer:table')
 
     menu = get_object_or_404(Menu, pk=menu_id)
 
@@ -236,7 +253,8 @@ def cart(request):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         try:
-            cart = Cart(menu=menu_instance, num=cart_num, customer=user_uuid, curr=True)
+            cart = Cart(menu=menu_instance, num=cart_num,
+                        customer=user_uuid, curr=True)
             cart.save()
         except Exception:
             pass
@@ -285,8 +303,8 @@ def cart_detail(request, menu_id):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     curr_num = request.POST.get('curr_num')
     cart_id = request.POST.get('cart_id')
@@ -326,8 +344,8 @@ def cart_ch(request):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
@@ -374,16 +392,8 @@ def order(request):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
-
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        category_id = request.session['category_name']
-        menus = Menu.objects.defer('created_at').filter(
-            category=category_id).order_by('-id')
-    except Exception:
-        pass
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     try:
         from .models import Cart, Order
@@ -392,7 +402,7 @@ def order(request):
         same_user_table_list = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True)
 
-        # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
+        # そのユーザー毎がカートに追加した内容をまとめたCartリストを作成
         for same_user in same_user_table_list:
             same_user_carts = Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
@@ -401,7 +411,7 @@ def order(request):
 
             for each in same_user_carts:
                 order = Order(status='調理中', menu=each.menu,
-                                num=each.num, customer=each.customer, curr=True)
+                              num=each.num, customer=each.customer, curr=True)
                 order.save()
                 cart_price = cart_price + (each.menu.price * each.num)
 
@@ -413,8 +423,6 @@ def order(request):
         pass
 
     ctx = {
-        'categories': categories,
-        'menus': menus,
     }
     messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
@@ -424,68 +432,76 @@ def order(request):
 # 飲み放題開始用のボタン
 @require_POST
 def nomiho(request):
-    try:
-        request.session.session_key
-    except Exception:
+    user = request.user
+    if user.is_authenticated:
+        return redirect('customer:index')
+    else:
+
+        try:
+            request.session.session_key
+        except Exception:
             messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:table')
 
-    nomiho_type = request.POST.get('nomiho_type')
+        nomiho_type = request.POST.get('nomiho_type')
 
-    category_id = request.session['category_name']
-    categories = Category.objects.defer('created_at').order_by('id')
-    menus = Menu.objects.defer('created_at').filter(
-        category=category_id).order_by('-id')
-    allergies = Allergy.objects.defer('created_at').order_by('id')
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        category_id = request.session['category_name']
+        categories = Category.objects.defer('created_at').order_by('id')
+        menus = Menu.objects.defer('created_at').filter(
+            category=category_id).order_by('-id')
+        allergies = Allergy.objects.defer('created_at').order_by('id')
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
-    try:
-        nomiho_query = Nomiho.objects.get(id=nomiho_type)
+        # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
+        try:
+            nomiho_query = Nomiho.objects.get(id=nomiho_type)
 
-        table_num = request.session['table']
-        same_user_table_list = nonLoginUser.objects.defer(
-            'created_at').filter(table=table_num, active=True)
+            table_num = request.session['table']
+            same_user_table_list = nonLoginUser.objects.defer(
+                'created_at').filter(table=table_num, active=True)
 
-        for same_user in same_user_table_list:
-            same_user.price = int(same_user.price) + \
-                int(nomiho_query.price)
-            # 各々の「飲み放題」ステータス：yes/noをyesにする
-            same_user.nomiho = True
-            same_user.save()
-            same_user.nomiho_name = nomiho_query.name
-            same_user.save()
-            same_user.nomiho_price += int(nomiho_query.price)
-            same_user.save()
+            for same_user in same_user_table_list:
+                same_user.price += int(nomiho_query.price)
+                same_user.save()
+                # 各々の「飲み放題」ステータス：yes/noをyesにする
+                same_user.nomiho = True
+                same_user.save()
+                same_user.nomiho_name = nomiho_query.name
+                same_user.save()
+                same_user.nomiho_price += int(nomiho_query.price)
+                same_user.save()
 
-            nomiho_is_started = same_user.nomiho
+                nomiho_is_started = same_user.nomiho
 
-            time = nomiho_query.duration
+                # TODO:
+                duration = nomiho_query.duration
+                stop_nomiho(request, duration)
 
-            messages.info(request, f'🍺 飲み放題が開始されました！！🍶  制限時間は{time}分です！')
+                messages.info(
+                    request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
 
-    except Exception:
-        nomiho_query = None
+        except Exception:
+            nomiho_query = None
 
-    ctx = {
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-        'nomiho_query': nomiho_query,
-        'user_uuid': user_uuid,
-        'nomiho_is_started': nomiho_is_started,
-    }
+        ctx = {
+            'categories': categories,
+            'menus': menus,
+            'allergies': allergies,
+            'nomiho_query': nomiho_query,
+            'user_uuid': user_uuid,
+            'nomiho_is_started': nomiho_is_started,
+        }
 
-    return render(request, 'customer/menu.html', ctx)
+        return render(request, 'customer/menu.html', ctx)
 
 
 def history(request):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     from .models import Cart, Order
     carts = ''
@@ -513,8 +529,10 @@ def history(request):
             orders_in_cart += int(each.menu.price) * int(each.num)
         for each in same_user_orders:
             same_user.price += int(each.menu.price) * int(each.num)
+            same_user.save()
 
         same_user.price += same_user.nomiho_price
+        same_user.save()
         orders_in_order += same_user.price
 
     total_price = orders_in_cart + orders_in_order
@@ -525,7 +543,7 @@ def history(request):
         'orders_in_cart': orders_in_cart,
         'orders_in_order': orders_in_order,
         'total_price': total_price,
-        'user_uuid':user_uuid,
+        'user_uuid': user_uuid,
     }
 
     return render(request, 'customer/history.html', ctx)
@@ -536,8 +554,8 @@ def stop(request):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     total_price = request.POST.get('total_price')
     uuid = request.session['nonloginuser_uuid']
@@ -556,25 +574,25 @@ def stop(request):
                 customer=same_user.uuid).order_by('-id')
 
             orders = list(chain(same_user_orders))
+    except Exception:
+        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+        return redirect('customer:history')
 
-        # TODO:
-        # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
-        user_uuid_list = ''
+    # TODO:
+    # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
+    user_uuid_list = []
 
-        # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-        try:
-            for same_user in same_user_table_list:
+    # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
+    try:
+        for same_user in same_user_table_list:
 
-                same_user.active = False
-                same_user.save()
-                # ここまでは正常
+            same_user.active = False
+            same_user.save()
+            print(same_user.active)
+            # ここまでは正常
 
-                user_uuid_list = list(chain(same_user))
-                print(user_uuid_list)
-        except Exception:
-            messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-            return redirect('customer:history')
-
+            user_uuid_list = list(chain(same_user))
+            print(user_uuid_list)
     except Exception:
         messages.info(request, f'申し訳ありませんがエラーが発生しました。')
         return redirect('customer:history')
@@ -586,19 +604,19 @@ def stop(request):
         'user_uuid': user_uuid,
     }
 
-    messages.info(request, f'リロードせずにこのままこの画面を、お会計時にお店に見せてください')
+    messages.info(request, f'リロードせずにこのままこの画面を、お会計時お店に表示ください。')
 
     return render(request, 'customer/stop.html', ctx)
 
 
-#TODO:
+# TODO:
 @require_POST
 def revert(request):
     try:
         request.session.session_key
     except Exception:
-            messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-            return redirect('customer:table')
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
     # TODO:
     user_uuid_list = request.POST.get('user_uuid_list')
@@ -606,7 +624,7 @@ def revert(request):
     user_list = ''
 
     for each in user_uuid_list:
-        each_user = nonLoginUser.objects.defer('created_at').filter(uuid=each)
+        each_user = nonLoginUser.objects.defer('created_at').filter(uuid=each.uuid)
         user_list = list(chain(each_user))
         # user_list.append(each_user)
         print(user_list)
@@ -614,8 +632,8 @@ def revert(request):
 
     try:
         # TODO:
-        # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-        if user_list != []:
+        # FalseにしたユーザーをTrueにする
+        if user_list != '':
             for same_user in user_list:
                 same_user.active = True
                 same_user.save()

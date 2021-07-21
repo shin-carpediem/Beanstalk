@@ -16,7 +16,7 @@
           <img class="lazyload" data-src="{{ cart.menu.img.url }}" alt="Menu">
           <div class="text-box">
             <p class="text-left pl-2">{{ cart.menu.name }}</p>
-            <p class="text-right pr-2">¥ {{ cart.menu.price }}</p>
+            <p class="text-right pr-2">¥ {{ cart.menu.price | intcomma }}</p>
           </div>
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <p class="py-2 px-3 badge badge__orange">注文予定</p>
@@ -64,31 +64,25 @@
       <p class="text__bold text_large">¥ {{ total_price }}</p>
     </div>
 
-    {% if user.is_authenticated %}
-      <div>
-        {% include 'components/restaurant/modal/menu.html' %}
-      </div>
-    {% else %}
-      <div class="btn__fixed-wider d-flex justify-content-between">
-        <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
-          <!-- hidden -->
-          <input type="hidden" name="menu_id" value="{{ menu.id }}">
-          {% if carts %}
-            <button class="btn btn__orange shadow px-5 text__bold" onclick="loading_show()">
-          {% else %}
-            <button class="btn btn__grey shadow px-5 text__bold" disabled onclick="loading_show()">
-          {% endif %}
-              注文
-            </button>
-        </form>
-        <form action="{% url 'customer:stop' %}" method="POST">{% csrf_token %}
-          <!-- hidden -->
-          <input type="hidden" name="total_price" value="{{ total_price }}">
-          <button type="submit" style="color: #383636;" class="btn btn__turquoise shadow text__bold" id="orderStopConfirm">
-            オーダーストップ
+    <div class="btn__fixed-wider d-flex justify-content-between">
+      <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
+        <!-- hidden -->
+        <input type="hidden" name="menu_id" value="{{ menu.id }}">
+        {% if carts %}
+          <button class="btn btn__orange shadow px-5 text__bold" onclick="loading_show()">
+        {% else %}
+          <button class="btn btn__grey shadow px-5 text__bold" disabled onclick="loading_show()">
+        {% endif %}
+            注文
           </button>
-        </form>
-      </div>
-    {% endif %}
+      </form>
+      <form action="{% url 'customer:stop' %}" class="d-flex" method="POST">{% csrf_token %}
+        <!-- hidden -->
+        <input type="hidden" name="total_price" value="{{ total_price }}">
+        <button type="submit" class="btn btn__red shadow text__bold px-sm-4 py-sm-0 py-2" id="orderStopConfirm">
+          オーダー<br class="d-sm-block d-none">ストップ
+        </button>
+      </form>
+    </div>
 </section>
 {% endblock %}
