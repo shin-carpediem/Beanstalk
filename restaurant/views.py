@@ -19,22 +19,6 @@ from account.models import User, nonLoginUser
 
 # Create your views here.
 def login_as_user(request):
-    table_num = '管理者'
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-    except:
-        menus = None
-    allergies = Allergy.objects.all().order_by('id')
-    ctx = {
-        'table_num': table_num,
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
-
     user = User.objects.get(id=1)
     try:
         user = User.objects.get(id=2)
@@ -46,14 +30,15 @@ def login_as_user(request):
         pass
 
     email = user.email
-    ctx['email'] = email
+    ctx = {
+        'email': email
+    }
 
     return render(request, 'restaurant/login.html', ctx)
 
 
 # @require_POST
 # def confirm(request):
-    # table_num = '管理者'
     # categories = Category.objects.defer('created_at').order_by('id')
     # try:
     #     first_category = categories[0]
@@ -63,7 +48,6 @@ def login_as_user(request):
     #     menus = None
     # allergies = Allergy.objects.all().order_by('id')
     # ctx = {
-    #     'table_num': table_num,
     #     'categories': categories,
     #     'menus': menus,
     #     'allergies': allergies,
@@ -126,22 +110,6 @@ def login_as_user(request):
 
 
 def order_manage(request):
-    table_num = '管理者'
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-    except:
-        menus = None
-    allergies = Allergy.objects.all().order_by('id')
-    ctx = {
-        'table_num': table_num,
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
-
     # ログインから
     if request.method == 'POST':
         email = request.POST.get('username')
@@ -152,6 +120,7 @@ def order_manage(request):
         try:
             user = User.objects.get(email=email)
             login(request, user)
+            request.session['table'] = '管理者'
         except Exception:
             messages.info(request, f"メールアドレスが異なります。")
             return redirect(request, 'restaurant:login')
@@ -160,7 +129,7 @@ def order_manage(request):
         email = user.email
         request.session['user_email'] = {1: email}
 
-        return render(request, 'restaurant/order_manage.html', ctx)
+        return render(request, 'restaurant/order_manage.html')
         # else:
         #     messages.info(
         #         request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
@@ -174,9 +143,11 @@ def order_manage(request):
 
         order_list = Order.objects.filter(status='調理中')
 
-        ctx['formatted_logo'] = formatted_logo
-        ctx['name'] = name
-        ctx['order_list'] = order_list
+        ctx = {
+            'formatted_logo': formatted_logo,
+            'name': name,
+            'order_list': order_list,
+        }
 
         return render(request, 'restaurant/order_manage.html', ctx)
     else:
@@ -198,65 +169,37 @@ def order_status_ch(request):
 
 @login_required
 def history(request):
-    table_num = '管理者'
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-    except:
-        menus = None
-    allergies = Allergy.objects.all().order_by('id')
-    ctx = {
-        'table_num': table_num,
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
-
     user = User.objects.get(id=request.user.id)
     name = user.name
 
-    order_list = Order.objects.filter(Q(status='キャンセル') | Q(status='済'))
+    # order_list = Order.objects.filter(Q(status='キャンセル') | Q(status='済'))
+    order_list = Order.objects.filter(status='済')
 
-    ctx['name'] = name
-    ctx['order_list'] = order_list
+    ctx = {
+        'name': name,
+        'order_list': order_list,
+    }
 
     return render(request, 'restaurant/history.html', ctx)
 
 
 @login_required
 def total(request):
-    table_num = '管理者'
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-    except:
-        menus = None
-    allergies = Allergy.objects.all().order_by('id')
-    ctx = {
-        'table_num': table_num,
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
-
     dt_now = datetime.datetime.now()
     # 同日日時、あるいは昨日に作られた注文のみを抽出
     orders = Order.objects.filter(Q(created_at__date=datetime.date(
         dt_now.year, dt_now.month, dt_now.day)) | Q(created_at__date=datetime.date(
             dt_now.year, dt_now.month, (dt_now.day)-1)))
 
-    ctx['orders'] = orders
+    ctx = {
+        'orders': orders,
+    }
 
     return render(request, 'restaurant/total.html', ctx)
 
 
 @login_required
 def daily(request):
-    table_num = '管理者'
     categories = Category.objects.defer('created_at').order_by('id')
     try:
         first_category = categories[0]
@@ -266,7 +209,6 @@ def daily(request):
         menus = None
     allergies = Allergy.objects.all().order_by('id')
     ctx = {
-        'table_num': table_num,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
@@ -300,7 +242,6 @@ def daily(request):
 
 # for manageing customer screen
 def manage_login(request):
-    table_num = '管理者'
     categories = Category.objects.defer('created_at').order_by('id')
     try:
         first_category = categories[0]
@@ -310,7 +251,6 @@ def manage_login(request):
         menus = None
     allergies = Allergy.objects.all().order_by('id')
     ctx = {
-        'table_num': table_num,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
@@ -321,7 +261,6 @@ def manage_login(request):
 
 @login_required
 def manage_menu(request):
-    table_num = '管理者'
     categories = Category.objects.defer('created_at').order_by('id')
     try:
         first_category = categories[0]
@@ -331,7 +270,6 @@ def manage_menu(request):
         menus = None
     allergies = Allergy.objects.all().order_by('id')
     ctx = {
-        'table_num': table_num,
         'categories': categories,
         'menus': menus,
         'allergies': allergies,

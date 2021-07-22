@@ -4,7 +4,7 @@
 {% load restaurant_filters %}
 
 {% block custom__header %}
-  <title>卓版管理</title>
+  <title>お客様お会計</title>
 {% endblock %}
 
 {% block content %}
@@ -12,25 +12,31 @@
   {% include 'components/restaurant/header.html' %}
   <div class="pt-5">
     <div class="pt-sm-3 pt-5">
-      {% regroup orders by customer as users_list %}
-      {% for users in users_list %}
+      {% regroup orders by customer.table as table_list %}
+      {% for table in table_list %}
         <div class="mx-4 my-3">
           <div class="d-flex">
-            <p class="text__bold pb-3">テーブル： {{ users.grouper.table }}</p>
-            <p class="text__bold pb-3 pl-sm-5 pl-4">お客様ID：　{{ users.grouper }}</p>
+            <p class="text__bold pb-3">テーブル番号： {{ table.grouper }}</p>
           </div>
-          <div class="row">
-          {% for order in users.list %}
-            <div class="col-sm-2 col-6">
-              <p>料理名：　{{ order.menu }}</p>
-              <p>　単価：　{{ order.menu.price }}</p>
-              <p>　個数：　{{ order.num }}</p>
-              <p>　状況：　{{ order.status }}</p>
-              <p>　小計：　{% multiply order.menu.price order.num %}</p>
-            </div>
-          {% endfor %}
-          </div>
-          <p class="text__bold pt-3">合計：　{#% sum subtotal %#}</p>
+          <table border="1" class="w-100">
+            <tr class="text-center">
+              <th>料理名</th>
+              <th>単価（円）</th>
+              <th>個数</th>
+              <th>状況</th>
+              <th>小計（円）</th>
+            </tr>
+            {% for order in table.list %}
+              <tr>
+                <td class="px-sm-3 px-2">{{ order.menu }}</td>
+                <td class="text-right px-sm-3 px-2">{{ order.menu.price }}</td>
+                <td class="text-right px-sm-3 px-2">{{ order.num }}</td>
+                <td class="px-sm-3 px-2">{{ order.status }}</td>
+                <td class="text-right px-sm-3 px-2" id="subTotal" value="{% multiply order.menu.price order.num %}">{% multiply order.menu.price order.num %}</td>
+              </tr>
+            {% endfor %}
+          </table>
+          <p class="text__bold text__large text-right pt-3" id="sumOfTable">合計：　</p>
         </div>
       <hr />
       {% endfor %}

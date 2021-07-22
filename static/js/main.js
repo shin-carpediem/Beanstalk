@@ -56,6 +56,17 @@ if (path.indexOf("order_manage") > -1) {
   statusChange();
 }
 
+if (path.indexOf("order_manage/history/total") > -1) {
+  const total = () => {
+    const subTotal = document.getElementById("subTotal");
+    const sumOfTable = document.getElementById("sumOfTable");
+
+    const subTotalVal = subTotal.value;
+    
+  };
+  total();
+}
+
 // customer
 if (path.indexOf("detail") > -1) {
   let cartPlusMinus = () => {
