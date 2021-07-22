@@ -110,23 +110,16 @@ def menu(request):
             user_uuid.active = True
             user_uuid.save()
 
-    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
-    if not 'category_name' in request.session:
-
-        try:
-
-            first_category = categories[0].id
-            # カテゴリーIDのセッションを作成
-            request.session['category_name'] = first_category
-
-            menus = Menu.objects.defer('created_at').filter(
-                category=first_category).order_by('-id')
-        except Exception:
-            menus = None
-    else:
+    try:
         category = request.session['category_name']
-        menus = Menu.objects.defer('created_at').filter(
-            category=category).order_by('-id')
+    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
+    except Exception:
+        category = categories[0].id
+        # カテゴリーIDのセッションを作成
+        request.session['category_name'] = category
+
+    menus = Menu.objects.defer('created_at').filter(
+        category=category).order_by('-id')
 
     ctx = {
         'categories': categories,
