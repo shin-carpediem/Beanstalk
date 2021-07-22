@@ -219,7 +219,6 @@ def menu_detail(request, menu_id):
     return render(request, 'customer/detail.html', ctx)
 
 
-@require_POST
 def cart(request):
     try:
         request.session.session_key
@@ -369,6 +368,7 @@ def cart_ch(request):
             customer=same_user.uuid).order_by('-id')
 
         carts = list(chain(same_user_carts))
+        print(carts)
 
     ctx = {
         'carts': carts,
@@ -409,7 +409,6 @@ def order(request):
 
             same_user_carts.delete()
 
-        print("\007")
         # You can still use .filter() or any methods that return QuerySet (from the chain)
         # device = FCMDevice.objects.all().first()
         user = User.objects.get(id=1)
