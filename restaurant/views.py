@@ -1,3 +1,4 @@
+import datetime
 from customer.models import Order
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
@@ -200,42 +201,38 @@ def total(request):
 
 @login_required
 def daily(request):
-    categories = Category.objects.defer('created_at').order_by('id')
-    try:
-        first_category = categories[0]
-        menus = Menu.objects.defer('created_at').filter(
-            category=first_category).order_by('-id')
-    except:
-        menus = None
-    allergies = Allergy.objects.all().order_by('id')
-    ctx = {
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-    }
+    # 日付の範囲指定分の売上
+    if request.method == 'POST':
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        if start > end:
+            messages.warning(request, f"左の日付をより昔にしてください。")
+    else:
+        # デフォルトは昨日から今日の範囲
+        dt_now = datetime.datetime.now()
+        start = datetime.datetime(dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
+        end = datetime.datetime(dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
 
+    pointed_orders = Order.objects.filter(
+        status='済', created_at__range=(start, end)).order_by('-id')
+    pointed_total_price = 0
+    for pointed_order in pointed_orders:
+        pointed_total_price += (pointed_order.menu.price * pointed_order.num)
+
+    # トータルの売上
     orders = Order.objects.filter(status='済').order_by('-id')
-
     total_price = 0
-
     for order in orders:
-        total_price = total_price + (order.menu.price * order.num)
+        total_price += (order.menu.price * order.num)
 
-    # 1日の売上と各商品の数量
-    dt_now = datetime.datetime.now()
-    todays_orders = Order.objects.filter(status='済', created_at__date=datetime.date(
-        dt_now.year, dt_now.month, dt_now.day)).order_by('-id')
-
-    totays_total_price = 0
-
-    for todays_order in todays_orders:
-        totays_total_price = totays_total_price + \
-            (todays_order.menu.price * todays_order.num)
-
-    ctx['orders'] = orders
-    ctx['total_price'] = total_price
-    ctx['todays_orders'] = todays_orders
-    ctx['totays_total_price'] = totays_total_price
+    ctx = {
+        'start': start,
+        'end': end,
+        'pointed_orders': pointed_orders,
+        'pointed_total_price': pointed_total_price,
+        'orders': orders,
+        'total_price': total_price,
+    }
 
     return render(request, 'restaurant/daily.html', ctx)
 

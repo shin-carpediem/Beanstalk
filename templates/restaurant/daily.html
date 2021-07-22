@@ -10,33 +10,63 @@
 <div class="w-100 restaurant">
   {% include 'components/restaurant/header.html' %}
   <section class="pt-5 daily">
-    <div class="p-5">
+    <div class="p-sm-5 pt-5 p-2">
       <div class="daily-interest p-2 m-2">
-        <p>1日の売上と各商品の数量</p>
-        <div class="pt-3">
-          <p class="text__bold text__large">{{ totays_total_price }}　円</p>
+        <p>指定期間内の売上と各商品の数量</p>
+        <div class="py-3">
+          <p class="text-center text__bold text__large">{{ pointed_total_price }}　円</p>
+          <form action="{% url 'restaurant:daily' %}" method="POST">{% csrf_token %}
+            <p class="pb-2">期間を指定してください</p>
+            <div class="d-sm-flex align-items-center">
+              <div class="d-flex align-items-center">
+                <input type="datetime-local" name="start" value="{{ start }}">
+                <p class="px-2">から</p>
+              </div>
+              <div class="d-flex align-items-center py-sm-0 py-2">
+                <input type="datetime-local" name="end" value="{{ end }}">
+                <p class="px-2">まで</p>
+                <button type="submit" class="ml-sm-3 ml-5 btn btn__blue px-3">
+                  フィルタ
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
-        <div>
-          {% for order in todays_orders %}
-            <p>料理名：　{{ order.menu.name }}</p>
-            <p>単価　：　{{ order.menu.price }}</p>
-            <p>個数　：　{{ order.num }}</p>
-          {% endfor %}
-        </div>
+        <table border="1" class="w-100">
+          <tr class="text-center">
+            <th>料理名</th>
+            <th>単価（円）</th>
+            <th>個数</th>
+          </tr>
+          <tr>
+            {% for order in pointed_orders %}
+              <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
+              <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
+              <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
+            {% endfor %}
+          </tr>
+        </table>
       </div>
 
       <div class="total-interest p-2 mt-5 m-2">
-        <p>これまでの売上と各商品の個数</p>
-        <div class="pt-3">
-          <p class="text__bold text__large">{{ totays_total_price }}　円</p>
+        <p>売上総額</p>
+        <div class="py-3">
+          <p class="text-center text__bold text__large">{{ total_price }}　円</p>
         </div>
-        <div>
-          {% for order in orders %}
-            <p>料理名：　{{ order.menu.name }}</p>
-            <p>単価　：　{{ order.menu.price }}</p>
-            <p>個数　：　{{ order.num }}</p>
-          {% endfor %}
-        </div>
+        <table border="1" class="w-100">
+          <tr class="text-center">
+            <th>料理名</th>
+            <th>単価（円）</th>
+            <th>個数</th>
+          </tr>
+          <tr>
+            {% for order in orders %}
+              <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
+              <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
+              <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
+            {% endfor %}
+          </tr>
+        </table>
       </div>
     </div>
   </section>

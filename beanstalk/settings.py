@@ -86,11 +86,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
+    'api',
     'imagekit',
     'account',
     'customer',
     'restaurant',
     'webpush',
+    'mathfilters',
 ]
 
 NUMBER_GROUPING = 3

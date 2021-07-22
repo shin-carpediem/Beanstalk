@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-{% load restaurant_filters %}
+{% load mathfilters %}
+{# % load restaurant_filters % #}
 
 {% block custom__header %}
   <title>お客様お会計</title>
@@ -29,14 +30,14 @@
             {% for order in table.list %}
               <tr>
                 <td class="px-sm-3 px-2">{{ order.menu }}</td>
-                <td class="text-right px-sm-3 px-2">{{ order.menu.price }}</td>
+                <td class="text-right px-sm-3 px-2">{{ order.menu.price | intcomma }}</td>
                 <td class="text-right px-sm-3 px-2">{{ order.num }}</td>
                 <td class="px-sm-3 px-2">{{ order.status }}</td>
-                <td class="text-right px-sm-3 px-2" id="subTotal" value="{% multiply order.menu.price order.num %}">{% multiply order.menu.price order.num %}</td>
+                <td class="text-right px-sm-3 px-2" id="subTotal">{{ order.menu.price|mul:order.num | intcomma }}</td>
               </tr>
             {% endfor %}
           </table>
-          <p class="text__bold text__large text-right pt-3" id="sumOfTable">合計：　</p>
+          <p class="text__bold text__large text-right pt-3" id="sumOfTable">合計：　{{ table.list.price }}</p>
         </div>
       <hr />
       {% endfor %}
