@@ -128,33 +128,37 @@ def order_manage(request):
 
         # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
         email = user.email
-        request.session['user_email'] = {1: email}
+        request.session['user_email'] = email
 
         return render(request, 'restaurant/order_manage.html')
-        # else:
-        #     messages.info(
-        #         request, f"ログインに失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
-        #     return redirect(request, 'restaurant:login')
+
     # いきなりこの画面から＆メニュー編集画面から戻ってくるパターン(多くの店がこの想定)
     elif 'user_email' in request.session:
-        user_email = request.session['user_email']['1']
+        user_email = request.session['user_email']
         user = User.objects.get(email=user_email)
-        formatted_logo = user.formatted_logo
-        name = user.name
-
-        order_list = Order.objects.filter(status='調理中')
-
-        ctx = {
-            'formatted_logo': formatted_logo,
-            'name': name,
-            'order_list': order_list,
-        }
-
-        return render(request, 'restaurant/order_manage.html', ctx)
     else:
-        messages.info(
-            request, f"ログインの有効期限が切れました。お手数ですが再度ログインしてください。")
-        return redirect(request, 'restaurant:login')
+        user = User.objects.get(id=1)
+        try:
+            user = User.objects.get(id=2)
+        except Exception:
+            pass
+        try:
+            user = User.objects.get(id=3)
+        except Exception:
+            pass
+
+    formatted_logo = user.formatted_logo
+    name = user.name
+
+    order_list = Order.objects.filter(status='調理中')
+
+    ctx = {
+        'formatted_logo': formatted_logo,
+        'name': name,
+        'order_list': order_list,
+    }
+
+    return render(request, 'restaurant/order_manage.html', ctx)
 
 
 @login_required
