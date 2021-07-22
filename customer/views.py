@@ -74,15 +74,10 @@ def menu(request):
         table_num = '管理者'
     else:
 
-        try:
-            table_num = request.POST.get('table')
-        except Exception:
-            messages.info(request, f'注文を続けるにはテーブル番号を入力してください。')
-            return redirect('customer:table')
-
         # 新規の客かどうかをセッションで判断する
         # 新規
         if not request.session.session_key:
+            table_num = request.POST.get('table')
 
             try:
                 newuser = nonLoginUser(table=table_num, active=True)
@@ -104,7 +99,13 @@ def menu(request):
             request.session['nonloginuser_uuid'] = uuid
         # 既存
         else:
-            uuid = request.session['nonloginuser_uuid']
+            try:
+                uuid = request.session['nonloginuser_uuid']
+
+            except Exception:
+                messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+                return redirect('customer:table')
+
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
             user_uuid.active = True
             user_uuid.save()
@@ -131,6 +132,7 @@ def menu(request):
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
+        'user_uuid': user_uuid,
     }
 
     return render(request, 'customer/menu.html', ctx)
@@ -523,6 +525,7 @@ def history(request):
     orders_in_cart = 0
     orders_in_order = 0
 
+    categories = Category.objects.defer('created_at').order_by('id')
     table_num = request.session['table']
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
@@ -542,16 +545,16 @@ def history(request):
         for each in same_user_carts:
             orders_in_cart += int(each.menu.price) * int(each.num)
         for each in same_user_orders:
+            same_user.price = 0
             same_user.price += int(each.menu.price) * int(each.num)
+            same_user.price += same_user.nomiho_price
             same_user.save()
-
-        same_user.price += same_user.nomiho_price
-        same_user.save()
-        orders_in_order += same_user.price
+            orders_in_order += same_user.price
 
     total_price = orders_in_cart + orders_in_order
 
     ctx = {
+        'categories': categories,
         'carts': carts,
         'orders': orders,
         'orders_in_cart': orders_in_cart,
