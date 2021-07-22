@@ -29,34 +29,10 @@ def table(request):
     # 新規
     if not request.session.session_key:
 
-        # restaurant_name = None
-        # try:
-        #     restaurant = User.objects.get(id=1)
-        #     restaurant_name = restaurant.name
-        # except Exception:
-        #     pass
-        # try:
-        #     restaurant = User.objects.get(id=2)
-        #     restaurant_name = restaurant.name
-        # except Exception:
-        #     pass
-        # try:
-        #     # MEMO: be careful of id, client id should be 3.
-        #     restaurant = User.objects.get(id=3)
-        #     restaurant_name = restaurant.name
-        # except Exception:
-        #     pass
-
         if user.is_authenticated:
             return redirect('restaurant:logout')
         else:
-            None
-
-            ctx = {
-                # 'restaurant_name': restaurant_name,
-            }
-
-            return render(request, 'customer/table.html', ctx)
+            return render(request, 'customer/table.html')
     # 既存
     else:
         return redirect('customer:menu')
@@ -176,7 +152,6 @@ def filter(request):
 
         # カテゴリーのセッションを更新
         request.session['category_name'] = category_id.id
-        print(request.session['category_name'])
         menus = Menu.objects.defer('created_at').filter(
             category=category_id).order_by('-id')
     except Exception:
@@ -199,17 +174,14 @@ def filter(request):
         'user_uuid': user_uuid,
     }
 
-    # 飲み放題を選択した場合
+    # 飲み放題のカテゴリーを選択した場合
     if category_id.nomiho == True:
         nomihos = Nomiho.objects.defer('created_at').order_by('-id')
         ctx['nomihos'] = nomihos
-
-        if category_id.nomiho == True:
-            ctx['nomiho_category'] = "Yes"
-        else:
-            ctx['nomiho_category'] = "No"
-
+        ctx['nomiho_category'] = "Yes"
         messages.info(request, f'このページは飲み放題用です')
+    else:
+        ctx['nomiho_category'] = "No"
 
     return render(request, 'customer/menu.html', ctx)
 

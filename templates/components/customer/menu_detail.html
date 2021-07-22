@@ -12,7 +12,9 @@
 
   <div class="text-box px-sm-5 px-2 py-1">
     <p class="text-left">{{ menu.name }}</p>
-    <p class="text-right">¥ {{ menu.price | intcomma }}</p>
+    {% if menu.category.nomiho == False %}
+      <p class="text-right">¥ {{ menu.price | intcomma }}</p>
+    {% endif %}
   </div>
 
   {% include 'components/restaurant/modal/text.html' %}
