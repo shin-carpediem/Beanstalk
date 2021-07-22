@@ -19,15 +19,28 @@ const loading_hide = () => {
 loading_hide();
 
 // restaurant
-if (path.indexOf("login") > -1) {
-  const loginBtnDisable = () => {
-    const loginBtn = document.getElementById("loginBtn");
-    loginBtn.addEventListener("click", () => {
-      loginBtn.classList.add("el__dactivate");
-    });
-  };
-  loginBtnDisable();
-}
+// if (path.indexOf("login") > -1) {
+//   const loginBtnDisable = () => {
+//     const loginBtn = document.getElementById("loginBtn");
+//     loginBtn.addEventListener("click", () => {
+//       loginBtn.classList.add("el__dactivate");
+//     });
+//   };
+//   loginBtnDisable();
+// }
+
+const manageMenu = () => {
+  const manageMenu = document.getElementById("manageMenu");
+  manageMenu.addEventListener("click", () => {
+    const answer = confirm(
+      "メニューの編集画面に移りますか？（営業時間内の変更はお客様に変更内容が即時反映されますので、極力お避けください）"
+    );
+    if (answer) {
+      window.location.href = "/manage/menu/";
+    }
+  });
+};
+manageMenu();
 
 if (path.indexOf("order_manage") > -1) {
   const statusChange = () => {

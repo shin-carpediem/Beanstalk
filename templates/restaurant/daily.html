@@ -37,14 +37,16 @@
             <th>料理名</th>
             <th>単価（円）</th>
             <th>個数</th>
+            <th>テーブル番号</th>
           </tr>
-          <tr>
-            {% for order in pointed_orders %}
+          {% for order in pointed_orders %}
+            <tr>
               <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
               <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
               <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
-            {% endfor %}
-          </tr>
+              <td class="px-sm-3 px-2">{{ order.customer.table }}</td>
+            </tr>
+          {% endfor %}
         </table>
       </div>
 
@@ -58,14 +60,16 @@
             <th>料理名</th>
             <th>単価（円）</th>
             <th>個数</th>
+            <th>テーブル番号</th>
           </tr>
-          <tr>
-            {% for order in orders %}
+          {% for order in orders %}
+            <tr>
               <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
               <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
               <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
-            {% endfor %}
-          </tr>
+              <td class="px-sm-3 px-2">{{ order.customer.table }}</td>
+            </tr>
+          {% endfor %}
         </table>
       </div>
     </div>
