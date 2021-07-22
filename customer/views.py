@@ -4,6 +4,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q, Sum
 from itertools import chain
 import time
+import customer.models
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 
@@ -80,14 +81,13 @@ def menu(request):
         if not request.session.session_key:
 
             try:
-                newuser = nonLoginUser(table=table_num,)
+                newuser = nonLoginUser(table=table_num, active=True)
+                newuser.save()
 
             except Exception:
                 messages.info(request, f'申し訳ございません。エラーが発生しました。')
                 return redirect('customer:index')
 
-            newuser.active = True
-            newuser.save()
             uuid = str(newuser.uuid)
 
             # レストラン名のセッションを作成
@@ -221,8 +221,6 @@ def cart(request):
         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:table')
 
-    from .models import Cart
-
     # メニュー詳細(/detail/)から見るルート
     if request.POST.get('direct') == 'direct':
 
@@ -234,7 +232,7 @@ def cart(request):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         try:
-            cart = Cart(menu=menu_instance, num=cart_num,
+            cart = customer.models.Cart(menu=menu_instance, num=cart_num,
                         customer=user_uuid, curr=True)
             cart.save()
         except Exception:
@@ -266,13 +264,15 @@ def cart(request):
 
         # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
         for same_user in same_user_table_list:
-            same_user_carts = Cart.objects.defer('created_at').filter(
+            same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
             carts = list(chain(same_user_carts))
             print(carts)
             # TODO:
             # 同じ商品は個数をまとめたい
+
+        print("hoge")
 
         ctx = {
             'carts': carts,
@@ -332,11 +332,9 @@ def cart_ch(request):
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
 
-    from .models import Cart
-
     # Cartデータの更新
     try:
-        cart = Cart.objects.defer('created_at').get(id=cart_id)
+        cart = customer.models.Cart.objects.defer('created_at').get(id=cart_id)
 
         if type == 'change':
             cart_num = request.POST.get('cart_num')
@@ -357,7 +355,7 @@ def cart_ch(request):
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
-        same_user_carts = Cart.objects.defer('created_at').filter(
+        same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
         carts = list(chain(same_user_carts))
@@ -378,7 +376,6 @@ def order(request):
         return redirect('customer:table')
 
     try:
-        from .models import Cart, Order
         table_num = request.session['table']
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         same_user_table_list = nonLoginUser.objects.defer(
@@ -386,13 +383,13 @@ def order(request):
 
         # そのユーザー毎がカートに追加した内容をまとめたCartリストを作成
         for same_user in same_user_table_list:
-            same_user_carts = Cart.objects.defer('created_at').filter(
+            same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
             cart_price = 0
 
             for each in same_user_carts:
-                order = Order(status='調理中', menu=each.menu,
+                order = customer.models.Order(status='調理中', menu=each.menu,
                               num=each.num, customer=each.customer, curr=True)
                 order.save()
                 cart_price = cart_price + (each.menu.price * each.num)
@@ -404,11 +401,9 @@ def order(request):
     except Exception:
         pass
 
-    ctx = {
-    }
     messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
-    return render(request, 'customer/menu.html', ctx)
+    return render(request, 'customer/menu.html')
 
 
 # 飲み放題開始用のボタン
@@ -485,7 +480,6 @@ def history(request):
         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:table')
 
-    from .models import Cart, Order
     carts = ''
     orders = ''
     orders_in_cart = 0
@@ -499,9 +493,9 @@ def history(request):
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
-        same_user_carts = Cart.objects.defer('created_at').filter(
+        same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
-        same_user_orders = Order.objects.defer('created_at').filter(
+        same_user_orders = customer.models.Order.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
         carts = list(chain(same_user_carts))
@@ -549,10 +543,9 @@ def stop(request):
         same_user_table_list = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True)
 
-        from .models import Order
         orders = ''
         for same_user in same_user_table_list:
-            same_user_orders = Order.objects.defer('created_at').filter(
+            same_user_orders = customer.models.Order.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
             orders = list(chain(same_user_orders))
