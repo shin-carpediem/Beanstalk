@@ -29,20 +29,20 @@ loading_hide();
 //   loginBtnDisable();
 // }
 
-const manageMenu = () => {
-  const manageMenu = document.getElementById("manageMenu");
-  manageMenu.addEventListener("click", () => {
-    const answer = confirm(
-      "メニューの編集画面に移りますか？（営業時間内の変更はお客様に変更内容が即時反映されますので、極力お避けください）"
-    );
-    if (answer) {
-      window.location.href = "/manage/menu/";
-    }
-  });
-};
-manageMenu();
-
 if (path.indexOf("order_manage") > -1) {
+  const manageMenu = () => {
+    const manageMenu = document.getElementById("manageMenu");
+    manageMenu.addEventListener("click", () => {
+      const answer = confirm(
+        "メニューの編集画面に移りますか？（営業時間内の変更はお客様に変更内容が即時反映されますので、極力お避けください）"
+      );
+      if (answer) {
+        window.location.href = "/manage/menu/";
+      }
+    });
+  };
+  manageMenu();
+
   const statusChange = () => {
     try {
       const cooking = document.getElementById("cooking");

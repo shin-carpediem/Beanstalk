@@ -292,16 +292,16 @@ def cart_detail(request, menu_id):
         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:table')
 
-    curr_num = request.POST.get('curr_num')
-    cart_id = request.POST.get('cart_id')
+    num = request.POST.get('num')
+    cart_id = request.POST.get('id')
+    type = request.POST.get('type')
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
     has_allergies = menu.allergies.defer('created_at').order_by('id')
 
     # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
-    # from .models import Cart
-    # curr_num = 0
+    # num = 0
 
     # same_user_table_list = nonLoginUser.objects.defer(
     #     'created_at').filter(table=table_num, active=True)
@@ -312,15 +312,19 @@ def cart_detail(request, menu_id):
     #                                                               customer=same_user.uuid).order_by('-id')
 
     #     for each in same_user_carts:
-    #         curr_num += int(each.num)
+    #         num += int(each.num)
 
     ctx = {
         'menu': menu,
         'allergies': allergies,
         'has_allergies': has_allergies,
-        'curr_num': curr_num,
+        'num': num,
         'cart_id': cart_id,
     }
+
+    if type == 'history-order':
+        tag = "off"
+        ctx['tag'] = tag
 
     return render(request, 'customer/cart_detail.html', ctx)
 

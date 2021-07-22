@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block custom__header %}
-  <!-- <meta http-equiv="refresh" content="10; URL="> -->
+  <meta http-equiv="refresh" content="5; URL=">
   <title>注文履歴</title>
 {% endblock %}
 
@@ -21,8 +21,9 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <p class="py-2 px-3 badge badge__orange">注文予定</p>
           <!-- hidden -->
-          <input type="hidden" name="curr_num" value="{{ cart.num }}">
-          <input type="hidden" name="cart_id" value="{{ cart.id }}">
+          <input type="hidden" name="num" value="{{ cart.num }}">
+          <input type="hidden" name="id" value="{{ cart.id }}">
+          <input type="hidden" name="type" value="history-cart">
         </button>
       </form>
     {% endfor %}
@@ -38,9 +39,16 @@
           <p class="pt-1 cart-num icon icon__red text__bold">{{ order.num }}</p>
           {% if order.status == '調理中' %}
             <p class="py-2 px-3 badge badge__turquoise">調理中</p>
+            <!-- hidden -->
+            <input type="hidden" name="order_status" value="調理中">
           {% elif order.status == '済' %}
             <p class="py-2 px-3 badge badge__grey">済</p>
+            <!-- hidden -->
+            <input type="hidden" name="order_status" value="済">
           {% endif %}
+          <input type="hidden" name="num" value="{{ order.num }}">
+          <input type="hidden" name="id" value="{{ order.id }}">
+          <input type="hidden" name="type" value="history-order">
         </button>
       </form>
     {% endfor %}
