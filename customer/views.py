@@ -5,6 +5,9 @@ from django.db.models import Q, Sum
 from itertools import chain
 import time
 import customer.models
+from webpush import send_user_notification
+from firebase_admin.messaging import Message, Notification
+from fcm_django.models import FCMDevice
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 
@@ -233,7 +236,7 @@ def cart(request):
 
         try:
             cart = customer.models.Cart(menu=menu_instance, num=cart_num,
-                        customer=user_uuid, curr=True)
+                                        customer=user_uuid, curr=True)
             cart.save()
         except Exception:
             pass
@@ -390,13 +393,41 @@ def order(request):
 
             for each in same_user_carts:
                 order = customer.models.Order(status='調理中', menu=each.menu,
-                              num=each.num, customer=each.customer, curr=True)
+                                              num=each.num, customer=each.customer, curr=True)
                 order.save()
                 cart_price = cart_price + (each.menu.price * each.num)
 
             same_user.price += int(cart_price)
 
             same_user_carts.delete()
+
+        # You can still use .filter() or any methods that return QuerySet (from the chain)
+        # device = FCMDevice.objects.all().first()
+        user = User.objects.get(id=1)
+        try:
+            user = User.objects.get(id=2)
+        except Exception:
+            pass
+        try:
+            user = User.objects.get(id=3)
+        except Exception:
+            pass
+
+        payload = {"head": "注文が来ました", "body": "確認してください"}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        # device = FCMDevice.objects.filter(user=user_id).first()
+        # print("ok")
+
+        # title = 'title'
+        # message = 'mess'
+        # data = None
+
+        # send_message parameters include: message, dry_run, app
+        # device.send_message(notification=Notification(title='title', body='message'))
+        # result = device.send_message(title=title, body=message, data=data, sound=True)
+        # print(result)
+        print("ok")
 
     except Exception:
         pass

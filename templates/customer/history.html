@@ -50,18 +50,18 @@
   <div class="row">
     <div class="col-4">
       <p class="py-2 px-3 badge badge__orange">注文予定</p>
-      <p>¥ {{ orders_in_cart }}</p>
+      <p>¥ {{ orders_in_cart | intcomma }}</p>
     </div>
     <div class="col-4">
       <p class="py-2 px-3 badge badge__grey">注文済</p>
       <p>¥ {{ orders_in_order }}</p>
       {% if user_uuid.price != 0 %}
-        <p class="pt-2">（内 {{ user_uuid.nomiho_name }} ¥ {{ user_uuid.nomiho_price }}）</p>
+        <p class="pt-2">（内 {{ user_uuid.nomiho_name }} ¥ {{ user_uuid.nomiho_price | intcomma }}）</p>
       {% endif %}
     </div>
     <div class="col-4">
       <p class="py-2 px-3 badge badge__yellow">合計</p>
-      <p class="text__bold text_large">¥ {{ total_price }}</p>
+      <p class="text__bold text_large">¥ {{ total_price | intcomma }}</p>
     </div>
 
     <div class="btn__fixed-wider d-flex justify-content-between">

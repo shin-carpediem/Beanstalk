@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load webpush_notifications %}  <!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
 
 {% block custom__header %}
   <title>注文管理</title>
-  {% webpush_header %}  <!-- webpush用のmetaタグとスクリプトの読み込み -->
 {% endblock %}
 
 {% block content %}
