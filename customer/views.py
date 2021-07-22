@@ -401,6 +401,7 @@ def order(request):
 
             same_user_carts.delete()
 
+        print("\007")
         # You can still use .filter() or any methods that return QuerySet (from the chain)
         # device = FCMDevice.objects.all().first()
         user = User.objects.get(id=1)
