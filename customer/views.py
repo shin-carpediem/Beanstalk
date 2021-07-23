@@ -21,6 +21,7 @@ def stop_nomiho(request, duration):
     time.sleep(int(duration)*60)
     user_uuid.nomiho = False
     user_uuid.save()
+    print("ok!!")
 
 
 def index(request):
@@ -179,7 +180,7 @@ def filter(request):
         nomihos = Nomiho.objects.defer('created_at').order_by('-id')
         ctx['nomihos'] = nomihos
         ctx['nomiho_category'] = "Yes"
-        messages.info(request, f'このページは飲み放題用です')
+        messages.info(request, f'このページのメニューは飲み放題を開始すると注文できます')
     else:
         ctx['nomiho_category'] = "No"
 
@@ -266,7 +267,8 @@ def cart(request):
             same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
-        carts = list(chain(same_user_carts))
+            carts = list(chain(carts, same_user_carts))
+        # print(carts)
         # TODO:
         # 同じ商品は個数をまとめたい
 
@@ -358,7 +360,7 @@ def cart_ch(request):
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
-    carts = list(chain(same_user_carts))
+        carts = list(chain(carts, same_user_carts))
 
     ctx = {
         'carts': carts,
@@ -511,6 +513,8 @@ def history(request):
 
     carts = ''
     orders = ''
+    # same_user_carts = ''
+    # same_user_orders = ''
     orders_in_cart = 0
     orders_in_order = 0
 
@@ -537,8 +541,8 @@ def history(request):
             same_user.save()
             orders_in_order += same_user.price
 
-    carts = list(chain(same_user_carts))
-    orders = list(chain(same_user_orders))
+        carts = list(chain(carts, same_user_carts))
+        orders = list(chain(carts, same_user_orders))
 
     total_price = orders_in_cart + orders_in_order
 
@@ -555,7 +559,6 @@ def history(request):
     return render(request, 'customer/history.html', ctx)
 
 
-# TODO:
 def stop(request):
     try:
         request.session.session_key
@@ -564,49 +567,45 @@ def stop(request):
         return redirect('customer:table')
 
     total_price = request.POST.get('total_price')
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    # uuid = request.session['nonloginuser_uuid']
+    # user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    orders = ''
+    ids = []
+    # same_user_table_list = ''
+    # same_user_orders = ''
+    # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
+    # user_uuid_list = ''
 
     try:
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         table_num = request.session['table']
-        same_user_table_list = nonLoginUser.objects.defer(
-            'created_at').filter(table=table_num, active=True)
-
-        orders = ''
-        for same_user in same_user_table_list:
-            same_user_orders = customer.models.Order.objects.defer('created_at').filter(
-                customer=same_user.uuid).order_by('-id')
-
-        orders = list(chain(same_user_orders))
     except Exception:
-        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+        messages.info(request, f'アカウントの有効期限が切れました。')
         return redirect('customer:history')
 
-    # TODO:
-    # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
-    user_uuid_list = []
+    same_user_table_list = nonLoginUser.objects.defer(
+        'created_at').filter(table=table_num, active=True)
+
+    for same_user in same_user_table_list:
+        same_user_orders = customer.models.Order.objects.defer('created_at').filter(
+            customer=same_user.uuid).order_by('-id')
+
+        orders = list(chain(orders, same_user_orders))
+        ids.append(same_user.uuid)
 
     # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-    try:
-        for same_user in same_user_table_list:
+    for same_user in same_user_table_list:
 
-            same_user.active = False
-            same_user.save()
-            print(same_user.active)
-            # ここまでは正常
+        same_user.active = False
+        same_user.save()
 
-        user_uuid_list = list(chain(same_user))
-        print(user_uuid_list)
-    except Exception:
-        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-        return redirect('customer:history')
+    print(ids)
+    # print(same_user_table_list)
 
     ctx = {
-        'user_uuid_list': user_uuid_list,
         'total_price': total_price,
+        'ids': ids,
         'orders': orders,
-        'user_uuid': user_uuid,
     }
 
     messages.info(request, f'リロードせずにこのままこの画面を、お会計時お店に表示ください。')
@@ -614,37 +613,45 @@ def stop(request):
     return render(request, 'customer/stop.html', ctx)
 
 
-# TODO:
 @require_POST
 def revert(request):
     try:
         request.session.session_key
     except Exception:
-        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        messages.info(request, f'アカウントの有効期限が切れました。')
         return redirect('customer:table')
 
     # TODO:
-    user_uuid_list = request.POST.get('user_uuid_list')
-    print(user_uuid_list)
+    ids = request.POST.get('ids')
+    print(ids)
+    # print(same_user_table_list.type)
+    # print(user_uuid_list)
     user_list = ''
+    # each_user = ''
 
-    for each in user_uuid_list:
+    for id in ids:
+        # each.active = True
+        # each.save()
+        print(id)
         each_user = nonLoginUser.objects.defer(
-            'created_at').filter(uuid=each.uuid)
+            'created_at').filter(uuid=id)
 
-    user_list = list(chain(each_user))
-    print(user_list)
+        user_list = list(chain(user_list, each_user))
+        print(user_list)
 
-    try:
-        # TODO:
-        # FalseにしたユーザーをTrueにする
-        if user_list != '':
-            for same_user in user_list:
-                same_user.active = True
-                same_user.save()
+    # try:
+    #     # TODO:
+    #     # FalseにしたユーザーをTrueにする
+    if user_list != '':
 
-    except Exception:
-        messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-        return redirect('customer:stop')
+        for same_user in user_list:
+            same_user.active = True
+            same_user.save()
+
+    messages.info(request, f'オーダーストップを取り消しました。')
 
     return redirect('customer:history')
+
+    # except Exception:
+    #     messages.info(request, f'申し訳ありませんがエラーが発生しました。')
+    #     return redirect('customer:stop')

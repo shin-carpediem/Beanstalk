@@ -17,6 +17,8 @@
   </div>
   <hr>
   <div class="p-2 m-2">
+    <!-- <p>飲み放題</p>
+    <p></p> -->
     <table class="w-100">
       <tr class="row pb-3">
         <th class="col-6">料理名</th>
@@ -35,10 +37,10 @@
 
   <form action="{% url 'customer:revert' %}" method="POST">{% csrf_token %}
     <!-- hidden -->
-    <input type="hidden" name="user_uuid_list" value="{{ user_uuid_list }}">
+    <input type="hidden" name="ids" value="{{ ids }}">
     <input type="hidden" name="orders" value="{{ orders }}">
     <button type="submit" class="btn btn__red btn__fixed shadow" onclick="loading_show()">
-      オーダーストップを<br />取り消す
+      オーダーストップを取り消して注文を続ける
     </button>
   </form>
 </section>
