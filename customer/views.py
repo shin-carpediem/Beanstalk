@@ -268,7 +268,7 @@ def cart(request):
                 customer=same_user.uuid).order_by('-id')
 
             carts = list(chain(carts, same_user_carts))
-        # print(carts)
+
         # TODO:
         # 同じ商品は個数をまとめたい
 
@@ -513,8 +513,6 @@ def history(request):
 
     carts = ''
     orders = ''
-    # same_user_carts = ''
-    # same_user_orders = ''
     orders_in_cart = 0
     orders_in_order = 0
 
@@ -542,7 +540,7 @@ def history(request):
             orders_in_order += same_user.price
 
         carts = list(chain(carts, same_user_carts))
-        orders = list(chain(carts, same_user_orders))
+        orders = list(chain(orders, same_user_orders))
 
     total_price = orders_in_cart + orders_in_order
 
@@ -567,14 +565,10 @@ def stop(request):
         return redirect('customer:table')
 
     total_price = request.POST.get('total_price')
-    # uuid = request.session['nonloginuser_uuid']
-    # user_uuid = nonLoginUser.objects.get(uuid=uuid)
+
     orders = ''
+    # TODO:
     ids = []
-    # same_user_table_list = ''
-    # same_user_orders = ''
-    # やっぱりオーダーストップを元に戻したい客用に、False→Trueにすべきユーザーリストを保存しておく
-    # user_uuid_list = ''
 
     try:
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -600,7 +594,6 @@ def stop(request):
         same_user.save()
 
     print(ids)
-    # print(same_user_table_list)
 
     ctx = {
         'total_price': total_price,
@@ -624,10 +617,8 @@ def revert(request):
     # TODO:
     ids = request.POST.get('ids')
     print(ids)
-    # print(same_user_table_list.type)
-    # print(user_uuid_list)
+
     user_list = ''
-    # each_user = ''
 
     for id in ids:
         # each.active = True
@@ -639,9 +630,6 @@ def revert(request):
         user_list = list(chain(user_list, each_user))
         print(user_list)
 
-    # try:
-    #     # TODO:
-    #     # FalseにしたユーザーをTrueにする
     if user_list != '':
 
         for same_user in user_list:
@@ -651,7 +639,3 @@ def revert(request):
     messages.info(request, f'オーダーストップを取り消しました。')
 
     return redirect('customer:history')
-
-    # except Exception:
-    #     messages.info(request, f'申し訳ありませんがエラーが発生しました。')
-    #     return redirect('customer:stop')
