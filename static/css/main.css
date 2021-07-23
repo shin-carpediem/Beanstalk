@@ -123,7 +123,7 @@ select {
 .btn__fixed {
   width: 183px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   left: 15vh;
   bottom: 10px;
 }
@@ -131,7 +131,7 @@ select {
 .btn__fixed-wider {
   width: 250px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   left: 15vh;
   bottom: 10px;
 }
@@ -139,7 +139,7 @@ select {
 .btn__fixed-righter {
   width: 130px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   right: 5vh;
   bottom: 10px;
 }
@@ -367,17 +367,6 @@ body .nomiho-limit {
 
 .message {
   background-color: #f1f1f1;
-}
-
-.full__wrapper {
-  position: relative;
-}
-
-.full__wrapper .logout {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
 }
 
 .wrapper {
@@ -627,12 +616,7 @@ section.table .choose-table input {
   position: absolute;
   top: -30px;
   left: 50px;
-  z-index: 9999;
-}
-
-.board__customer section.menu-list form.nomiho--1 {
-  background-color: #ffe5be;
-  border-radius: 10px;
+  z-index: 2;
 }
 
 .board__customer section.menu-list .menu-item {
@@ -698,6 +682,22 @@ section.table .choose-table input {
   top: 8px;
   left: 40px;
   z-index: 10000;
+}
+
+.board__customer section.menu-list section.nomiho {
+  position: relative;
+}
+
+.board__customer section.menu-list section.nomiho form.nomiho--1 {
+  background-color: #ffe5be;
+  border-radius: 10px;
+}
+
+.board__customer section.menu-list section.nomiho .nomiho-manage-btn {
+  position: absolute;
+  top: 30px;
+  right: 50px;
+  z-index: 2;
 }
 
 .board__customer section.menu-detail .menu-top-view {

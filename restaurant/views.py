@@ -13,7 +13,7 @@ from django.db.models import Q
 # import smtplib
 import datetime
 from itertools import groupby
-from .models import Category, Allergy, Menu
+from .models import Category, Allergy, Menu, Nomiho
 from account.models import User, nonLoginUser
 # from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
@@ -214,8 +214,10 @@ def daily(request):
     else:
         # デフォルトは昨日から今日の範囲
         dt_now = datetime.datetime.now()
-        start = datetime.datetime(dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
-        end = datetime.datetime(dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
+        start = datetime.datetime(
+            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
+        end = datetime.datetime(
+            dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
 
     pointed_orders = Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
@@ -250,7 +252,8 @@ def manage_login(request):
             category=first_category).order_by('-id')
     except:
         menus = None
-    allergies = Allergy.objects.all().order_by('id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
+
     ctx = {
         'categories': categories,
         'menus': menus,
@@ -269,17 +272,18 @@ def manage_menu(request):
             category=first_category).order_by('-id')
     except:
         menus = None
-    allergies = Allergy.objects.all().order_by('id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
+    nomihos = Nomiho.objects.defer('created_at').order_by('-id')
+    user = request.user
+    restaurant_name = user.name
+
     ctx = {
         'categories': categories,
         'menus': menus,
         'allergies': allergies,
+        'nomihos': nomihos,
+        'restaurant_name': restaurant_name,
     }
-
-    user = request.user
-    restaurant_name = user.name
-
-    ctx['restaurant_name'] = restaurant_name
 
     return render(request, 'customer/menu.html', ctx)
 
@@ -532,3 +536,54 @@ def menu_chef_comment_manage(request):
     # messages.success(request, f"{menu_name}に名前を変更しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
+
+
+@login_required
+@require_POST
+def nomiho_add(request):
+    nomiho_name = request.POST.get('nomiho_name')
+    nomiho_price = request.POST.get('nomiho_price')
+    nomiho_duration = request.POST.get('nomiho_duration')
+    nomiho_comment = request.POST.get('nomiho_comment')
+
+    nomiho = Nomiho(name=nomiho_name, price=nomiho_price,
+                    duration=nomiho_duration, comment=nomiho_comment)
+    nomiho.save()
+
+    messages.success(request, f"飲み放題プラン『{nomiho_name}』を追加しました。")
+
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
+def nomiho_ch(request):
+    nomiho_name = request.POST.get('nomiho_name')
+    nomiho_price = request.POST.get('nomiho_price')
+    nomiho_duration = request.POST.get('nomiho_duration')
+    nomiho_comment = request.POST.get('nomiho_comment')
+
+    nomiho_id = request.POST.get('nomiho_id')
+    nomiho = Nomiho.objects.get(id=nomiho_id)
+
+    nomiho.name = nomiho_name
+    nomiho.price = nomiho_price
+    nomiho.duration = nomiho_duration
+    nomiho.comment = nomiho_comment
+    nomiho.save()
+
+    messages.success(request, f"飲み放題プランの内容を変更しました。")
+
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
+def nomiho_del(request):
+    id = request.POST.get('del_nomiho_form')
+    nomiho = Nomiho.objects.get(id=id)
+    name = nomiho.name
+    nomiho.delete()
+    messages.success(request, f"飲み放題プランから{name}を削除しました。")
+
+    return redirect('customer:menu')

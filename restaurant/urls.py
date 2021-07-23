@@ -28,5 +28,8 @@ urlpatterns = [
     path('manage/menu/allergy/item/add', views.allergy_add, name='allergy_add'),
     path('manage/menu/allergy/item/delete',
          views.allergy_del, name='allergy_del'),
+    path('manage/menu/nomiho/add', views.nomiho_add, name='nomiho_add'),
+    path('manage/menu/nomiho/change', views.nomiho_ch, name='nomiho_ch'),
+    path('manage/menu/nomiho/delete', views.nomiho_del, name='nomiho_del'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

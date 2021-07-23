@@ -26,32 +26,42 @@
   </div>
 
   <!-- 飲み放題プランの表示箇所 -->
-  <!-- もしそもそも飲み放題プランがある場合 -->
-  {% if nomihos %}
-    {% if user_uuid.nomiho == False and nomiho_category == 'Yes' %}
-      {% for nomiho in nomihos %}
-        <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
-          <div>
-            <h3 class="text__bold">プラン名： {{ nomiho.name }}</h3>
-            <h4 class="py-3 text__bold">料金：　¥　{{ nomiho.price }}</h4>
-            <p>{{ nomiho.comment }}</p>
-          </div>
-          <!-- hidden -->
-          <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
-          {% if user.is_authenticated %}
-            <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
-              *お客様用のボタンです
-            </button>
-          {% else %}
-            <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
-              開始する
-            </button>
-          {% endif %}
-        </form>
-      {% endfor %}
+  <section class="nomiho">
+    <!-- もしそもそも飲み放題プランがある場合 -->
+    {% if nomihos %}
+      {% if user_uuid.nomiho == False and nomiho_category == 'Yes' %}
+        {% for nomiho in nomihos %}
+          <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
+            <div>
+              <h3 class="text__bold">プラン名： {{ nomiho.name }}</h3>
+              <h4 class="pt-3 pb-1 text__bold">料金：　¥　{{ nomiho.price }}</h4>
+              <p class="pt-1 pb-3">制限時間：　{{ nomiho.duration }}分</p>
+              <p>{{ nomiho.comment }}</p>
+            </div>
+            <!-- hidden -->
+            <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
+            {% if user.is_authenticated %}
+              <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
+                *お客様用のボタンです
+              </button>
+            {% else %}
+              <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
+                開始する
+              </button>
+            {% endif %}
+          </form>
+        {% endfor %}
+      {% endif %}
     {% endif %}
-  {% endif %}
-　
+  　
+    {% if user.is_authenticated and nomiho_category == 'Yes' %}
+      <div>
+        {% include 'components/restaurant/modal/nomiho.html' %}
+      </div>
+    {% else %}
+    {% endif %}
+  </section>
+
   <!-- 飲み放題を開始していない場合は、選択できないようにする -->
   <!-- 飲み放題を1つでも開始した場合、全て選択できるようにする -->
   <div class="d-flex flex-wrap">

@@ -389,17 +389,23 @@ def order(request):
             same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
-            cart_price = 0
+            # 同時に同じテーブルの人が注文した際は後者を弾く為
+            if not same_user_carts == None:
 
-            for each in same_user_carts:
-                order = customer.models.Order(status='調理中', menu=each.menu,
-                                              num=each.num, customer=each.customer, curr=True)
-                order.save()
-                cart_price = cart_price + (each.menu.price * each.num)
+                cart_price = 0
 
-            same_user.price += int(cart_price)
+                for each in same_user_carts:
+                    order = customer.models.Order(status='調理中', menu=each.menu,
+                                                num=each.num, customer=each.customer, curr=True)
+                    order.save()
+                    cart_price = cart_price + (each.menu.price * each.num)
 
-            same_user_carts.delete()
+                same_user.price += int(cart_price)
+
+                same_user_carts.delete()
+            else:
+                messages.info(request, f"注文を先ほど承っております。")
+                return redirect('customer:cart')
 
         # You can still use .filter() or any methods that return QuerySet (from the chain)
         # device = FCMDevice.objects.all().first()

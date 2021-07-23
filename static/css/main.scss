@@ -116,21 +116,21 @@ select {
 .btn__fixed {
   width: 183px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   left: 15vh;
   bottom: 10px;
 }
 .btn__fixed-wider {
   width: 250px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   left: 15vh;
   bottom: 10px;
 }
 .btn__fixed-righter {
   width: 130px;
   position: fixed;
-  z-index: 10000;
+  z-index: 2;
   right: 5vh;
   bottom: 10px;
 }
@@ -334,16 +334,6 @@ body {
   background-color: $light-grey;
 }
 
-.full__wrapper {
-  position: relative;
-  .logout {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 9999;
-  }
-}
-
 // restaurant
 .wrapper {
   min-height: 120vh;
@@ -543,13 +533,8 @@ section.table {
         position: absolute;
         top: -30px;
         left: 50px;
-        z-index: 9999;
+        z-index: 2;
       }
-    }
-    // 飲み放題コースの装飾
-    form.nomiho--1 {
-      background-color: $yellow;
-      border-radius: 10px;
     }
     .menu-item {
       width: 174px;
@@ -602,6 +587,20 @@ section.table {
         top: 8px;
         left: 40px;
         z-index: 10000;
+      }
+    }
+    // 飲み放題コースの装飾
+    section.nomiho {
+      position: relative;
+      form.nomiho--1 {
+        background-color: $yellow;
+        border-radius: 10px;
+      }
+      .nomiho-manage-btn {
+        position: absolute;
+        top: 30px;
+        right: 50px;
+        z-index: 2;
       }
     }
   }
