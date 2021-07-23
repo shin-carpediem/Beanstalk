@@ -266,12 +266,9 @@ def cart(request):
             same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
-            carts = chain(same_user_carts)
-            print(carts)
-            # TODO:
-            # 同じ商品は個数をまとめたい
-
-        print("hoge")
+        carts = list(chain(same_user_carts))
+        # TODO:
+        # 同じ商品は個数をまとめたい
 
         ctx = {
             'carts': carts,
@@ -361,8 +358,7 @@ def cart_ch(request):
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
-        carts = chain(same_user_carts)
-        print(carts)
+    carts = list(chain(same_user_carts))
 
     ctx = {
         'carts': carts,
@@ -532,9 +528,6 @@ def history(request):
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
-        carts = chain(same_user_carts)
-        orders = chain(same_user_orders)
-
         for each in same_user_carts:
             orders_in_cart += int(each.menu.price) * int(each.num)
         for each in same_user_orders:
@@ -543,6 +536,9 @@ def history(request):
             same_user.price += same_user.nomiho_price
             same_user.save()
             orders_in_order += same_user.price
+
+    carts = list(chain(same_user_carts))
+    orders = list(chain(same_user_orders))
 
     total_price = orders_in_cart + orders_in_order
 
@@ -582,7 +578,7 @@ def stop(request):
             same_user_orders = customer.models.Order.objects.defer('created_at').filter(
                 customer=same_user.uuid).order_by('-id')
 
-            orders = chain(same_user_orders)
+        orders = list(chain(same_user_orders))
     except Exception:
         messages.info(request, f'申し訳ありませんがエラーが発生しました。')
         return redirect('customer:history')
@@ -600,8 +596,8 @@ def stop(request):
             print(same_user.active)
             # ここまでは正常
 
-            user_uuid_list = chain(same_user)
-            print(user_uuid_list)
+        user_uuid_list = list(chain(same_user))
+        print(user_uuid_list)
     except Exception:
         messages.info(request, f'申し訳ありませんがエラーが発生しました。')
         return redirect('customer:history')
@@ -635,9 +631,8 @@ def revert(request):
     for each in user_uuid_list:
         each_user = nonLoginUser.objects.defer(
             'created_at').filter(uuid=each.uuid)
-        user_list = chain(each_user)
-        # user_list.append(each_user)
-        print(user_list)
+
+    user_list = list(chain(each_user))
     print(user_list)
 
     try:
