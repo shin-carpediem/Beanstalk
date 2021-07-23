@@ -2,7 +2,7 @@
   <i class="fas fa-pencil-alt"></i>
 </button>
 
-<div class="modal modal-nomiho fade" id="nomiho-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal modal-nomiho text-left fade" id="nomiho-manage-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -38,29 +38,33 @@
         <hr>
 
         <form class="p-2" action="{% url 'restaurant:nomiho_ch' %}" method="POST">{% csrf_token %}
-          {% for nomiho in nomihos %}
-            <div>
-              <div>
-                <label>プラン名</label><br />
-                <input class="w-100 pl-2" type="text" name="nomiho_name" value="{{ nomiho.name }}" required>
-              </div>
-              <div class="pt-3">
-                <label>料金</label><br />
-                <input class="text-right pr-2" type="number" name="nomiho_price" value="{{ nomiho.price }}" required>  円
-              </div>
-              <div class="pt-3">
-                <label>制限時間</label><br />
-                <input class="text-right pr-2" type="number" name="nomiho_duration" value="{{ nomiho.duration }}" required>  分
-              </div>
-              <div class="pt-3">
-                <label>コメント</label><br />
-                <input class="w-100 pl-2" type="textarea" name="nomiho_comment" value="{{ nomiho.comment }}" required>
-              </div>
-              <hr>
-              <!-- hidden -->
-              <input type="hidden" name="nomiho_id" value="{{ nomiho.id }}">
+          <div>
+            <p>更新したいプラン</p>
+            <select name="nomiho_id" class="w-100 mt-3 py-2">
+              {% for nomiho in nomihos %}
+                <option name="nomiho_id" value="{{ nomiho.id }}">{{ nomiho.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <div class="pt-3">
+              <label>更新後のプラン名</label><br />
+              <input class="pl-2 w-100" type="text" name="nomiho_name" required>
             </div>
-          {% endfor %}
+            <div class="pt-3">
+              <label>料金</label><br />
+              <input class="text-right pr-2" type="number" name="nomiho_price" required>  円
+            </div>
+            <div class="pt-3">
+              <label>制限時間</label><br />
+              <input class="text-right pr-2" type="number" name="nomiho_duration" required>  分
+            </div>
+            <div class="pt-3">
+              <label>コメント</label><br />
+              <input class="w-100 pl-2" type="textarea" name="nomiho_comment" required>
+            </div>
+            <hr>
+          </div>
           <button type="submit" class="mt-3 btn btn__light-orange w-50" onclick="loading_show()">
             更新
           </button>
@@ -69,6 +73,7 @@
 
         <form class="p-2" action="{% url 'restaurant:nomiho_del' %}" method="POST">{% csrf_token %}
           <div>
+            <p>プラン名</p>
             <select name="del_nomiho_form" class="w-100 mt-3 py-2">
               {% for nomiho in nomihos %}
                 <option name="nomiho_id" value="{{ nomiho.id }}">{{ nomiho.name }}</option>

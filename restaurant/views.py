@@ -389,6 +389,17 @@ def menu_add(request):
         menu.save()
         messages.success(request, f"{category}に{name}を追加しました。")
 
+        # 飲み放題カテゴリに追加するメニューは、たとえ間違って金額を0以外で入力しても、0にする処理をする
+        if menu.category.nomiho == True:
+            nomiho_categorys = Category.objects.defer('created_at').filter(nomiho=True)
+
+            for nomiho_category in nomiho_categorys:
+                nomiho_menus = Menu.objects.defer('created_at').filter(category=nomiho_category)
+
+                for nomiho_menu in nomiho_menus:
+                    nomiho_menu.price = 0
+                    nomiho_menu.save()
+
     return redirect('customer:menu')
 
 
@@ -558,13 +569,13 @@ def nomiho_add(request):
 @login_required
 @require_POST
 def nomiho_ch(request):
+    nomiho_id = request.POST.get('nomiho_id')
+    nomiho = Nomiho.objects.get(id=nomiho_id)
+
     nomiho_name = request.POST.get('nomiho_name')
     nomiho_price = request.POST.get('nomiho_price')
     nomiho_duration = request.POST.get('nomiho_duration')
     nomiho_comment = request.POST.get('nomiho_comment')
-
-    nomiho_id = request.POST.get('nomiho_id')
-    nomiho = Nomiho.objects.get(id=nomiho_id)
 
     nomiho.name = nomiho_name
     nomiho.price = nomiho_price

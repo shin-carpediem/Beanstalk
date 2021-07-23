@@ -66,7 +66,7 @@
   <!-- 飲み放題を1つでも開始した場合、全て選択できるようにする -->
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
-      {% if menu.category.nomiho == True and user_uuid.nomiho == False %}
+      {% if menu.category.nomiho == True and user_uuid.nomiho == False and not user.is_authenticated %}
         <form class="mx-auto my-1 menu-item shadow el__dactivate" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
       {% else %}
         <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
