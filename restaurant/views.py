@@ -198,56 +198,92 @@ def history(request):
     name = user.name
     active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
     order_list = ''
+    start = None
+    end = None
     table = None
 
     # 日付の範囲指定分の売上
     if request.method == 'POST':
         filter_type = request.POST.get('filter-type')
 
-        if filter_type == 'date-filter':
-            start = request.POST.get('start')
-            end = request.POST.get('end')
+        if (request.POST.get('start') != None) and (request.POST.get('end') != None):
+            request.session['filter_date_start'] = request.POST.get('start')
+            start = request.session['filter_date_start']
+            request.session['filter_date_end'] = request.POST.get('end')
+            end = request.session['filter_date_end']
+
+            if not request.session['filter_table'] == None:
+                table = request.session['filter_table']
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(table=table, active=True)
+            else:
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(active=True)
 
             if start > end:
                 messages.warning(request, f"左の日付をより昔にしてください。")
+                (start, end) = (end, start)
+
+            for same_table_user in same_table_users:
+                active_user_order = Order.objects.filter(
+                    customer=same_table_user, created_at__range=(start, end)).order_by('-id')
+                order_list = list(chain(order_list, active_user_order))
+
+        elif filter_type == 'date-filter-clear':
+            request.session['filter_date_start'] = None
+            request.session['filter_date_end'] = None
+
+            if not request.session['filter_table'] == None:
+                table = request.session['filter_table']
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(table=table, active=True)
+            else:
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(active=True)
+
+            for same_table_user in same_table_users:
+                active_user_order = Order.objects.filter(
+                    customer=same_table_user).order_by('-id')
+                order_list = list(chain(order_list, active_user_order))
+
+        elif (request.POST.get('table') != None):
+            request.session['filter_table'] = request.POST.get('table')
+            table = request.session['filter_table']
+
+            same_table_users = nonLoginUser.objects.defer(
+                'created_at').filter(table=table, active=True)
+
+            if not request.session['filter_date_start'] == None:
+                start = request.session['filter_date_start']
+                end = request.session['filter_date_end']
+
+                for same_table_user in same_table_users:
+                    same_user_order = Order.objects.filter(
+                        customer=same_table_user, created_at__range=(start, end)).order_by('-id')
+                    order_list = list(chain(order_list, same_user_order))
+            else:
+
+                for same_table_user in same_table_users:
+                    same_user_order = Order.objects.filter(
+                        customer=same_table_user).order_by('-id')
+                    order_list = list(chain(order_list, same_user_order))
+
+        elif filter_type == 'table-filter-clear':
+            request.session['filter_table'] = None
+
+            if not request.session['filter_date_start'] == None:
+                start = request.session['filter_date_start']
+                end = request.session['filter_date_end']
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(table=table, active=True)
+            else:
+                same_table_users = nonLoginUser.objects.defer(
+                    'created_at').filter(active=True)
 
             for active_user in active_users:
                 active_user_order = Order.objects.filter(
                     customer=active_user, created_at__range=(start, end)).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
-
-        elif filter_type == 'date-filter-clear':
-
-            for active_user in active_users:
-                active_user_order = Order.objects.filter(
-                    customer=active_user).order_by('-id')
-                order_list = list(chain(order_list, active_user_order))
-
-            start = None
-            end = None
-
-        elif filter_type == 'table-filter':
-            table = request.POST.get('table')
-            same_table_users = nonLoginUser.objects.defer(
-                'created_at').filter(table=table, active=True)
-
-            for same_table_user in same_table_users:
-                same_user_order = Order.objects.filter(
-                    customer=same_table_user).order_by('-id')
-                order_list = list(chain(order_list, same_user_order))
-
-            start = None
-            end = None
-
-        elif filter_type == 'table-filter-clear':
-
-            for active_user in active_users:
-                active_user_order = Order.objects.filter(
-                    customer=active_user).order_by('-id')
-                order_list = list(chain(order_list, active_user_order))
-
-            start = None
-            end = None
 
     else:
         # デフォルトは昨日から今日の範囲
