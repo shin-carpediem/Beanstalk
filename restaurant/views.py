@@ -342,10 +342,16 @@ def category_add(request):
 def category_ch(request):
     name = request.POST.get('category_name')
     required_name = request.POST.get('ch_category_form')
+    try:
+        nomiho = request.POST.get('nomiho')
+    except Exception:
+        nomiho = False
+
     category = Category.objects.get(name=name)
     category.name = required_name
+    category.nomiho = nomiho
     category.save()
-    messages.success(request, f"カテゴリーの名前を{name}から{required_name}に変更しました。")
+    messages.success(request, f"カテゴリー{name}を変更しました。")
 
     return redirect('customer:menu')
 

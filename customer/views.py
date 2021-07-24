@@ -610,64 +610,58 @@ def history(request):
     return render(request, 'customer/history.html', ctx)
 
 
+@require_POST
+# 伝票はテーブル1つにつき1画面で表示できればいい
+# def stop(request):
+#     try:
+#         request.session.session_key
+#     except Exception:
+#         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+#         return redirect('customer:table')
+#     uuid = request.session['nonloginuser_uuid']
+#     user_uuid = nonLoginUser.objects.get(uuid=uuid)
+#     if user_uuid.active == False:
+#         messages.info(
+#             request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
+#         return redirect('customer:index')
+#     try:
+#         total_price = request.session['total_price']
+#     # total_price = request.POST.get('total_price')
+#     except Exception:
+#         messages.info(request, f'アカウントの有効期限が切れました。')
+#         return redirect('customer:history')
+#     orders = ''
+#     TODO:
+#     ids = []
+#     try:
+#         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
+#         table_num = request.session['table']
+#     except Exception:
+#         messages.info(request, f'アカウントの有効期限が切れました。')
+#         return redirect('customer:history')
+#     same_user_table_list = nonLoginUser.objects.defer(
+#         'created_at').filter(table=table_num, active=True)
+#     for same_user in same_user_table_list:
+#         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
+#             customer=same_user.uuid).order_by('-id')
+#         orders = list(chain(orders, same_user_orders))
+#         ids.append(same_user.uuid)
+#     # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
+#     for same_user in same_user_table_list:
+#         same_user.active = False
+#         same_user.save()
+#     request.session['same_user_table_list'] = same_user_table_list
+#     print(ids)
+#     ctx = {
+#         'total_price': total_price,
+#         'ids': ids,
+#         'orders': orders,
+#     }
+#     messages.info(request, f'リロードせずにこのままこの画面を、お会計時お店に表示ください。')
+#     return render(request, 'customer/stop.html', ctx)
+@require_POST
+# 伝票はテーブル1つにつき1画面で表示できればいい
 def stop(request):
-    try:
-        request.session.session_key
-    except Exception:
-        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-        return redirect('customer:table')
-
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
-    if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
-
-    # total_price = request.POST.get('total_price')
-
-    # orders = ''
-    # TODO:
-    # ids = []
-
-    try:
-        # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
-        table_num = request.session['table']
-    except Exception:
-        messages.info(request, f'アカウントの有効期限が切れました。')
-        return redirect('customer:history')
-
-    same_user_table_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=table_num, active=True)
-
-    # for same_user in same_user_table_list:
-    #     same_user_orders = customer.models.Order.objects.defer('created_at').filter(
-    #         customer=same_user.uuid).order_by('-id')
-
-    #     orders = list(chain(orders, same_user_orders))
-    #     ids.append(same_user.uuid)
-
-    # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-    for same_user in same_user_table_list:
-
-        same_user.active = False
-        same_user.save()
-
-    # print(ids)
-
-    # ctx = {
-    #     'total_price': total_price,
-    #     'ids': ids,
-    #     'orders': orders,
-    # }
-
-    messages.info(request, f'リロードせずにこのままこの画面を、お会計時お店に表示ください。')
-
-    return redirect('customer:stop_static')
-
-
-def stop_static(request):
     try:
         request.session.session_key
     except Exception:
@@ -683,7 +677,7 @@ def stop_static(request):
 
     orders = ''
     # TODO:
-    ids = []
+    # ids = []
 
     try:
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -691,6 +685,29 @@ def stop_static(request):
     except Exception:
         messages.info(request, f'アカウントの有効期限が切れました。')
         return redirect('customer:history')
+
+    # TODO:
+    # same_user_table_list = nonLoginUser.objects.defer(
+    #     'created_at').filter(table=table_num, active=True)
+
+    # # same_user_list = same_user_table_list.values_list()
+    # users = [user.uuid for user in same_user_table_list]
+    # print(users)
+    # print("ok")
+
+    # # active=Falseにしたユーザーをセッションで記憶する
+    # request.session['same_user_table_list'] = users
+    # print("no..")
+
+    # # リロードされた時に同じ内容を表示する為、
+    # # 上記セッションで保存したユーザーをactive=Trueに戻しておく
+    # pre_users = request.session['same_user_table_list']
+    # print(pre_users)
+    # for pre_user in pre_users:
+    #     print(pre_user)
+    #     pre_user_query = nonLoginUser.objects.get(uuid=str(pre_user))
+    #     pre_user_query.active = True
+    #     pre_user_query.save()
 
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
@@ -700,67 +717,29 @@ def stop_static(request):
             customer=same_user.uuid).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
-        ids.append(same_user.uuid)
+        # ids.append(same_user.uuid)
 
     # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-    # for same_user in same_user_table_list:
+    for same_user in same_user_table_list:
 
-    #     same_user.active = False
-    #     same_user.save()
+        same_user.active = False
+        same_user.save()
 
-    print(ids)
+    # print(ids)
 
     ctx = {
         'total_price': total_price,
-        'ids': ids,
+        # 'ids': ids,
         'orders': orders,
     }
 
-    # messages.info(request, f'リロードせずにこのままこの画面を、お会計時お店に表示ください。')
+    messages.info(request, f'このままこの伝票画面を、お会計時に表示ください。')
 
     return render(request, 'customer/stop.html', ctx)
 
 
 @require_POST
 def revert(request):
-    try:
-        request.session.session_key
-    except Exception:
-        messages.info(request, f'アカウントの有効期限が切れました。')
-        return redirect('customer:table')
-
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
-    # TODO:
-    ids = request.POST.get('ids')
-    print(ids)
-
-    user_list = ''
-
-    for id in ids:
-        # each.active = True
-        # each.save()
-        print(id)
-        each_user = nonLoginUser.objects.defer(
-            'created_at').filter(uuid=id)
-
-        user_list = list(chain(user_list, each_user))
-        print(user_list)
-
-    if user_list != '':
-
-        for same_user in user_list:
-            same_user.active = True
-            same_user.save()
-
-    messages.info(request, f'オーダーストップを取り消しました。')
-
-    return redirect('customer:history')
-
-
-@require_POST
-def revert_from_index(request):
     try:
         request.session.session_key
     except Exception:
