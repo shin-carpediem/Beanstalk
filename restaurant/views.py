@@ -699,31 +699,21 @@ def allergy_del(request):
 
 @login_required
 @require_POST
-def menu_chef_img_manage(request):
-    # menu_img = request.FILES.get('menu_img')
+def chef(request):
+    chef_img = request.FILES.get('chef_img')
+    comment = request.POST.get('comment')
     menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
 
-    # # 以前のファイルは削除
-    # menu.img.delete(False)
+    # 以前のファイルは削除
+    if not menu.chef_img == None:
+        menu.chef_img.delete(False)
 
-    # menu.img = menu_img
-    # menu.save()
-    # name = menu.name
-    # messages.success(request, f"{name}の写真を変更しました。")
-
-    return redirect('customer:menu_detail', menu_id=menu.id)
-
-
-@login_required
-@require_POST
-def menu_chef_comment_manage(request):
-    # menu_name = request.POST.get('menu_name')
-    menu_id = request.POST.get('menu_id')
-    menu = Menu.objects.get(id=menu_id)
-    # menu.name = menu_name
-    # menu.save()
-    # messages.success(request, f"{menu_name}に名前を変更しました。")
+    menu.chef_img = chef_img
+    menu.comment = comment
+    menu.save()
+    name = menu.name
+    messages.success(request, f"{name}のシェフの顔写真・コメントを更新しました。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
@@ -739,7 +729,6 @@ def nomiho_add(request):
     nomiho = Nomiho(name=nomiho_name, price=nomiho_price,
                     duration=nomiho_duration, comment=nomiho_comment)
     nomiho.save()
-
     messages.success(request, f"飲み放題プラン『{nomiho_name}』を追加しました。")
 
     return redirect('customer:menu')
@@ -761,7 +750,6 @@ def nomiho_ch(request):
     nomiho.duration = nomiho_duration
     nomiho.comment = nomiho_comment
     nomiho.save()
-
     messages.success(request, f"飲み放題プランの内容を変更しました。")
 
     return redirect('customer:menu')

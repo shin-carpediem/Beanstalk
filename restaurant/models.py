@@ -35,6 +35,14 @@ class Menu(models.Model):
                                    options={"quality": 100}
                                    )
     allergies = models.ManyToManyField(Allergy, blank=True, null=True)
+    chef_img = models.ImageField("シェフの顔写真", upload_to="chef_img",
+                            max_length=100, blank=True, null=True)
+    formatted_chef_img = ImageSpecField(source="chef_img",
+                                   processors=[ResizeToFill(70, 70)],
+                                   format="JPEG",
+                                   options={"quality": 100}
+                                   )
+    comment = models.TextField("コメント", max_length=500, blank=True, null=True)
     created_at = models.DateTimeField("作成日", auto_now=True)
 
     def __str__(self):

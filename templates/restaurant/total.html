@@ -44,8 +44,8 @@
         <div class="d-flex pt-3 justify-content-center align-items-center flex-wrap">
           {% for active_table in active_table_list %}
             <form action="{% url 'restaurant:stop_user_order' %}" class="mx-3" method="POST">{% csrf_token %}
-              <button class="badge__red badge-table my-sm-0 my-3 shadow">
-                {{ active_table }}
+              <button class="badge__red badge-table my-sm-0 my-3 shadow text__bold">
+                {{ active_table }} 番
                 <!-- hidden -->
                 <input type="hidden" name="active_table" value="{{ active_table }}">
               </button>

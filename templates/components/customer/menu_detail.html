@@ -44,16 +44,31 @@
     {% include 'components/restaurant/modal/allergy_edit.html' %}
   </div>
 
-  <!-- TODO: new feature -->
+  <section class="chef-wrapper">
+    <p class="mt-5 text-left text__bold">シェフからのコメント</p>
+    <hr/>
+    <div class="row py-3 mx-auto d-flex justify-content-around">
+      <div class="col-4">
+        <div class="shadow chef">
+          {% if menu.chef_img %}
+            <img src="{{ menu.chef_img.url }}" alt="Chef Img">
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="px-2 py-3 comment shadow">
+          {% if menu.comment %}
+            {{ menu.comment }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
-  <!-- <p class="mt-5 text-left text__bold">シェフからのコメント</p>
-  <hr/>
-  <div class="row mx-auto">
-    <img class="col-4 shadow chef" src="#" alt="Comment from Chef">
-    <div class="col-8 shadow comment"></div>
-  </div>
+    {% include 'components/restaurant/modal/chef.html' %}
+  </section>
 
-  <p class="mt-5 text-left text__bold">生産者からのメッセージ</p>
-  <hr/>
-  <div class="row mx-auto">
+  <!-- <div>
+    <p class="mt-5 text-left text__bold">生産者からのメッセージ</p>
+    <hr/>
+    <div class="row mx-auto"></div>
   </div> -->
