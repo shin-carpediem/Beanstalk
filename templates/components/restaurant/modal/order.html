@@ -1,19 +1,19 @@
 　<button type="button" class="order-item-card w-100 d-flex align-items-center justify-content-between focus" data-toggle="modal" data-target="#order-modal__ModalCenter">
     <div class="d-flex align-items-center justify-content-between">
       {% if order.status == '調理中' %}
-        <div class="badge__orange px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1">
+        <div class="badge__orange px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1 mr-sm-5 mr-3">
           <p class="text__bold text__large" style="color: white;">注文</p>
         </div>
-      {# % elif order.status == 'キャンセル' % #}
-        <!-- <div>
-        <p class="badge__blue text__bold text__large">{{ order.status }}</p>
-        </div> -->
+      {% elif order.status == 'キャンセル' %}
+        <div class="badge__blue p-sm-2 p-1 ml-sm-3 ml-1 mr-3">
+        <p class="text__bold" style="color: white;">{{ order.status }}</p>
+        </div>
       {% elif order.status == '済' %}
-        <div class="badge__grey px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1">
+        <div class="badge__grey px-sm-3 p-1 py-sm-2 ml-sm-3 ml-1 mr-sm-5 mr-3">
           <p class="text__bold text__large" style="color: white;">{{ order.status }}</p>
         </div>
       {% endif %}
-      <p class="mt-3 ml-sm-5 ml-3 table text__bold icon icon_yellow text__large">{{ order.customer.table }}</p>
+      <p class="mt-3 table text__bold icon icon_yellow text__large">{{ order.customer.table }}</p>
     </div>
 
     <div>
@@ -38,7 +38,7 @@
         <div class="modal-body mx-auto">
           <div class="py-3 d-flex justify-content-around align-items-center">
             <input type="radio" name="order_status" value="調理中" checked id="cookingRadio"><p id="cooking" class="badge__orange ml-3 mr-4 px-3 py-2 text__bold">オーダー</p>
-            <!-- <input type="radio" name="order_status" value="キャンセル" id="chancelRadio"><p id="chancel" class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p> -->
+            <input type="radio" name="order_status" value="キャンセル" id="chancelRadio"><p id="chancel" class="badge__blue ml-3 mr-4 px-3 py-2 text__bold">キャンセル</p>
             <input type="radio" name="order_status" value="済" id="doneRadio"><p id="done" class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
           </div>
         </div>

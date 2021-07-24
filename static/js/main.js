@@ -46,19 +46,19 @@ if (path.indexOf("order_manage") > -1) {
   const statusChange = () => {
     try {
       const cooking = document.getElementById("cooking");
-      // const chancel = document.getElementById("chancel");
+      const chancel = document.getElementById("chancel");
       const done = document.getElementById("done");
 
       const cookingRadio = document.getElementById("cookingRadio");
-      // const chancelRadio = document.getElementById("chancelRadio");
+      const chancelRadio = document.getElementById("chancelRadio");
       const doneRadio = document.getElementById("doneRadio");
 
       cooking.addEventListener("click", () => {
         cookingRadio.click();
       });
-      // chancel.addEventListener("click", () => {
-      //   chancelRadio.click();
-      // });
+      chancel.addEventListener("click", () => {
+        chancelRadio.click();
+      });
       done.addEventListener("click", () => {
         doneRadio.click();
       });

@@ -40,8 +40,12 @@
             <p class="py-2 px-3 badge badge__turquoise">調理中</p>
             <!-- hidden -->
             <input type="hidden" name="order_status" value="調理中">
+          {% elif order.status == 'キャンセル' %}
+            <p class="py-2 px-3 badge badge__blue">キャンセル</p>
+            <!-- hidden -->
+            <input type="hidden" name="order_status" value="キャンセル">
           {% elif order.status == '済' %}
-            <p class="py-2 px-3 badge badge__grey">済</p>
+            <p class="py-2 px-3 badge badge__grey">ご提供済</p>
             <!-- hidden -->
             <input type="hidden" name="order_status" value="済">
           {% endif %}
@@ -84,8 +88,6 @@
           </button>
       </form>
       <form action="{% url 'customer:stop' %}" class="d-flex" method="POST">{% csrf_token %}
-        <!-- hidden -->
-        <!-- <input type="hidden" name="total_price" value="{{ total_price }}"> -->
         <button type="submit" class="btn btn__red shadow text__bold px-sm-4 py-sm-0 py-2" id="orderStopConfirm">
           オーダー<br class="d-sm-block d-none">ストップ
         </button>

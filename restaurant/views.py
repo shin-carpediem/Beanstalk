@@ -112,8 +112,13 @@ def login_as_user(request):
 
 
 def order_manage(request):
+    try:
+        filter_type = request.POST.get('filter-type')
+    except Exception:
+        filter_type = None
+
     # ログインから
-    if request.method == 'POST':
+    if request.method == 'POST' and filter_type == 'login':
         email = request.POST.get('username')
         # passcode = request.POST.get('passcode')
 
@@ -150,12 +155,26 @@ def order_manage(request):
 
     formatted_logo = user.formatted_logo
     name = user.name
+    order_list = ''
+    table = None
 
-    order_list = Order.objects.filter(status='調理中').order_by('-id')
+    active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
+
+    # テーブル番号でフィルタした際
+    if request.POST.get('table') != None:
+        table = request.POST.get('table')
+        active_users = nonLoginUser.objects.defer(
+            'created_at').filter(table=table, active=True)
+
+    for active_user in active_users:
+        active_user_order = Order.objects.filter(
+            customer=active_user, status='調理中').order_by('-id')
+        order_list = list(chain(order_list, active_user_order))
 
     ctx = {
         'formatted_logo': formatted_logo,
         'name': name,
+        'table': table,
         'order_list': order_list,
     }
 
@@ -177,13 +196,78 @@ def order_status_ch(request):
 def history(request):
     user = User.objects.get(id=request.user.id)
     name = user.name
+    active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
+    order_list = ''
+    table = None
 
-    # order_list = Order.objects.filter(Q(status='キャンセル') | Q(status='済'))
-    order_list = Order.objects.filter(status='済')
+    # 日付の範囲指定分の売上
+    if request.method == 'POST':
+        filter_type = request.POST.get('filter-type')
+
+        if filter_type == 'date-filter':
+            start = request.POST.get('start')
+            end = request.POST.get('end')
+
+            if start > end:
+                messages.warning(request, f"左の日付をより昔にしてください。")
+
+            for active_user in active_users:
+                active_user_order = Order.objects.filter(
+                    customer=active_user, created_at__range=(start, end)).order_by('-id')
+                order_list = list(chain(order_list, active_user_order))
+
+        elif filter_type == 'date-filter-clear':
+
+            for active_user in active_users:
+                active_user_order = Order.objects.filter(
+                    customer=active_user).order_by('-id')
+                order_list = list(chain(order_list, active_user_order))
+
+            start = None
+            end = None
+
+        elif filter_type == 'table-filter':
+            table = request.POST.get('table')
+            same_table_users = nonLoginUser.objects.defer(
+                'created_at').filter(table=table, active=True)
+
+            for same_table_user in same_table_users:
+                same_user_order = Order.objects.filter(
+                    customer=same_table_user).order_by('-id')
+                order_list = list(chain(order_list, same_user_order))
+
+            start = None
+            end = None
+
+        elif filter_type == 'table-filter-clear':
+
+            for active_user in active_users:
+                active_user_order = Order.objects.filter(
+                    customer=active_user).order_by('-id')
+                order_list = list(chain(order_list, active_user_order))
+
+            start = None
+            end = None
+
+    else:
+        # デフォルトは昨日から今日の範囲
+        dt_now = datetime.datetime.now()
+        start = datetime.datetime(
+            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
+        end = datetime.datetime(
+            dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
+
+        for active_user in active_users:
+            active_user_order = Order.objects.filter(
+                customer=active_user, created_at__range=(start, end)).order_by('-id')
+            order_list = list(chain(order_list, active_user_order))
 
     ctx = {
         'name': name,
+        'table': table,
         'order_list': order_list,
+        'start': start,
+        'end': end,
     }
 
     return render(request, 'restaurant/history.html', ctx)
@@ -191,13 +275,9 @@ def history(request):
 
 @login_required
 def total(request):
-    dt_now = datetime.datetime.now()
-    # 同日日時、あるいは昨日に作られた注文のみを抽出
-    orders = Order.objects.filter(Q(created_at__date=datetime.date(
-        dt_now.year, dt_now.month, dt_now.day)) | Q(created_at__date=datetime.date(
-            dt_now.year, dt_now.month, (dt_now.day)-1))).order_by('-id')
-
     active_table_list = []
+    orders = ''
+
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
 
@@ -205,9 +285,14 @@ def total(request):
         table_int = active_non_login_user.table
         table = str(table_int)
 
+        active_non_login_user_orders = Order.objects.defer(
+            'created_at').filter(customer=active_non_login_user.uuid).order_by('-id')
+        orders = list(chain(orders, active_non_login_user_orders))
+
         if not table in active_table_list:
             active_table_list.append(table)
 
+    print(orders)
     ctx = {
         'orders': orders,
         'active_table_list': active_table_list,
