@@ -37,7 +37,17 @@
     {% include 'components/restaurant/modal/company-name.html' %}
   </h5>
 
-  <p class="col-4 my-auto text__bold">テーブル番号: {{ request.session.table }}</p>
+  <p class="col-4 my-auto text__bold">
+    テーブル番号:
+    <br
+      {% if request.session.table == '管理者' %}
+        class="d-block"
+      {% else %}
+        class="d-none"
+      {% endif %}
+    />
+    {{ request.session.table }}
+  </p>
 
   {% if request.path == '/filter/' or request.path == '/cart/static/' or request.path == '/menu/' or request.path == '/order/' or request.path == '/nomiho/' %}
     {% if not user.is_authenticated %}

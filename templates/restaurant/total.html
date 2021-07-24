@@ -5,18 +5,40 @@
 {# % load restaurant_filters % #}
 
 {% block custom__header %}
+  <meta http-equiv="refresh" content="10; URL=">
   <title>お客様お会計</title>
 {% endblock %}
 
 {% block content %}
 <div class="w-100 restaurant">
   {% include 'components/restaurant/header.html' %}
-  <div class="pt-5">
+  <section class="pt-5 total">
     <div class="pt-sm-3 pt-5">
+      <p class="text-sm-left text-center pt-sm-3 pl-sm-3">＊このページは10秒毎に自動で再読み込みします</p>
+      <div class="table-list py-5 mx-4">
+        <div class="pb-4 text__bold text-center">
+          <p class="text__large pb-3">利用中のテーブル停止ボタン</p>
+          <p>タッチするとその番号のテーブルの利用が<br class="d-sm-none d-block">途中停止されますのでご注意ください</p>
+        </div>
+        <div class="d-flex pt-3 justify-content-center align-items-center flex-wrap">
+          {% for active_table in active_table_list %}
+            <form action="{% url 'restaurant:stop_user_order' %}" class="mx-3" method="POST">{% csrf_token %}
+              <button class="badge__red badge-table my-sm-0 my-3">
+                {{ active_table }}
+                <!-- hidden -->
+                <input type="hidden" name="active_table" value="{{ active_table }}">
+              </button>
+            </form>
+            {% empty %}
+            <p>なし</p>
+          {% endfor %}
+        </div>
+      </div>
+
       {% regroup orders by customer.table as table_list %}
       {% for table in table_list %}
         <div class="mx-4 my-3">
-          <div class="d-flex">
+          <div class="d-flex justify-content-around pb-4">
             <p class="text__bold pb-3">テーブル番号： {{ table.grouper }}</p>
           </div>
           <table border="1" class="w-100">
@@ -37,11 +59,12 @@
               </tr>
             {% endfor %}
           </table>
-          <p class="text__bold text__large text-right pt-3" id="sumOfTable">合計：　{{ table.list.price }}</p>
+          <p class="text__bold text__large text-right pt-3" id="sumOfTable">合計：　
+          </p>
         </div>
       <hr />
       {% endfor %}
     </div>
-  </div>
+  </section>
 </div>
 {% endblock %}

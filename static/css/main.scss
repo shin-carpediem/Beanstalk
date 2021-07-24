@@ -281,6 +281,10 @@ a {
   border-radius: 100px;
   font-weight: bold;
 }
+.badge__red {
+  background-color: $red;
+  color: $white;
+}
 .badge__orange {
   background-color: $orange;
   color: $white;
@@ -301,6 +305,11 @@ a {
 }
 .badge__yellow {
   background-color: $yellow;
+}
+.badge-table {
+  border-color: transparent;
+  width: 100px;
+  border-radius: 4px;
 }
 
 .logo {
@@ -402,6 +411,11 @@ body {
           font-size: 32px * 0.7;
         }
       }
+    }
+  }
+  section.total {
+    .table-list {
+      background-color: $light-grey;
     }
   }
   section.daily {

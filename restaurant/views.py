@@ -7,6 +7,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Q
+from itertools import chain
 # from django.template import Context, Template
 # from email.mime.multipart import MIMEMultipart
 # from email.mime.text import MIMEText
@@ -150,7 +151,7 @@ def order_manage(request):
     formatted_logo = user.formatted_logo
     name = user.name
 
-    order_list = Order.objects.filter(status='調理中')
+    order_list = Order.objects.filter(status='調理中').order_by('-id')
 
     ctx = {
         'formatted_logo': formatted_logo,
@@ -194,13 +195,42 @@ def total(request):
     # 同日日時、あるいは昨日に作られた注文のみを抽出
     orders = Order.objects.filter(Q(created_at__date=datetime.date(
         dt_now.year, dt_now.month, dt_now.day)) | Q(created_at__date=datetime.date(
-            dt_now.year, dt_now.month, (dt_now.day)-1)))
+            dt_now.year, dt_now.month, (dt_now.day)-1))).order_by('-id')
+
+    active_table_list = []
+    active_non_login_user_list = nonLoginUser.objects.defer(
+        'created_at').filter(active=True)
+
+    for active_non_login_user in active_non_login_user_list:
+        table_int = active_non_login_user.table
+        table = str(table_int)
+
+        if not table in active_table_list:
+            active_table_list.append(table)
 
     ctx = {
         'orders': orders,
+        'active_table_list': active_table_list,
     }
 
     return render(request, 'restaurant/total.html', ctx)
+
+
+@login_required
+@require_POST
+def stop_user_order(request):
+    active_table = request.POST.get('active_table')
+    print(active_table)
+    same_user_table_list = nonLoginUser.objects.defer(
+        'created_at').filter(table=active_table, active=True)
+
+    for same_user in same_user_table_list:
+        same_user.active = False
+        same_user.save()
+
+    messages.info(request, f'{active_table}テーブルの注文を停止させました。')
+
+    return redirect('restaurant:total')
 
 
 @login_required
@@ -385,7 +415,8 @@ def category_menu_ch(request):
     pre_category = menu.category.name
     category_name = category.name
 
-    messages.success(request, f"{menu_name}のカテゴリーを{pre_category}から{category_name}に変更しました。")
+    messages.success(
+        request, f"{menu_name}のカテゴリーを{pre_category}から{category_name}に変更しました。")
 
     return redirect('customer:menu')
 
@@ -417,10 +448,12 @@ def menu_add(request):
 
         # 飲み放題カテゴリに追加するメニューは、たとえ間違って金額を0以外で入力しても、0にする処理をする
         if menu.category.nomiho == True:
-            nomiho_categorys = Category.objects.defer('created_at').filter(nomiho=True)
+            nomiho_categorys = Category.objects.defer(
+                'created_at').filter(nomiho=True)
 
             for nomiho_category in nomiho_categorys:
-                nomiho_menus = Menu.objects.defer('created_at').filter(category=nomiho_category)
+                nomiho_menus = Menu.objects.defer(
+                    'created_at').filter(category=nomiho_category)
 
                 for nomiho_menu in nomiho_menus:
                     nomiho_menu.price = 0

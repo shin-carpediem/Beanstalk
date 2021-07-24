@@ -306,6 +306,11 @@ a:hover {
   font-weight: bold;
 }
 
+.badge__red {
+  background-color: #ff5b51;
+  color: #fff;
+}
+
 .badge__orange {
   background-color: #ff9900;
   color: #fff;
@@ -331,6 +336,12 @@ a:hover {
 
 .badge__yellow {
   background-color: #ffe5be;
+}
+
+.badge-table {
+  border-color: transparent;
+  width: 100px;
+  border-radius: 4px;
 }
 
 .logo {
@@ -450,6 +461,10 @@ body .nomiho-limit {
   .restaurant section.order-table .order-item .name {
     font-size: 22.4px;
   }
+}
+
+.restaurant section.total .table-list {
+  background-color: #f1f1f1;
 }
 
 .restaurant section.daily .daily-interest,
