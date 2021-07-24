@@ -372,6 +372,26 @@ def category_del(request):
 
 @login_required
 @require_POST
+def category_menu_ch(request):
+    menu_id = request.POST.get('menu_id')
+    category_id = request.POST.get('category_id')
+
+    menu = Menu.objects.get(id=menu_id)
+    category = Category.objects.get(id=category_id)
+    menu.category = category
+    menu.save()
+
+    menu_name = menu.name
+    pre_category = menu.category.name
+    category_name = category.name
+
+    messages.success(request, f"{menu_name}のカテゴリーを{pre_category}から{category_name}に変更しました。")
+
+    return redirect('customer:menu')
+
+
+@login_required
+@require_POST
 def menu_add(request):
     name = request.POST.get('name')
     if Menu.objects.filter(name=name).count() != 0:

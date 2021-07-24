@@ -65,6 +65,32 @@
               実行
             </button>
           </form>
+          <hr>
+
+          <form class="py-2" action="{% url 'restaurant:category_menu_ch' %}" method="POST">{% csrf_token %}
+            <p class="badge__blue py-1 mx-5">メニューの分類されるカテゴリーを変更</p>
+            <div class="py-2 d-flex align-items-center justify-content-around">
+              <div class="py-3">
+                <label>メニュー</label>
+                <select name="menu_id" class="w-100 my-3 py-2">
+                  {% for menu in menus %}
+                    <option value="{{ menu.id }}">{{ menu.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="py-3">
+                <label>カテゴリー</label>
+                <select name="category_id" class="w-100 my-3 py-2">
+                  {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="w-50 btn btn__blue" onclick="loading_show()">
+              実行
+            </button>
+          </form>
         </div>
       </div>
     </div>
