@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+<!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
+{% load webpush_notifications %}
 
 {% block custom__header %}
   <meta http-equiv="refresh" content="10; URL=">
   <title>注文管理</title>
+  <!-- webpush用のmetaタグとスクリプトの読み込み -->
+  {% webpush_header %}
 {% endblock %}
 
 {% block content %}

@@ -91,7 +91,7 @@
       {% include 'components/restaurant/modal/menu.html' %}
     </div>
   {% else %}
-    <form action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+    <form action="{% url 'customer:cart_static' %}" method="POST">{% csrf_token %}
       <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文予定を見る
       </button>
