@@ -311,8 +311,9 @@ def history(request):
 
 @login_required
 def total(request):
-    active_table_list = []
     orders = ''
+    active_table_list = []
+    active_table_price_list = {}
 
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
@@ -327,10 +328,13 @@ def total(request):
 
         if not table in active_table_list:
             active_table_list.append(table)
+            price = active_non_login_user.price
+            active_table_price_list[table] = str(price)
 
     ctx = {
         'orders': orders,
         'active_table_list': active_table_list,
+        'active_table_price_list': active_table_price_list,
     }
 
     return render(request, 'restaurant/total.html', ctx)

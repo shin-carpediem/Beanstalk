@@ -43,13 +43,11 @@
   {% endif %}
 
   <div class="w-100 full__wrapper">
-    {% if not user.is_authenticated %}
-      {% for message in messages %}
-        <div class="message-{{ message.tags }} message text-center">
-          <p class="py-2 text__bold">{{ message }}</p>
-        </div>
-      {% endfor %}
-    {% endif %}
+    {% for message in messages %}
+      <div class="message-{{ message.tags }} message text-center">
+        <p class="py-2 text__bold">{{ message }}</p>
+      </div>
+    {% endfor %}
 
     {% block content %}
     {% endblock %}
