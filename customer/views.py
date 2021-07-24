@@ -221,9 +221,6 @@ def cart(request):
         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:table')
 
-    # メニュー詳細(/detail/)から見るルート
-    # if request.POST.get('direct') == 'direct':
-
     # Cartデータの保存
     menu_id = request.POST.get('menu_id')
     cart_num = request.POST.get('cart_num')
@@ -231,54 +228,11 @@ def cart(request):
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    # try:
     cart = customer.models.Cart(menu=menu_instance, num=cart_num,
                                 customer=user_uuid, curr=True)
     cart.save()
-    # except Exception:
-    #     pass
 
-        # categories = Category.objects.defer('created_at').order_by('id')
-        # try:
-        #     category_id = request.session['category_name']
-        #     menus = Menu.objects.filter(
-        #         category=category_id).order_by('-id')
-        # except Exception:
-        #     menus = None
-        # allergies = Allergy.objects.defer('created_at').order_by('id')
-
-        # ctx = {
-        #     'categories': categories,
-        #     'menus': menus,
-        #     'allergies': allergies,
-        # }
-
-        # return render(request, 'customer/menu.html', ctx)
     return redirect('customer:menu')
-    # メニューIDの情報を保持していない、一覧ページからのルート
-    # else:
-        # carts = ''
-        # table_num = request.session['table']
-        # # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
-        # same_user_table_list = nonLoginUser.objects.defer(
-        #     'created_at').filter(table=table_num, active=True)
-
-        # # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
-        # for same_user in same_user_table_list:
-        #     same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
-        #         customer=same_user.uuid).order_by('-id')
-
-        #     carts = list(chain(carts, same_user_carts))
-
-        # TODO:
-        # 同じ商品は個数をまとめたい
-
-        # ctx = {
-        #     'carts': carts,
-        # }
-
-        # return render(request, 'customer/cart.html', ctx)
-        # return redirect('customer:cart_static')
 
 
 def cart_static(request):
@@ -288,27 +242,6 @@ def cart_static(request):
         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:table')
 
-    # メニュー詳細(/detail/)から見るルート
-    # if request.POST.get('direct') == 'direct':
-
-    #     categories = Category.objects.defer('created_at').order_by('id')
-    #     try:
-    #         category_id = request.session['category_name']
-    #         menus = Menu.objects.filter(
-    #             category=category_id).order_by('-id')
-    #     except Exception:
-    #         menus = None
-    #     allergies = Allergy.objects.defer('created_at').order_by('id')
-
-    #     ctx = {
-    #         'categories': categories,
-    #         'menus': menus,
-    #         'allergies': allergies,
-    #     }
-
-    #     return render(request, 'customer/menu.html', ctx)
-    # メニューIDの情報を保持していない、一覧ページからのルート
-    # else:
     carts = ''
     table_num = request.session['table']
     # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
