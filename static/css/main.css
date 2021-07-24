@@ -342,6 +342,14 @@ a:hover {
   border-color: transparent;
   width: 100px;
   border-radius: 4px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.badge-table:hover {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+  opacity: 0.7;
 }
 
 .logo {

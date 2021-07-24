@@ -328,7 +328,6 @@ def total(request):
         if not table in active_table_list:
             active_table_list.append(table)
 
-    print(orders)
     ctx = {
         'orders': orders,
         'active_table_list': active_table_list,
