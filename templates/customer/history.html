@@ -85,7 +85,7 @@
       </form>
       <form action="{% url 'customer:stop' %}" class="d-flex" method="POST">{% csrf_token %}
         <!-- hidden -->
-        <input type="hidden" name="total_price" value="{{ total_price }}">
+        <!-- <input type="hidden" name="total_price" value="{{ total_price }}"> -->
         <button type="submit" class="btn btn__red shadow text__bold px-sm-4 py-sm-0 py-2" id="orderStopConfirm">
           オーダー<br class="d-sm-block d-none">ストップ
         </button>

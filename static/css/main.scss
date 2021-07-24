@@ -461,6 +461,17 @@ section.table {
       }
     }
   }
+  img {
+    position: relative;
+  }
+  .revert_from_index {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    button {
+      font-size: 8px;
+    }
+  }
 }
 section.table {
   .choose-table {
