@@ -386,6 +386,7 @@ def total(request):
 
         if not table in active_table_list:
             active_table_list.append(table)
+
             price = active_non_login_user.price
             active_table_price_list[table] = str(price)
 

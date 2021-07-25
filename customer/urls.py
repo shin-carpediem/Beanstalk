@@ -17,6 +17,5 @@ urlpatterns = [
     path('nomiho/', views.nomiho, name='nomiho'),
     path('history/', views.history, name='history'),
     path('stop/', views.stop, name='stop'),
-    # path('stop/static/', views.stop_static, name='stop_static'),
-    path('revert/', views.revert, name='revert'),
+    # path('revert/', views.revert, name='revert'),
 ]

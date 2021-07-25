@@ -51,7 +51,7 @@
       <div class="col-4">
         <div class="shadow chef">
           {% if menu.chef_img %}
-            <img src="{{ menu.chef_img.url }}" alt="Chef Img">
+            <img class="lazyload" data-src="{{ menu.chef_img.url }}" alt="Chef Img">
           {% endif %}
         </div>
       </div>

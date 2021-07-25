@@ -25,7 +25,7 @@
         <th class="col-3">単価</th>
         <th class="col-3">個数</th>
       </tr>
-      {% for order in orders %}
+      {% for order in request.session.orders %}
         <tr class="row">
           <td class="col-6">{{ order.menu.name }}</td>
           <td class="col-3">{{ order.menu.price }}</td>
@@ -35,13 +35,13 @@
     </table>
   </div>
 
-  <form action="{% url 'customer:revert' %}" method="POST">{% csrf_token %}
+  <!-- <form action="{# % url 'customer:revert' % #}" method="POST">{# % csrf_token % #} -->
     <!-- hidden -->
-    <input type="hidden" name="ids" value="{{ ids }}">
+    <!-- <input type="hidden" name="ids" value="{{ ids }}">
     <input type="hidden" name="orders" value="{{ orders }}">
     <button type="submit" class="btn btn__red btn__fixed shadow" onclick="loading_show()">
       オーダーストップを取り消して注文を続ける
     </button>
-  </form>
+  </form> -->
 </section>
 {% endblock %}
