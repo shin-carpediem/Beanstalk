@@ -270,7 +270,7 @@ def history(request):
             request.session['filter_date_end'] = request.POST.get('end')
             end = request.session['filter_date_end']
 
-            if not 'filter_table' in request.session:
+            if 'filter_table' in request.session:
                 table = request.session['filter_table']
                 same_table_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
@@ -291,7 +291,7 @@ def history(request):
             request.session['filter_date_start'] = None
             request.session['filter_date_end'] = None
 
-            if not 'filter_table' in request.session:
+            if 'filter_table' in request.session:
                 table = request.session['filter_table']
                 same_table_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
@@ -311,7 +311,7 @@ def history(request):
             same_table_users = nonLoginUser.objects.defer(
                 'created_at').filter(table=table, active=True)
 
-            if not 'filter_date_start' in request.session:
+            if 'filter_date_start' in request.session:
                 start = request.session['filter_date_start']
                 end = request.session['filter_date_end']
 
@@ -329,7 +329,7 @@ def history(request):
         elif filter_type == 'table-filter-clear':
             request.session['filter_table'] = None
 
-            if not 'filter_date_start' in request.session:
+            if 'filter_date_start' in request.session:
                 start = request.session['filter_date_start']
                 end = request.session['filter_date_end']
                 same_table_users = nonLoginUser.objects.defer(

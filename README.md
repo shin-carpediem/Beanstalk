@@ -51,10 +51,6 @@ https://beanstalk-test-prod.an.r.appspot.com/terms/
 
 #### まだできない事&今後追加搭載したい機能
 
-##### 全般
-
-- AI による自動テスト
-
 ##### 客
 
 - 飲み放題中の残り時間の表示と、制限時間を過ぎた時の通知音
@@ -71,6 +67,7 @@ Technology:
 - App Engine
 - Cloud SQL/MySQL
 - Cloud Storage
+- Selenium IDE
 
 To go into virtual environment with Pipfile,
 
