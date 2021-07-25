@@ -1,10 +1,10 @@
 {% load static %}
 <!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
-{% load webpush_notifications %}
+{# % load webpush_notifications % #}
 
 <div class="nav-list px-3 py-3 my-auto d-sm-flex align-items-center">
   <div class="back-menu mx-3" id="webPushBtn">
-    {% webpush_button %}  <!-- push通知の購読ボタン -->
+    {# % webpush_button % #}  <!-- push通知の購読ボタン -->
   </div>
   <a class="back-menu mx-3" href="{% url 'restaurant:history' %}" onclick="loading_show()">修正</a>
   <a class="back-menu mx-3" href="{% url 'restaurant:total' %}" onclick="loading_show()">お客様お会計</a>
