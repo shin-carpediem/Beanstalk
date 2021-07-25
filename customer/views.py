@@ -15,6 +15,7 @@ from restaurant.models import Allergy, Category, Menu, Nomiho
 
 
 # Create your views here.
+# TODO: 要確認
 def stop_nomiho(request, duration):
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -240,7 +241,7 @@ def cart(request):
 
     for same_table_user in same_table_user_list:
         same_table_cart = customer.models.Cart.objects.defer(
-            'created_at').filter(customer=same_table_user).order_by('-id')
+            'created_at').filter(customer=same_table_user, curr=True).order_by('-id')
         same_table_cart_list = list(
             chain(same_table_cart_list, same_table_cart))
 
@@ -254,7 +255,7 @@ def cart(request):
 
     # すでにカートに同じ商品が追加されていないかチェック
     try:
-        cart = customer.models.Cart.objects.get(menu=menu_instance)
+        cart = customer.models.Cart.objects.get(menu=menu_instance, curr=True)
         cart.num += int(cart_num)
     except Exception:
         cart = customer.models.Cart(menu=menu_instance, num=cart_num,
@@ -287,7 +288,7 @@ def cart_static(request):
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
-            customer=same_user.uuid).order_by('-id')
+            customer=same_user.uuid, curr=True).order_by('-id')
 
         carts = list(chain(carts, same_user_carts))
 
@@ -353,7 +354,7 @@ def cart_ch(request):
 
     # Cartデータの更新
     try:
-        cart = customer.models.Cart.objects.defer('created_at').get(id=cart_id)
+        cart = customer.models.Cart.objects.defer('created_at').get(id=cart_id, curr=True)
 
         if type == 'change':
             cart_num = request.GET.get('cart_num')
@@ -375,7 +376,7 @@ def cart_ch(request):
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
-            customer=same_user.uuid).order_by('-id')
+            customer=same_user.uuid, curr=True).order_by('-id')
 
         carts = list(chain(carts, same_user_carts))
 
@@ -408,7 +409,7 @@ def order(request):
         # そのユーザー毎がカートに追加した内容をまとめたCartリストを作成
         for same_user in same_user_table_list:
             same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
-                customer=same_user.uuid).order_by('-id')
+                customer=same_user.uuid, curr=True).order_by('-id')
 
             # 同時に同じテーブルの人が注文した際は後者を弾く為
             if not same_user_carts == None:
@@ -561,9 +562,9 @@ def history(request):
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
-            customer=same_user.uuid).order_by('-id')
+            customer=same_user.uuid, curr=True).order_by('-id')
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
-            customer=same_user.uuid).order_by('-id')
+            customer=same_user.uuid, curr=True).order_by('-id')
 
         for each in same_user_carts:
             orders_in_cart += int(each.menu.price) * int(each.num)
@@ -622,7 +623,7 @@ def stop(request):
 
     for same_user in same_user_table_list:
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
-            customer=same_user.uuid).order_by('-id')
+            customer=same_user.uuid, curr=True).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
 

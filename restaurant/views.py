@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST
 from django.db.models import Q
 from itertools import chain
 from django.template import Context, Template
@@ -226,7 +226,7 @@ def order_manage(request):
 
     for active_user in active_users:
         active_user_order = customer.models.Order.objects.filter(
-            customer=active_user, status='調理中').order_by('-id')
+            customer=active_user, status='調理中', curr=True).order_by('-id')
         order_list = list(chain(order_list, active_user_order))
 
     ctx = {
@@ -403,13 +403,22 @@ def total(request):
 @require_POST
 def stop_user_order(request):
     active_table = request.POST.get('active_table')
-    print(active_table)
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=active_table, active=True)
 
     for same_user in same_user_table_list:
         same_user.active = False
         same_user.save()
+
+        same_user_carts = customer.models.Cart.objects.defer('created_at').filter(customer=same_user, curr=True)
+        same_user_orders = customer.models.Order.objects.defer('created_at').filter(customer=same_user, curr=True)
+
+        for same_user_cart in same_user_carts:
+            same_user_cart.curr = False
+            same_user_cart.save()
+        for same_user_order in same_user_orders:
+            same_user_order.curr = False
+            same_user_order.save()
 
     messages.info(request, f'{active_table}テーブルのお会計完了を保存しました。')
 

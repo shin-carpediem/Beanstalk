@@ -4,7 +4,7 @@ from .models import Cart, Order
 
 # Register your models here.
 class cartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'menu', 'num', 'customer', 'created_at')
+    list_display = ('id', 'menu', 'num', 'customer', 'curr', 'created_at')
     ordering = ('-created_at',)
 
 
