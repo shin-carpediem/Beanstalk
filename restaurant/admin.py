@@ -11,13 +11,13 @@ class categoryAdmin(admin.ModelAdmin):
 
 class allergyAdmin(admin.ModelAdmin):
     list_display = ('id', 'ingredient', 'created_at')
-    list_editable = ('ingredient')
+    list_editable = ('ingredient',)
     ordering = ('id',)
 
 
 class menuAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'category', 'price',
-                    'img', 'allergies', 'chef_img', 'comment', 'created_at')
+                    'img', 'chef_img', 'comment', 'created_at')
     list_editable = ('name', 'category', 'price', 'img', 'chef_img', 'comment')
     ordering = ('id',)
 

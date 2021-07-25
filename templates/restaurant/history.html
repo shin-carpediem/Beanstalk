@@ -13,7 +13,7 @@
 
       <div class="d-sm-flex align-items-center">
         <div class="pt-sm-5 mx-3 d-sm-flex align-items-center">
-          <form action="{% url 'restaurant:history' %}" method="GET">
+          <form action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
             <p class="pb-2">期間を指定してください</p>
             <div class="d-sm-flex align-items-center">
               <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
             </div>
           </form>
 
-          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="GET">
+          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
             <!-- hidden -->
             <input type="hidden" name="filter-type" value="date-filter-clear">
             <button type="submit" class="btn btn__grey mt-sm-4 text__small">
@@ -40,17 +40,23 @@
         </div>
 
         <div class="pt-sm-5 pt-3 mx-3 d-sm-flex align-items-center">
-          <form action="{% url 'restaurant:history' %}" method="GET">
+          <form action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
             <p class="pb-2">テーブル番号を指定してください</p>
             <div class="d-sm-flex align-items-center py-sm-0 py-2">
-              <input type="number" name="table" class="mr-2 text-center text__bold text__large" min="1" value="{{ request.session.filter_table }}" required>番
+              <input type="number" name="table" class="mr-2 text-center text__bold text__large" min="1"
+                {% if request.session.filter_table %}
+                  value="{{ request.session.filter_table }}"
+                {% else %}
+                  value="{{ table }}"
+                {% endif %}
+                required>番
               <button type="submit" class="ml-sm-3 ml-5 btn btn__blue px-3 text__small">
                 絞り込み
               </button>
             </div>
           </form>
 
-          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="GET">
+          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
             <!-- hidden -->
             <input type="hidden" name="filter-type" value="table-filter-clear">
             <button type="submit" class="btn btn__grey mt-sm-4 text__small">

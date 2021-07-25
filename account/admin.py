@@ -42,6 +42,8 @@ class MyUserAdmin(UserAdmin):
 class nonLoginUserAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'table', 'price', 'active', 'nomiho',
                     'nomiho_name', 'nomiho_price', 'created_at')
+    list_editable = ('table', 'price', 'active', 'nomiho',
+                     'nomiho_name', 'nomiho_price')
     ordering = ('-created_at',)
 
 

@@ -18,7 +18,7 @@
       <p class="text-sm-left text-center pt-sm-3 pl-sm-3">＊このページは10秒毎に自動で再読み込みします</p>
 
       <div class="d-flex pt-sm-3 pt-3 mx-3">
-        <form action="{% url 'restaurant:order_manage' %}" method="GET">
+        <form action="{% url 'restaurant:order_manage' %}" method="POST">{% csrf_token %}
           <p class="pb-2">テーブル番号を指定してください</p>
           <div class="d-sm-flex align-items-center py-sm-0 py-2">
             <input type="number" name="table" class="mr-2 text-center" min="1" value="{{ table }}" required>番
@@ -30,7 +30,7 @@
           </div>
         </form>
 
-        <form class="pt-sm-1 pt-5 ml-sm-2" action="{% url 'restaurant:order_manage' %}" method="GET">
+        <form class="pt-sm-1 pt-5 ml-sm-2" action="{% url 'restaurant:order_manage' %}" method="POST">{% csrf_token %}
           <!-- hidden -->
           <input type="hidden" name="filter-type" value="table-filter-clear">
           <button type="submit" class="btn btn__grey mt-sm-4 text__small">

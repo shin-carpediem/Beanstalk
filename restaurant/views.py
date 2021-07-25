@@ -161,20 +161,20 @@ def send_code(request):
 
 def order_manage(request):
     try:
-        filter_type = request.GET.get('filter-type')
+        filter_type = request.POST.get('filter-type')
     except Exception:
         filter_type = None
 
     # ログインから
-    if request.method == 'GET' and filter_type == 'login':
-        email = request.GET.get('username')
+    if request.method == 'POST' and filter_type == 'login':
+        email = request.POST.get('username')
         # passcode = request.POST.get('passcode')
 
         # 入力されたパスコードがセッションに保持されたパスコードと一致するならログインを許可
         # if passcode == request.session['user'][email]:
         try:
             user = User.objects.get(email=email)
-            code = request.GET.get('code')
+            code = request.POST.get('code')
 
             ######## it is okay to change if the process is troublesome ######
             # TODO: もしやるなら暗証番号を必ず伝える！
@@ -219,8 +219,8 @@ def order_manage(request):
     active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
 
     # テーブル番号でフィルタした際
-    if request.GET.get('table') != None:
-        table = request.GET.get('table')
+    if request.POST.get('table') != None:
+        table = request.POST.get('table')
         active_users = nonLoginUser.objects.defer(
             'created_at').filter(table=table, active=True)
 
@@ -261,16 +261,17 @@ def history(request):
     table = None
 
     # 日付の範囲指定分の売上
-    if request.method == 'GET':
-        filter_type = request.GET.get('filter-type')
+    if request.method == 'POST':
+        filter_type = request.POST.get('filter-type')
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        table = request.POST.get('table')
 
-        if (request.GET.get('start') != None) and (request.GET.get('end') != None):
-            request.session['filter_date_start'] = request.GET.get('start')
-            start = request.session['filter_date_start']
-            request.session['filter_date_end'] = request.GET.get('end')
-            end = request.session['filter_date_end']
+        if (start != None) and (end != None):
+            request.session['filter_date_start'] = start
+            request.session['filter_date_end'] = end
 
-            if 'filter_table' in request.session:
+            if request.session['filter_table'] != None:
                 table = request.session['filter_table']
                 same_table_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
@@ -291,27 +292,23 @@ def history(request):
             request.session['filter_date_start'] = None
             request.session['filter_date_end'] = None
 
-            if 'filter_table' in request.session:
+            if request.session['filter_table'] != None:
                 table = request.session['filter_table']
-                same_table_users = nonLoginUser.objects.defer(
+                active_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
-            else:
-                same_table_users = nonLoginUser.objects.defer(
-                    'created_at').filter(active=True)
 
-            for same_table_user in same_table_users:
+            for active_user in active_users:
                 active_user_order = customer.models.Order.objects.filter(
-                    customer=same_table_user).order_by('-id')
+                    customer=active_user).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
-        elif request.GET.get('table') != None:
-            request.session['filter_table'] = request.GET.get('table')
-            table = request.session['filter_table']
+        elif table != None:
+            request.session['filter_table'] = table
 
             same_table_users = nonLoginUser.objects.defer(
                 'created_at').filter(table=table, active=True)
 
-            if 'filter_date_start' in request.session:
+            if request.session['filter_date_start'] != None:
                 start = request.session['filter_date_start']
                 end = request.session['filter_date_end']
 
@@ -329,27 +326,25 @@ def history(request):
         elif filter_type == 'table-filter-clear':
             request.session['filter_table'] = None
 
-            if 'filter_date_start' in request.session:
+            if request.session['filter_date_start'] != None:
                 start = request.session['filter_date_start']
                 end = request.session['filter_date_end']
-                same_table_users = nonLoginUser.objects.defer(
-                    'created_at').filter(table=table, active=True)
-            else:
-                same_table_users = nonLoginUser.objects.defer(
-                    'created_at').filter(active=True)
+                active_users = nonLoginUser.objects.defer(
+                    'created_at').filter(active=True, created_at__range=(start, end))
 
             for active_user in active_users:
                 active_user_order = customer.models.Order.objects.filter(
-                    customer=active_user, created_at__range=(start, end)).order_by('-id')
+                    customer=active_user).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
+    # TODO:
     else:
         # デフォルトは昨日から今日の範囲
         dt_now = datetime.datetime.now()
         start = datetime.datetime(
-            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
+            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour, dt_now.minute)
         end = datetime.datetime(
-            dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
+            dt_now.year, dt_now.month, dt_now.day, dt_now.hour, dt_now.minute)
 
         for active_user in active_users:
             active_user_order = customer.models.Order.objects.filter(
@@ -410,8 +405,10 @@ def stop_user_order(request):
         same_user.active = False
         same_user.save()
 
-        same_user_carts = customer.models.Cart.objects.defer('created_at').filter(customer=same_user, curr=True)
-        same_user_orders = customer.models.Order.objects.defer('created_at').filter(customer=same_user, curr=True)
+        same_user_carts = customer.models.Cart.objects.defer(
+            'created_at').filter(customer=same_user, curr=True)
+        same_user_orders = customer.models.Order.objects.defer(
+            'created_at').filter(customer=same_user, curr=True)
 
         for same_user_cart in same_user_carts:
             same_user_cart.curr = False
@@ -428,9 +425,9 @@ def stop_user_order(request):
 @login_required
 def daily(request):
     # 日付の範囲指定分の売上
-    if request.method == 'GET':
-        start = request.GET.get('start')
-        end = request.GET.get('end')
+    if request.method == 'POST':
+        start = request.POST.get('start')
+        end = request.POST.get('end')
         if start > end:
             messages.warning(request, f"左の日付をより昔にしてください。")
     else:
