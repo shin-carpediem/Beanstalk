@@ -59,14 +59,14 @@
         <div class="col-sm-6 col-12 webpush-btn">
           {% webpush_button %}  <!-- push通知の購読ボタン -->
         </div>
-        <form class="col-sm-6 col-12" action="{% url 'restaurant:send_code' %}" method="POST" onclick="loading_show()">{% csrf_token %}
+        <form class="d-sm-flex align-items-center mt-sm-0 mt-5 col-sm-6 col-12" action="{% url 'restaurant:send_code' %}" method="POST" onclick="loading_show()">{% csrf_token %}
           <!-- hidden -->
           {% if email %}
             <input type="hidden" name="username" value="{{ email }}">
           {% else %}
             <input type="hidden" name="username">
           {% endif %}
-          <button type="submit" class="btn btn__grey">
+          <button type="submit" class="btn btn__grey text__small">
             暗証番号をメールで確認する
           </button>
         </form>

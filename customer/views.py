@@ -123,7 +123,10 @@ def menu(request):
 
     menus = Menu.objects.defer('created_at').filter(
         category=category).order_by('-id')
-    user_uuid = request.session['nonloginuser_uuid']
+    try:
+        user_uuid = request.session['nonloginuser_uuid']
+    except Exception:
+        user_uuid = None
 
     ctx = {
         'categories': categories,
