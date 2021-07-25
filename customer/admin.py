@@ -3,5 +3,16 @@ from .models import Cart, Order
 
 
 # Register your models here.
-admin.site.register(Cart)
-admin.site.register(Order)
+class cartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'menu', 'num', 'customer', 'created_at')
+    ordering = ('-created_at',)
+
+
+class orderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'status', 'menu', 'num',
+                    'customer', 'created_at')
+    ordering = ('-created_at',)
+
+
+admin.site.register(Cart, cartAdmin)
+admin.site.register(Order, orderAdmin)

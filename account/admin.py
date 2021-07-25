@@ -39,5 +39,11 @@ class MyUserAdmin(UserAdmin):
     ordering = ('name',)
 
 
+class nonLoginUserAdmin(admin.ModelAdmin):
+    list_display = ('uuid', 'table', 'price', 'active', 'nomiho',
+                    'nomiho_name', 'nomiho_price', 'created_at')
+    ordering = ('-created_at',)
+
+
 admin.site.register(User, MyUserAdmin)
-admin.site.register(nonLoginUser)
+admin.site.register(nonLoginUser, nonLoginUserAdmin)
