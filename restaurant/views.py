@@ -8,15 +8,15 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from itertools import chain
-# from django.template import Context, Template
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-# import smtplib
+from django.template import Context, Template
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
 import datetime
 from itertools import groupby
 from .models import Category, Allergy, Menu, Nomiho
 from account.models import User, nonLoginUser
-# from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
+from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
 
 # Create your views here.
@@ -104,11 +104,59 @@ def login_as_user(request):
 #             request, f"入力したメールアドレス宛てに4ケタの数字が書かれたメールを送信しました。その数字を以下に入力してください。")
 #     except Exception:
 #         messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
-#         return redirect(request, 'restaurant:login')
+#         return redirect('restaurant:login')
 
 #     ctx['email'] = email
 
 #     return render(request, 'restaurant/confirm.html', ctx)
+
+
+def send_code(request):
+    # メールアドレスを取得
+    email = request.POST.get('username')
+    # TODO:
+    code = '1847'
+
+    if email == None:
+        messages.info(request, f"送信対象となるメールアドレスが登録されていません。")
+        return redirect('restaurant:login')
+
+    EMAIL = EMAIL_HOST_USER
+    PASSWORD = EMAIL_HOST_PASSWORD
+    TO = email
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = '【注文・メニュー管理システム】4ケタの暗証番号をお送りします'
+    msg['From'] = EMAIL
+    msg['To'] = TO
+
+    html = """\
+    <html>
+      <head>
+      </head>
+      <body>
+        <p>{{ code }}</p>
+      </body>
+    </html>
+    """
+
+    html = Template(html)
+    context = Context({'code': code})
+    template = MIMEText(html.render(context=context), 'html')
+    msg.attach(template)
+
+    try:
+        s = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
+        s.starttls()
+        s.login(EMAIL, PASSWORD)
+        s.sendmail(EMAIL, TO, msg.as_string())
+        s.quit()
+        messages.info(
+            request, f"メールアドレス宛てに4桁の暗証番号が書かれたメールを送信しました。その数字を入力してください。")
+        return redirect('restaurant:login')
+    except Exception:
+        messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+        return redirect('restaurant:login')
 
 
 def order_manage(request):
@@ -126,11 +174,21 @@ def order_manage(request):
         # if passcode == request.session['user'][email]:
         try:
             user = User.objects.get(email=email)
-            login(request, user)
-            request.session['table'] = '管理者'
+            code = request.POST.get('code')
+
+            ######## it is okay to change if the process is troublesome ######
+            # TODO: もしやるなら暗証番号を必ず伝える！
+            if code == '1847':
+                login(request, user)
+                request.session['table'] = '管理者'
+            else:
+                messages.info(request, f"暗証番号が異なります。")
+                return redirect('restaurant:login')
+            ######## it is okay to change if the process is troublesome ######
+
         except Exception:
             messages.info(request, f"メールアドレスが異なります。")
-            return redirect(request, 'restaurant:login')
+            return redirect('restaurant:login')
 
         # emailのセッションを作成(いきなりオーダー画面にアクセスするお店を識別する為)
         email = user.email

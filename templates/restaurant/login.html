@@ -27,26 +27,53 @@
         <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
       <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
-        <label>メールアドレス</label><br>
-        {% if email %}
-          <input name="username" value="{{ email }}" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large" readonly>
-        {% else %}
-          <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large">
-        {% endif %}
-        <br>
+        <div>
+          <label>メールアドレス</label><br>
+          {% if email %}
+            <input name="username" value="{{ email }}" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large" readonly>
+          {% else %}
+            <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2 text__bold text__large">
+          {% endif %}
+          <br>
+        </div>
+        <div>
+          <label>4桁の暗証番号</label><br>
+          {% if request.session.code %}
+            <input class="text-center text__bold text__large" type="text" name="code" value="{{request.session.code}}" required>
+          {% else %}
+            <input class="text-center text__bold text__large" type="text" name="code" required>
+          {% endif %}
+          <br>
+        </div>
         <div class="pt-5">
           <!-- hidden -->
           <input type="hidden" name="filter-type" value="login">
-          <button type="submit" class="px-5 py-3 btn btn__blue shadow" onclick="loading_show()" id="loginBtn">
+          <button type="submit" class="px-5 py-3 btn btn__blue shadow" id="loginBtn">
             <!-- 認証コードを受け取る -->
             ログイン
           </button>
         </div>
       </form>
-      <div class="mt-5 mb-3 webpush-btn">
-        {% webpush_button %}  <!-- push通知の購読ボタン -->
+
+      <div class="row mt-5 mb-3">
+        <div class="col-sm-6 col-12 webpush-btn">
+          {% webpush_button %}  <!-- push通知の購読ボタン -->
+        </div>
+        <form class="col-sm-6 col-12" action="{% url 'restaurant:send_code' %}" method="POST" onclick="loading_show()">{% csrf_token %}
+          <!-- hidden -->
+          {% if email %}
+            <input type="hidden" name="username" value="{{ email }}">
+          {% else %}
+            <input type="hidden" name="username">
+          {% endif %}
+          <button type="submit" class="btn btn__grey">
+            暗証番号をメールで確認する
+          </button>
+        </form>
       </div>
+
     </div>
+
     <div class="pt-3 admin row">
       <div class="col-sm-6 col-12">
         {% if request.path == '/manage/login/' %}

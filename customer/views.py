@@ -279,7 +279,7 @@ def cart_static(request):
         carts = list(chain(carts, same_user_carts))
 
     # TODO:
-    # 同じ商品は個数をまとめたい
+    # 同じ商品は個数をまとめたい←カートに追加する時はセッションにして、実際にカートmodelに保存するのは、なくてもいいのでは。
 
     ctx = {
         'carts': carts,
