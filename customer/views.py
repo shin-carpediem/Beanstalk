@@ -1,3 +1,4 @@
+from restaurant.views import order_status_ch
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -115,6 +116,9 @@ def menu(request):
                 # return redirect('customer:index')
                 user_uuid.active = True
                 user_uuid.save()
+
+                # activeのセッションを作成
+                request.session['active'] = 'True'
 
                 messages.info(
                     request, f'⚠️ あなたのアカウントのオーダーストップを取り消しました。テーブルの他の方も再度「オーダーストップの取消」をタップして、アカウントを復帰させてください。')
@@ -241,6 +245,16 @@ def cart(request):
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    user_table = user_uuid.table
+    same_table_user_list = nonLoginUser.objects.defer(
+        'created_at').filter(table=user_table, active=True)
+    same_table_cart_list = ''
+
+    for same_table_user in same_table_user_list:
+        same_table_cart = customer.models.Cart.objects.defer(
+            'created_at').filter(customer=same_table_user).order_by('-id')
+        same_table_cart_list = list(
+            chain(same_table_cart_list, same_table_cart))
 
     if user_uuid.active == False:
         messages.info(
@@ -252,8 +266,14 @@ def cart(request):
     cart_num = request.POST.get('cart_num')
     menu_instance = Menu.objects.get(id=menu_id)
 
-    cart = customer.models.Cart(menu=menu_instance, num=cart_num,
-                                customer=user_uuid, curr=True)
+    # すでにカートに同じ商品が追加されていないかチェック
+    try:
+        cart = customer.models.Cart.objects.get(menu=menu_instance)
+        cart.num += int(cart_num)
+    except Exception:
+        cart = customer.models.Cart(menu=menu_instance, num=cart_num,
+                                    customer=user_uuid, curr=True)
+
     cart.save()
 
     return redirect('customer:menu')
@@ -287,9 +307,6 @@ def cart_static(request):
 
         carts = list(chain(carts, same_user_carts))
 
-    # TODO:
-    # 同じ商品は個数をまとめたい←カートに追加する時はセッションにして、実際にカートmodelに保存するのは、なくてもいいのでは。
-
     ctx = {
         'carts': carts,
     }
@@ -319,20 +336,6 @@ def cart_detail(request, menu_id):
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
     has_allergies = menu.allergies.defer('created_at').order_by('id')
-
-    # TODO: 同じ商品を1つにまとめる際に使えるので、残しておく。
-    # num = 0
-
-    # same_user_table_list = nonLoginUser.objects.defer(
-    #     'created_at').filter(table=table_num, active=True)
-
-    # # 同じテーブルでカートに追加された、同一の商品の全ての個数を表示
-    # for same_user in same_user_table_list:
-    #     same_user_carts = Cart.objects.defer('created_at').filter(menu=menu,
-    #                                                               customer=same_user.uuid).order_by('-id')
-
-    #     for each in same_user_carts:
-    #         num += int(each.num)
 
     ctx = {
         'menu': menu,
@@ -675,18 +678,30 @@ def stop(request):
 
         orders = list(chain(orders, same_user_orders))
 
+    active_or_not = request.session['active']
+
+    request.session['orders'] = list(orders)
+    print(request.session['orders'])
+
+    if active_or_not == 'True':
+        orders_static = orders
+    else:
+        orders_static = request.session['orders']
+
     # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
     for same_user in same_user_table_list:
 
         same_user.active = False
         same_user.save()
 
+    request.session['active'] = 'False'
+
     ctx = {
         'total_price': total_price,
-        'orders': orders,
+        'orders_static': orders_static,
     }
 
-    messages.info(request, f'リロードせずにこのままこの伝票画面を、お会計時に表示ください。')
+    messages.info(request, f'この画面をスクリーンショットしてお会計の際に表示してください。')
 
     return render(request, 'customer/stop.html', ctx)
 

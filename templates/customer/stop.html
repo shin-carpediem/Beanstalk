@@ -5,7 +5,7 @@
 {% block inner__content %}
 <section class="menu-list">
   <div class="d-flex justify-content-center align-items-center my-5">
-    <p class="text__bold text__large">伝票</p>
+    <p class="text__bold text__large">テーブル毎合計</p>
     <p class="text__bold text__large ml-3">
       {% if total_price %}
         {{ total_price }}
@@ -25,7 +25,7 @@
         <th class="col-3">単価</th>
         <th class="col-3">個数</th>
       </tr>
-      {% for order in request.session.orders %}
+      {% for order in orders_static %}
         <tr class="row">
           <td class="col-6">{{ order.menu.name }}</td>
           <td class="col-3">{{ order.menu.price }}</td>

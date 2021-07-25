@@ -1,5 +1,4 @@
 import datetime
-from customer.models import Order
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -16,6 +15,7 @@ import datetime
 from itertools import groupby
 from .models import Category, Allergy, Menu, Nomiho
 from account.models import User, nonLoginUser
+import customer.models
 from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
 
@@ -225,7 +225,7 @@ def order_manage(request):
             'created_at').filter(table=table, active=True)
 
     for active_user in active_users:
-        active_user_order = Order.objects.filter(
+        active_user_order = customer.models.Order.objects.filter(
             customer=active_user, status='調理中').order_by('-id')
         order_list = list(chain(order_list, active_user_order))
 
@@ -244,7 +244,7 @@ def order_manage(request):
 def order_status_ch(request):
     order_status = request.POST.get('order_status')
     order_id = request.POST.get('order_id')
-    order = Order.objects.get(id=order_id)
+    order = customer.models.Order.objects.get(id=order_id)
     order.status = order_status
     order.save()
     return redirect('restaurant:order_manage')
@@ -283,7 +283,7 @@ def history(request):
                 (start, end) = (end, start)
 
             for same_table_user in same_table_users:
-                active_user_order = Order.objects.filter(
+                active_user_order = customer.models.Order.objects.filter(
                     customer=same_table_user, created_at__range=(start, end)).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
@@ -300,7 +300,7 @@ def history(request):
                     'created_at').filter(active=True)
 
             for same_table_user in same_table_users:
-                active_user_order = Order.objects.filter(
+                active_user_order = customer.models.Order.objects.filter(
                     customer=same_table_user).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
@@ -316,13 +316,13 @@ def history(request):
                 end = request.session['filter_date_end']
 
                 for same_table_user in same_table_users:
-                    same_user_order = Order.objects.filter(
+                    same_user_order = customer.models.Order.objects.filter(
                         customer=same_table_user, created_at__range=(start, end)).order_by('-id')
                     order_list = list(chain(order_list, same_user_order))
             else:
 
                 for same_table_user in same_table_users:
-                    same_user_order = Order.objects.filter(
+                    same_user_order = customer.models.Order.objects.filter(
                         customer=same_table_user).order_by('-id')
                     order_list = list(chain(order_list, same_user_order))
 
@@ -339,7 +339,7 @@ def history(request):
                     'created_at').filter(active=True)
 
             for active_user in active_users:
-                active_user_order = Order.objects.filter(
+                active_user_order = customer.models.Order.objects.filter(
                     customer=active_user, created_at__range=(start, end)).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
@@ -352,7 +352,7 @@ def history(request):
             dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
 
         for active_user in active_users:
-            active_user_order = Order.objects.filter(
+            active_user_order = customer.models.Order.objects.filter(
                 customer=active_user, created_at__range=(start, end)).order_by('-id')
             order_list = list(chain(order_list, active_user_order))
 
@@ -380,7 +380,7 @@ def total(request):
         table_int = active_non_login_user.table
         table = str(table_int)
 
-        active_non_login_user_orders = Order.objects.defer(
+        active_non_login_user_orders = customer.models.Order.objects.defer(
             'created_at').filter(customer=active_non_login_user.uuid).order_by('-id')
         orders = list(chain(orders, active_non_login_user_orders))
 
@@ -432,14 +432,14 @@ def daily(request):
         end = datetime.datetime(
             dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
 
-    pointed_orders = Order.objects.filter(
+    pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
     pointed_total_price = 0
     for pointed_order in pointed_orders:
         pointed_total_price += (pointed_order.menu.price * pointed_order.num)
 
     # トータルの売上
-    orders = Order.objects.filter(status='済').order_by('-id')
+    orders = customer.models.Order.objects.filter(status='済').order_by('-id')
     total_price = 0
     for order in orders:
         total_price += (order.menu.price * order.num)
