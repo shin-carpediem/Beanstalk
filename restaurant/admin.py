@@ -5,22 +5,26 @@ from .models import Category, Allergy, Menu, Nomiho
 # Register your models here.
 class categoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'nomiho', 'created_at')
+    list_editable = ('name', 'nomiho')
     ordering = ('id',)
 
 
 class allergyAdmin(admin.ModelAdmin):
     list_display = ('id', 'ingredient', 'created_at')
+    list_editable = ('ingredient')
     ordering = ('id',)
 
 
 class menuAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'category', 'price',
-                    'img', 'created_at')
+                    'img', 'allergies', 'chef_img', 'comment', 'created_at')
+    list_editable = ('name', 'category', 'price', 'img', 'chef_img', 'comment')
     ordering = ('id',)
 
 
 class nomihoAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'duration', 'comment', 'created_at')
+    list_editable = ('name', 'price', 'duration', 'comment')
     ordering = ('id',)
 
 

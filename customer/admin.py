@@ -5,12 +5,14 @@ from .models import Cart, Order
 # Register your models here.
 class cartAdmin(admin.ModelAdmin):
     list_display = ('id', 'menu', 'num', 'customer', 'curr', 'created_at')
+    list_editable = ('num', 'curr')
     ordering = ('-created_at',)
 
 
 class orderAdmin(admin.ModelAdmin):
     list_display = ('id', 'status', 'menu', 'num',
-                    'customer', 'created_at')
+                    'curr', 'customer', 'created_at')
+    list_editable = ('num', 'curr')
     ordering = ('-created_at',)
 
 
