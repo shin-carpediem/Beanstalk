@@ -15,7 +15,7 @@
         <p>指定期間内の売上と各商品の数量</p>
         <div class="py-3">
           <p class="text-center text__bold text__large">{{ pointed_total_price }}　円</p>
-          <form action="{% url 'restaurant:daily' %}" method="POST">{% csrf_token %}
+          <form action="{% url 'restaurant:daily' %}" method="GET">
             <p class="pb-2">期間を指定してください</p>
             <div class="d-sm-flex align-items-center">
               <div class="d-flex align-items-center">

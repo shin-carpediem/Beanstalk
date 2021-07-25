@@ -26,7 +26,7 @@
         </div>
         <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
-      <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
+      <form method="GET" action="{% url 'restaurant:order_manage' %}">
         <div>
           <label>メールアドレス</label><br>
           {% if email %}

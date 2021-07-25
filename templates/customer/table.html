@@ -11,7 +11,7 @@
     <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
   </div>
   <div class="forms">
-    <form class="px-auto" method="POST" action="{% url 'customer:menu' %}">{% csrf_token %}
+    <form class="px-auto" method="GET" action="{% url 'customer:menu' %}">
       <div class="text__bold text-center choose-table mx-auto">
         <label class="text__bold text__large pb-5">テーブル番号</label>
         <input type="number" min="1" name="table" required>

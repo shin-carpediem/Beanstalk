@@ -13,7 +13,7 @@
 
       <div class="d-sm-flex align-items-center">
         <div class="pt-sm-5 mx-3 d-sm-flex align-items-center">
-          <form action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
+          <form action="{% url 'restaurant:history' %}" method="GET">
             <p class="pb-2">期間を指定してください</p>
             <div class="d-sm-flex align-items-center">
               <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
             </div>
           </form>
 
-          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
+          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="GET">
             <!-- hidden -->
             <input type="hidden" name="filter-type" value="date-filter-clear">
             <button type="submit" class="btn btn__grey mt-sm-4 text__small">
@@ -40,7 +40,7 @@
         </div>
 
         <div class="pt-sm-5 pt-3 mx-3 d-sm-flex align-items-center">
-          <form action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
+          <form action="{% url 'restaurant:history' %}" method="GET">
             <p class="pb-2">テーブル番号を指定してください</p>
             <div class="d-sm-flex align-items-center py-sm-0 py-2">
               <input type="number" name="table" class="mr-2 text-center text__bold text__large" min="1" value="{{ request.session.filter_table }}" required>番
@@ -50,7 +50,7 @@
             </div>
           </form>
 
-          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="POST">{% csrf_token %}
+          <form class="pt-1 ml-2" action="{% url 'restaurant:history' %}" method="GET">
             <!-- hidden -->
             <input type="hidden" name="filter-type" value="table-filter-clear">
             <button type="submit" class="btn btn__grey mt-sm-4 text__small">

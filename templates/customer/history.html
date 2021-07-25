@@ -10,7 +10,7 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
+      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="GET">
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           <img class="lazyload" data-src="{{ cart.menu.img.url }}" alt="Menu">
           <div class="text-box">
@@ -28,7 +28,7 @@
     {% endfor %}
 
     {% for order in orders %}
-      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="POST">{% csrf_token %}
+      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' order.menu.id %}" method="GET">
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           <img class="lazyload" data-src="{{ order.menu.img.url }}" alt="Menu">
           <div class="text-box">
@@ -76,7 +76,7 @@
     </div>
 
     <div class="btn__fixed-wider d-flex justify-content-between">
-      <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
+      <form action="{% url 'customer:order' %}" method="GET">
         <!-- hidden -->
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         {% if carts %}
@@ -87,7 +87,7 @@
             注文
           </button>
       </form>
-      <form action="{% url 'customer:stop' %}" class="d-flex" method="POST">{% csrf_token %}
+      <form action="{% url 'customer:stop' %}" class="d-flex" method="GET">
         <button type="submit" class="btn btn__blue shadow text__bold px-sm-4 py-sm-0 py-2" id="orderStopConfirm">
           伝票表示
         </button>

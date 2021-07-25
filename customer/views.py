@@ -1,7 +1,7 @@
 from restaurant.views import order_status_ch
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Sum
 from itertools import chain
@@ -79,7 +79,7 @@ def menu(request):
         # 新規の客かどうかをセッションで判断する
         # 新規
         if not request.session.session_key:
-            table_num = request.POST.get('table')
+            table_num = request.GET.get('table')
 
             try:
                 newuser = nonLoginUser(table=table_num, active=True)
@@ -153,7 +153,7 @@ def filter(request):
             return redirect('customer:table')
 
     try:
-        category = request.POST.get('category_name')
+        category = request.GET.get('category_name')
         category_id = Category.objects.get(name=category)
 
         # カテゴリーのセッションを更新
@@ -311,9 +311,9 @@ def cart_detail(request, menu_id):
     if user_uuid.active == False:
         return redirect('customer:thanks')
 
-    num = request.POST.get('num')
-    cart_id = request.POST.get('id')
-    type = request.POST.get('type')
+    num = request.GET.get('num')
+    cart_id = request.GET.get('id')
+    type = request.GET.get('type')
     menu = get_object_or_404(Menu, pk=menu_id)
 
     allergies = Allergy.objects.defer('created_at').order_by('id')
@@ -334,7 +334,7 @@ def cart_detail(request, menu_id):
     return render(request, 'customer/cart_detail.html', ctx)
 
 
-@require_POST
+@require_GET
 def cart_ch(request):
     try:
         request.session.session_key
@@ -348,15 +348,15 @@ def cart_ch(request):
     if user_uuid.active == False:
         return redirect('customer:thanks')
 
-    cart_id = request.POST.get('cart_id')
-    type = request.POST.get('type')
+    cart_id = request.GET.get('cart_id')
+    type = request.GET.get('type')
 
     # Cartデータの更新
     try:
         cart = customer.models.Cart.objects.defer('created_at').get(id=cart_id)
 
         if type == 'change':
-            cart_num = request.POST.get('cart_num')
+            cart_num = request.GET.get('cart_num')
             cart.num = cart_num
             cart.save()
         elif type == 'delete':
@@ -386,8 +386,6 @@ def cart_ch(request):
     return render(request, 'customer/cart.html', ctx)
 
 
-@require_POST
-@csrf_exempt
 def order(request):
     try:
         request.session.session_key
@@ -467,7 +465,7 @@ def order(request):
 
 
 # 飲み放題開始用のボタン
-@require_POST
+@require_GET
 def nomiho(request):
     user = request.user
     if user.is_authenticated:
@@ -486,7 +484,7 @@ def nomiho(request):
         if user_uuid.active == False:
             return redirect('customer:thanks')
 
-        nomiho_type = request.POST.get('nomiho_type')
+        nomiho_type = request.GET.get('nomiho_type')
 
         category_id = request.session['category_name']
         categories = Category.objects.defer('created_at').order_by('id')
@@ -596,7 +594,6 @@ def history(request):
     return render(request, 'customer/history.html', ctx)
 
 
-@require_POST
 # 伝票はテーブル1つにつき1画面で表示できればいい
 def stop(request):
     try:
@@ -645,7 +642,6 @@ def stop(request):
     return render(request, 'customer/stop.html', ctx)
 
 
-@require_POST
 def revert(request):
     try:
         request.session.session_key

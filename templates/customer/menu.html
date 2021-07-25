@@ -7,7 +7,7 @@
   <div class="category mb-3">
     <div class="d-flex ml-3">
       {% for category in categories %}
-        <form action="{% url 'customer:filter' %}" method="POST">{% csrf_token %}
+        <form action="{% url 'customer:filter' %}" method="GET">
           {% if category.id == request.session.category_name %}
             <button type="submit" class="category-btn focus focused p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">
           {% else %}
@@ -31,7 +31,7 @@
     {% if nomihos %}
       {% if user_uuid.nomiho == False and nomiho_category == 'Yes' %}
         {% for nomiho in nomihos %}
-          <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="POST">{% csrf_token %}
+          <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="GET">
             <div>
               <h3 class="text__bold">プラン名： {{ nomiho.name }}</h3>
               <h4 class="pt-3 pb-1 text__bold">料金：　¥　{{ nomiho.price }}</h4>
@@ -45,7 +45,7 @@
                 *お客様用のボタンです
               </button>
             {% else %}
-              <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho">
+              <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho" onclick="loading_show()">
                 開始する
               </button>
             {% endif %}
@@ -67,9 +67,9 @@
   <div class="d-flex flex-wrap">
     {% for menu in menus %}
       {% if menu.category.nomiho == True and user_uuid.nomiho == False and not user.is_authenticated %}
-        <form class="mx-auto my-1 menu-item shadow el__dactivate" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
+        <form class="mx-auto my-1 menu-item shadow el__dactivate" action="{% url 'customer:menu_detail' menu.id %}" method="GET">
       {% else %}
-        <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="POST">{% csrf_token %}
+        <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="GET">
       {% endif %}
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           {% if menu.formatted_img %}
@@ -91,7 +91,7 @@
       {% include 'components/restaurant/modal/menu.html' %}
     </div>
   {% else %}
-    <form action="{% url 'customer:cart_static' %}" method="POST">{% csrf_token %}
+    <form action="{% url 'customer:cart_static' %}" method="GET">
       <button type="submit" class="btn btn__orange btn__fixed shadow" onclick="loading_show()">
         注文予定を見る
       </button>

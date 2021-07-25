@@ -9,7 +9,7 @@
     {% if not user.is_authenticated %}
       {% if not tag == 'off' %}
         <div class="btn__fixed-wider ml-5 pl-5">
-          <form class="cart-form mb-4" action="{% url 'customer:cart_ch' %}" method="POST">{% csrf_token %}
+          <form class="cart-form mb-4" action="{% url 'customer:cart_ch' %}" method="GET">
             <div class="d-flex input__fixed justify-content-center align-items-center">
               <p class="text__bold plus-minus el__pointer" id="cartMinus">-</p>
               <input type="number" name="cart_num" class="ml-4 mr-2 text__bold" value="{{ num }}" id="cartNum" required readonly>
@@ -25,7 +25,7 @@
             </button>
           </form>
 
-          <form class="cart-form" action="{% url 'customer:cart_ch' %}" method="POST">{% csrf_token %}
+          <form class="cart-form" action="{% url 'customer:cart_ch' %}" method="GET">
             <!-- hidden -->
             <input type="hidden" name="menu_id" value="{{ menu.id }}">
             <input type="hidden" name="cart_id" value="{{ cart_id }}">

@@ -22,7 +22,7 @@
         </div>
         <h5 class="m-auto">注文・メニュー管理</h5>
       </div>
-      <form method="POST" action="{% url 'restaurant:order_manage' %}">{% csrf_token %}
+      <form method="GET" action="{% url 'restaurant:order_manage' %}">
         <label>メールアドレス</label><br>
         <input name="username" class="px-3 mb-3 w-sm-50 w-100 py-2" value="{{ email }}" readonly><br>
         <label>4ケタの数字</label><br>

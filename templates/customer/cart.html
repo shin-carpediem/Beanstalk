@@ -10,7 +10,7 @@
 <section class="menu-list">
   <div class="d-flex flex-wrap">
     {% for cart in carts %}
-      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="POST">{% csrf_token %}
+      <form class="el__pointer mx-auto my-1 menu-item shadow" action="{% url 'customer:cart_detail' cart.menu.id %}" method="GET">
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
           <img class="lazyload" data-src="{{ cart.menu.img.url }}" alt="Menu">
           <div class="text-box">
@@ -28,7 +28,7 @@
   </div>
 
   {% if not user.is_authenticated %}
-    <form action="{% url 'customer:order' %}" method="POST">{% csrf_token %}
+    <form action="{% url 'customer:order' %}" method="GET">
       <!-- hidden -->
       <input type="hidden" name="menu_id" value="{{ menu.id }}">
       {% if carts %}

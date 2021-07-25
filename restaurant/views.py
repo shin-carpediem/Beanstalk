@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from django.db.models import Q
 from itertools import chain
 from django.template import Context, Template
@@ -161,20 +161,20 @@ def send_code(request):
 
 def order_manage(request):
     try:
-        filter_type = request.POST.get('filter-type')
+        filter_type = request.GET.get('filter-type')
     except Exception:
         filter_type = None
 
     # ログインから
-    if request.method == 'POST' and filter_type == 'login':
-        email = request.POST.get('username')
+    if request.method == 'GET' and filter_type == 'login':
+        email = request.GET.get('username')
         # passcode = request.POST.get('passcode')
 
         # 入力されたパスコードがセッションに保持されたパスコードと一致するならログインを許可
         # if passcode == request.session['user'][email]:
         try:
             user = User.objects.get(email=email)
-            code = request.POST.get('code')
+            code = request.GET.get('code')
 
             ######## it is okay to change if the process is troublesome ######
             # TODO: もしやるなら暗証番号を必ず伝える！
@@ -219,8 +219,8 @@ def order_manage(request):
     active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
 
     # テーブル番号でフィルタした際
-    if request.POST.get('table') != None:
-        table = request.POST.get('table')
+    if request.GET.get('table') != None:
+        table = request.GET.get('table')
         active_users = nonLoginUser.objects.defer(
             'created_at').filter(table=table, active=True)
 
@@ -261,13 +261,13 @@ def history(request):
     table = None
 
     # 日付の範囲指定分の売上
-    if request.method == 'POST':
-        filter_type = request.POST.get('filter-type')
+    if request.method == 'GET':
+        filter_type = request.GET.get('filter-type')
 
-        if (request.POST.get('start') != None) and (request.POST.get('end') != None):
-            request.session['filter_date_start'] = request.POST.get('start')
+        if (request.GET.get('start') != None) and (request.GET.get('end') != None):
+            request.session['filter_date_start'] = request.GET.get('start')
             start = request.session['filter_date_start']
-            request.session['filter_date_end'] = request.POST.get('end')
+            request.session['filter_date_end'] = request.GET.get('end')
             end = request.session['filter_date_end']
 
             if 'filter_table' in request.session:
@@ -304,8 +304,8 @@ def history(request):
                     customer=same_table_user).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
-        elif request.POST.get('table') != None:
-            request.session['filter_table'] = request.POST.get('table')
+        elif request.GET.get('table') != None:
+            request.session['filter_table'] = request.GET.get('table')
             table = request.session['filter_table']
 
             same_table_users = nonLoginUser.objects.defer(
@@ -419,9 +419,9 @@ def stop_user_order(request):
 @login_required
 def daily(request):
     # 日付の範囲指定分の売上
-    if request.method == 'POST':
-        start = request.POST.get('start')
-        end = request.POST.get('end')
+    if request.method == 'GET':
+        start = request.GET.get('start')
+        end = request.GET.get('end')
         if start > end:
             messages.warning(request, f"左の日付をより昔にしてください。")
     else:
