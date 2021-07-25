@@ -16,6 +16,7 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('nomiho/', views.nomiho, name='nomiho'),
     path('history/', views.history, name='history'),
+    path('thanks/', views.thanks, name='thanks'),
     path('stop/', views.stop, name='stop'),
-    # path('revert/', views.revert, name='revert'),
+    path('revert/', views.revert, name='revert'),
 ]

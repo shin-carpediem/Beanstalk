@@ -25,7 +25,7 @@
         <th class="col-3">単価</th>
         <th class="col-3">個数</th>
       </tr>
-      {% for order in orders_static %}
+      {% for order in orders %}
         <tr class="row">
           <td class="col-6">{{ order.menu.name }}</td>
           <td class="col-3">{{ order.menu.price }}</td>

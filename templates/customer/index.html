@@ -10,11 +10,6 @@
   <div class="img">
     <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
   </div>
-  <!-- <form class="revert_from_index" method="POST" action="{# % url 'customer:revert' % #}">{# % csrf_token % #}
-    <button type="submit" class="btn__glass btn shadow" onclick="loading_show()">
-      オーダーストップの取消
-    </button>
-  </form> -->
   <div class="forms">
     <h1 class="text__bold text-center">メニュー表</h1>
     <form class="px-auto my-5 py-5" method="POST" action="{% url 'customer:table' %}">{% csrf_token %}

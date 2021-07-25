@@ -111,17 +111,7 @@ def menu(request):
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
             if user_uuid.active == False:
-                # messages.info(
-                #     request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-                # return redirect('customer:index')
-                user_uuid.active = True
-                user_uuid.save()
-
-                # activeのセッションを作成
-                request.session['active'] = 'True'
-
-                messages.info(
-                    request, f'⚠️ あなたのアカウントのオーダーストップを取り消しました。テーブルの他の方も再度「オーダーストップの取消」をタップして、アカウントを復帰させてください。')
+                return redirect('customer:thanks')
 
     try:
         category = request.session['category_name']
@@ -178,9 +168,7 @@ def filter(request):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         if user_uuid.active == False:
-            messages.info(
-                request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-            return redirect('customer:index')
+            return redirect('customer:thanks')
 
     # まだ1人もお客さんが使用していない初期設定時を想定
     except Exception:
@@ -257,9 +245,7 @@ def cart(request):
             chain(same_table_cart_list, same_table_cart))
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     # Cartデータの保存
     menu_id = request.POST.get('menu_id')
@@ -290,9 +276,7 @@ def cart_static(request):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     carts = ''
     table_num = request.session['table']
@@ -325,9 +309,7 @@ def cart_detail(request, menu_id):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     num = request.POST.get('num')
     cart_id = request.POST.get('id')
@@ -364,9 +346,7 @@ def cart_ch(request):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     cart_id = request.POST.get('cart_id')
     type = request.POST.get('type')
@@ -419,9 +399,7 @@ def order(request):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     try:
         table_num = request.session['table']
@@ -506,9 +484,7 @@ def nomiho(request):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         if user_uuid.active == False:
-            messages.info(
-                request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-            return redirect('customer:index')
+            return redirect('customer:thanks')
 
         nomiho_type = request.POST.get('nomiho_type')
 
@@ -572,9 +548,7 @@ def history(request):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
-        messages.info(
-            request, f'すでにオーダーストップをしています。オーダー再開をするには画面右上の「オーダーストップの取消」をタップしてください。')
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
     carts = ''
     orders = ''
@@ -649,56 +623,21 @@ def stop(request):
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
 
-    # TODO:
-    # if not 'same_user_revert_uuid_list' in request.session:
-    #     request.session['same_user_revert_uuid_list'] = None
-
-    # uuid_list = ''
-
-    # for same_user_table in same_user_table_list:
-    #     same_user = nonLoginUser.objects.get(uuid=same_user_table.uuid)
-    #     print(same_user)
-    #     same_user_uuid = same_user.uuid
-    #     uuid_list = list(chain(uuid_list, str(same_user_uuid)))
-    #     print(uuid_list)
-
-    #     request.session['same_user_revert_uuid_list'] = uuid_list
-
-    # print(request.session['same_user_revert_uuid_list'])
-
-    # try:
-    #     request.session['same_user_revert_uuid_list']
-    # except Exception:
-    #     messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-    #     return redirect('customer:table')
-
     for same_user in same_user_table_list:
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
             customer=same_user.uuid).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
 
-    active_or_not = request.session['active']
+    # # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
+    # for same_user in same_user_table_list:
 
-    request.session['orders'] = list(orders)
-    print(request.session['orders'])
-
-    if active_or_not == 'True':
-        orders_static = orders
-    else:
-        orders_static = request.session['orders']
-
-    # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-    for same_user in same_user_table_list:
-
-        same_user.active = False
-        same_user.save()
-
-    request.session['active'] = 'False'
+    #     same_user.active = False
+    #     same_user.save()
 
     ctx = {
         'total_price': total_price,
-        'orders_static': orders_static,
+        'orders': orders,
     }
 
     messages.info(request, f'この画面をスクリーンショットしてお会計の際に表示してください。')
@@ -706,22 +645,26 @@ def stop(request):
     return render(request, 'customer/stop.html', ctx)
 
 
-# @require_POST
-# def revert(request):
-#     try:
-#         request.session.session_key
-#     except Exception:
-#         messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
-#         return redirect('customer:table')
+@require_POST
+def revert(request):
+    try:
+        request.session.session_key
+    except Exception:
+        messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
+        return redirect('customer:table')
 
-#     uuid = request.session['nonloginuser_uuid']
-#     user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    uuid = request.session['nonloginuser_uuid']
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-#     if user_uuid.active == False:
-#         user_uuid.active = True
-#         user_uuid.save()
+    if user_uuid.active == False:
+        user_uuid.active = True
+        user_uuid.save()
 
-#         messages.info(
-#             request, f'あなたのアカウントのオーダーストップを取り消しました。同じテーブルの他の方も注文をする場合は、同様に先ほどのページの「オーダーストップの取消」をタップして、アカウントを復帰させてください。')
+        messages.info(
+            request, f'あなたのアカウントのオーダーストップを取り消しました。同じテーブルの他の方も注文をする場合は、同様に先ほどのページの「オーダーストップの取消」をタップして、アカウントを復帰させてください。')
 
-#     return redirect('customer:menu')
+    return redirect('customer:menu')
+
+
+def thanks(request):
+    return render(request, 'customer/thanks.html')

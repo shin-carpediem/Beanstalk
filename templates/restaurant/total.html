@@ -16,9 +16,28 @@
     <div class="pt-sm-3 pt-5">
       <p class="text-sm-left text-center pt-sm-3 pl-sm-3">＊このページは10秒毎に自動で再読み込みします</p>
       <div class="table-list py-5 mx-4">
+
+        <div class="pb-4 text__bold text-center">
+          <p class="text__large pb-3">利用中のテーブルお会計終了ボタン</p>
+          <p class="text__underline">お会計の終了時に必ずタッチしてください</p>
+        </div>
+        <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
+          {% for active_table in active_table_list %}
+            <form action="{% url 'restaurant:stop_user_order' %}" class="mx-3" method="POST">{% csrf_token %}
+              <button class="badge__red badge-table my-sm-0 mx-3 my-3 p-3 shadow text__bold">
+                {{ active_table }} 番
+                <!-- hidden -->
+                <input type="hidden" name="active_table" value="{{ active_table }}">
+              </button>
+            </form>
+            {% empty %}
+            <p>なし</p>
+          {% endfor %}
+        </div>
+
         <div class="px-3">
           <p class="text__bold text__large text-center">合計（すでに調理・提供済みのメニューの合計金額）</p>
-          <table border="1" class="w-100 mt-3 mb-5">
+          <table border="1" class="w-100 my-3">
             <tr class="text-center">
               <th>テーブル番号</th>
               <th>合計（円）</th>
@@ -35,24 +54,6 @@
               </tr>
             {% endfor %}
           </table>
-        </div>
-
-        <div class="pb-4 text__bold text-center">
-          <p class="text__large pb-3">利用中のテーブル停止ボタン</p>
-          <p>タッチするとその番号のテーブルの利用が<br class="d-sm-none d-block">途中停止されますのでご注意ください</p>
-        </div>
-        <div class="d-flex pt-3 justify-content-center align-items-center flex-wrap">
-          {% for active_table in active_table_list %}
-            <form action="{% url 'restaurant:stop_user_order' %}" class="mx-3" method="POST">{% csrf_token %}
-              <button class="badge__red badge-table my-sm-0 my-3 shadow text__bold">
-                {{ active_table }} 番
-                <!-- hidden -->
-                <input type="hidden" name="active_table" value="{{ active_table }}">
-              </button>
-            </form>
-            {% empty %}
-            <p>なし</p>
-          {% endfor %}
         </div>
       </div>
 

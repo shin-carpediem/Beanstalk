@@ -1,0 +1,22 @@
+{% extends 'customer/base__next.html' %}
+{% load static %}
+
+{% block custom__header %}
+  <title>ご利用ありがとうございました</title>
+{% endblock %}
+
+{% block content %}
+<section class="w-100 top-view">
+  <div class="img">
+    <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
+  </div>
+  <form class="revert_from_index" method="POST" action="{% url 'customer:revert' %}">{% csrf_token %}
+    <button type="submit" class="btn__glass btn shadow" onclick="loading_show()">
+      オーダーストップの取消
+    </button>
+  </form>
+  <div class="forms">
+    <h1 class="text__bold text-center">ご利用<br>ありがとう<br>ございました</h1>
+  </div>
+</section>
+{% endblock %}

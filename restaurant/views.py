@@ -411,7 +411,7 @@ def stop_user_order(request):
         same_user.active = False
         same_user.save()
 
-    messages.info(request, f'{active_table}テーブルの注文を停止させました。')
+    messages.info(request, f'{active_table}テーブルのお会計完了を保存しました。')
 
     return redirect('restaurant:total')
 
