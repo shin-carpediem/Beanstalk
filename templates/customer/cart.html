@@ -32,7 +32,7 @@
       <!-- hidden -->
       <input type="hidden" name="menu_id" value="{{ menu.id }}">
       {% if carts %}
-        <button class="btn btn__orange btn__fixed shadow" id="orderConfirm" onclick="loading_show()">
+        <button class="btn btn__red btn__fixed shadow text__bold text__large" id="orderConfirm" onclick="loading_show()">
       {% else %}
         <button class="btn btn__grey btn__fixed shadow" id="orderConfirm" disabled onclick="loading_show()">
       {% endif %}
