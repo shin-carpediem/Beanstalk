@@ -556,7 +556,8 @@ section.table .forms {
   -ms-transform: translate(-50%, -50%);
 }
 
-section.top-view .forms h3,
+section.top-view .forms h1, section.top-view .forms h3,
+section.table .forms h1,
 section.table .forms h3 {
   color: #fff;
 }
