@@ -50,7 +50,7 @@ def menu(request):
     user = request.user
 
     categories = Category.objects.defer('created_at').order_by('id')
-    allergies = Allergy.objects.all().order_by('id')
+    allergies = Allergy.objects.defer('created_at').order_by('id')
 
     restaurant_name = None
     restaurant_logo = None
@@ -108,7 +108,6 @@ def menu(request):
             try:
                 uuid = request.session['nonloginuser_uuid']
             except Exception:
-                # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
                 return redirect('customer:thanks')
 
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -124,7 +123,7 @@ def menu(request):
         # カテゴリーIDのセッションを作成
         request.session['category_name'] = category
 
-    menus = Menu.objects.defer('created_at').filter(
+    menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
         category=category).order_by('-id')
 
     ctx = {
@@ -148,7 +147,6 @@ def filter(request):
         try:
             uuid = request.session['nonloginuser_uuid']
         except Exception:
-            # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:thanks')
 
     try:
@@ -157,7 +155,7 @@ def filter(request):
 
         # カテゴリーのセッションを更新
         request.session['category_name'] = category_id.id
-        menus = Menu.objects.defer('created_at').filter(
+        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
             category=category_id).order_by('-id')
     except Exception:
         menus = None
@@ -203,7 +201,6 @@ def menu_detail(request, menu_id):
         try:
             request.session['nonloginuser_uuid']
         except Exception:
-            # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:thanks')
 
     menu = get_object_or_404(Menu, pk=menu_id)
@@ -226,7 +223,6 @@ def cart(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -266,7 +262,6 @@ def cart_static(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -298,7 +293,6 @@ def cart_detail(request, menu_id):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -334,7 +328,6 @@ def cart_ch(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -347,7 +340,7 @@ def cart_ch(request):
 
     # Cartデータの更新
     try:
-        cart = customer.models.Cart.objects.defer('created_at').get(id=cart_id, curr=True)
+        cart = customer.models.Cart.objects.get(id=cart_id)
 
         if type == 'change':
             cart_num = request.GET.get('cart_num')
@@ -384,7 +377,6 @@ def order(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -531,7 +523,6 @@ def history(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -593,22 +584,7 @@ def stop(request):
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         table_num = request.session['table']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
-
-    # try:
-
-    # except Exception:
-    #     # messages.info(request, f'アカウントの有効期限が切れました。')
-    #     return redirect('customer:thanks')
-
-    # orders = ''
-
-    # try:
-
-    # except Exception:
-    #     # messages.info(request, f'アカウントの有効期限が切れました。')
-    #     return redirect('customer:thanks')
 
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
@@ -618,12 +594,6 @@ def stop(request):
             customer=same_user.uuid, curr=True).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
-
-    # # オーダーストップ時に、同じテーブルにいる全てのユーザーをis_activte=Falseにする
-    # for same_user in same_user_table_list:
-
-    #     same_user.active = False
-    #     same_user.save()
 
     ctx = {
         'total_price': total_price,
@@ -639,7 +609,6 @@ def revert(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
-        # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
