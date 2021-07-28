@@ -75,6 +75,7 @@ def menu(request):
 
     if user.is_authenticated:
         table_num = '管理者'
+        user_uuid = None
     else:
 
         # 新規の客かどうかをセッションで判断する
@@ -486,12 +487,9 @@ def nomiho(request):
 
             for same_user in same_user_table_list:
                 same_user.price += int(nomiho_query.price)
-                same_user.save()
                 # 各々の「飲み放題」ステータス：yes/noをyesにする
                 same_user.nomiho = True
-                same_user.save()
                 same_user.nomiho_name = nomiho_query.name
-                same_user.save()
                 same_user.nomiho_price += int(nomiho_query.price)
                 same_user.save()
 
