@@ -100,6 +100,8 @@ def menu(request):
             request.session['table'] = table_num
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
+
+            user_uuid = newuser
         # 既存
         else:
 
