@@ -116,11 +116,16 @@ def menu(request):
             if user_uuid.active == False:
                 return redirect('customer:thanks')
 
-    try:
+    if 'category_name' in request.session:
         category = request.session['category_name']
     # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
-    except Exception:
-        category = categories[0].id
+    else:
+
+        try:
+            category = categories[0].id
+        except Exception:
+            category = None
+
         # カテゴリーIDのセッションを作成
         request.session['category_name'] = category
 
@@ -587,6 +592,7 @@ def stop(request):
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
 
+    orders = ''
     for same_user in same_user_table_list:
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(
             customer=same_user.uuid, curr=True).order_by('-id')

@@ -276,8 +276,7 @@ def history(request):
                 same_table_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
             else:
-                same_table_users = nonLoginUser.objects.defer(
-                    'created_at').filter(active=True)
+                same_table_users = active_users
 
             if start > end:
                 messages.warning(request, f"左の日付をより昔にしてください。")
@@ -292,7 +291,7 @@ def history(request):
             request.session['filter_date_start'] = None
             request.session['filter_date_end'] = None
 
-            if request.session['filter_table'] != None:
+            if 'filter_table' in request.session:
                 table = request.session['filter_table']
                 active_users = nonLoginUser.objects.defer(
                     'created_at').filter(table=table, active=True)
@@ -326,18 +325,19 @@ def history(request):
         elif filter_type == 'table-filter-clear':
             request.session['filter_table'] = None
 
-            if request.session['filter_date_start'] != None:
-                start = request.session['filter_date_start']
-                end = request.session['filter_date_end']
-                active_users = nonLoginUser.objects.defer(
-                    'created_at').filter(active=True, created_at__range=(start, end))
+            if 'filter_date_start' in request.session:
+
+                if request.session['filter_date_start'] != None:
+                    start = request.session['filter_date_start']
+                    end = request.session['filter_date_end']
+                    active_users = nonLoginUser.objects.defer(
+                        'created_at').filter(active=True, created_at__range=(start, end))
 
             for active_user in active_users:
                 active_user_order = customer.models.Order.objects.filter(
                     customer=active_user).order_by('-id')
                 order_list = list(chain(order_list, active_user_order))
 
-    # TODO:
     else:
         # デフォルトは昨日から今日の範囲
         dt_now = datetime.datetime.now()
