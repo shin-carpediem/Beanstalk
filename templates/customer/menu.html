@@ -7,7 +7,7 @@
   <div class="category mb-3">
     <div class="d-flex ml-3">
       {% for category in categories %}
-        <form action="{% url 'customer:filter' %}" method="GET">
+        <form action="{% url 'customer:filter' category.id %}" method="GET">
           {% if category.id == request.session.category_name %}
             <button type="submit" class="category-btn focus focused p-2 text__bold" name="category" value="{{ category }}" onclick="loading_show()">
           {% else %}
@@ -15,9 +15,6 @@
           {% endif %}
               {{ category.name }}
             </button>
-          <!-- hidden -->
-          <input type="hidden" name="category_name" value="{{ category.name }}">
-          <input type="hidden" name="nomiho_or_not" value="{{ category.nomiho }}">
         </form>
       {% endfor %}
     </div>

@@ -664,9 +664,8 @@ def menu_del(request, menu_id):
 
 @login_required
 @require_POST
-def menu_img_manage(request):
+def menu_img_manage(request, menu_id):
     menu_img = request.FILES.get('menu_img')
-    menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
 
     # 以前のファイルは削除
@@ -682,9 +681,8 @@ def menu_img_manage(request):
 
 @login_required
 @require_POST
-def menu_name_manage(request):
+def menu_name_manage(request, menu_id):
     menu_name = request.POST.get('menu_name')
-    menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
     menu.name = menu_name
     menu.save()
@@ -695,9 +693,8 @@ def menu_name_manage(request):
 
 @login_required
 @require_POST
-def menu_price_manage(request):
+def menu_price_manage(request, menu_id):
     menu_price = request.POST.get('menu_price')
-    menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
     menu.price = menu_price
     menu.save()
@@ -709,9 +706,8 @@ def menu_price_manage(request):
 
 @login_required
 @require_POST
-def allergy_ch(request):
+def allergy_ch(request, menu_id):
     allergy_list = request.POST.getlist('allergy')
-    menu_id = request.POST.get('menu_id')
 
     menu = Menu.objects.get(id=menu_id)
     for allergy in allergy_list:
@@ -768,10 +764,9 @@ def allergy_del(request):
 
 @login_required
 @require_POST
-def chef(request):
+def chef(request, menu_id):
     chef_img = request.FILES.get('chef_img')
     comment = request.POST.get('comment')
-    menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
 
     # 以前のファイルは削除

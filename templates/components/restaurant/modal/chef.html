@@ -5,7 +5,7 @@
 
 <div class="modal modal-chef fade" id="chef-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="chef-btn__ModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <form class="modal-content" enctype="multipart/form-data" action="{% url 'restaurant:chef' %}" method="POST">{% csrf_token %}
+    <form class="modal-content" enctype="multipart/form-data" action="{% url 'restaurant:chef' menu.id %}" method="POST">{% csrf_token %}
       <div class="modal-header">
         <h5 class="modal-title" id="menu-chef-img-manage-btn__ModalCenterTitle">
           シェフの顔写真・コメントを更新する
@@ -23,8 +23,6 @@
           <label>コメント</label><br>
           <textarea class="w-100 pl-2 shadow" type="text" name="comment" value="{{ menu.comment }}">{% if menu.comment %}{{ menu.comment }}{% endif %}</textarea>
         </div>
-        <!-- hidden -->
-        <input type="hidden" name="menu_id" value="{{ menu.id }}">
       </div>
       <div class="modal-footer">
         <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button>

@@ -145,8 +145,11 @@ def menu(request):
         # カテゴリーIDのセッションを作成
         request.session['category_name'] = category
 
-    menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
-        category=category).order_by('-id')
+    if category != None:
+        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
+            category=category).order_by('-id')
+    else:
+        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').order_by('-id')
 
     ctx = {
         'categories': categories,
@@ -159,7 +162,7 @@ def menu(request):
     return render(request, 'customer/menu.html', ctx)
 
 
-def filter(request):
+def filter(request, category_id):
     user = request.user
     nomiho_is_started = False
 
@@ -175,8 +178,7 @@ def filter(request):
             return redirect('customer:thanks')
 
     try:
-        category = request.GET.get('category_name')
-        category_id = Category.objects.get(name=category)
+        category_id = Category.objects.get(id=category_id)
 
         # カテゴリーのセッションを更新
         request.session['category_name'] = category_id.id
