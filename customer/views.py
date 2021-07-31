@@ -225,8 +225,10 @@ def filter(request):
         ctx['nomihos'] = nomihos
         ctx['nomiho_category'] = "Yes"
 
-        if user_uuid.nomiho == False:
-            messages.info(request, f'このページのメニューは飲み放題を開始すると注文できます')
+        if user_uuid != None:
+
+            if user_uuid.nomiho == False:
+                messages.info(request, f'このページのメニューは飲み放題を開始すると注文できます')
     else:
         ctx['nomiho_category'] = "No"
 
@@ -592,15 +594,14 @@ def history(request):
 
     total_price = orders_in_cart + orders_in_order
 
+    request.session['orders_in_cart'] = orders_in_cart
+    request.session['orders_in_order'] = orders_in_order
     request.session['total_price'] = total_price
 
     ctx = {
         'categories': categories,
         'carts': carts,
         'orders': orders,
-        'orders_in_cart': orders_in_cart,
-        'orders_in_order': orders_in_order,
-        'total_price': total_price,
         'user_uuid': user_uuid,
     }
 
@@ -611,7 +612,7 @@ def history(request):
 def stop(request):
     try:
         request.session['nonloginuser_uuid']
-        total_price = request.session['total_price']
+        orders_in_order = request.session['orders_in_order']
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         table_num = request.session['table']
     except Exception:
@@ -628,7 +629,6 @@ def stop(request):
         orders = list(chain(orders, same_user_orders))
 
     ctx = {
-        'total_price': total_price,
         'orders': orders,
     }
 

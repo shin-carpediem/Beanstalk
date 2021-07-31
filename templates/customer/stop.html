@@ -7,8 +7,8 @@
   <div class="d-flex justify-content-center align-items-center my-5">
     <h4 class="text__bold"><span style="color: red;">{{ request.session.table }}</span>番テーブル お会計金額</h4>
     <h4 class="text__bold ml-3 text__underline">
-      {% if total_price %}
-        {{ total_price }}
+      {% if request.session.orders_in_order %}
+        {{ request.session.orders_in_order }}
       {% else %}
         0
       {% endif %}
