@@ -80,10 +80,12 @@
     </div>
     <div class="col-4">
       <p class="py-2 px-3 badge badge__yellow">合計</p>
-      {% if request.session.total_price %}
-        <p class="text__bold text_large">¥ {{ reques.session.total_price | intcomma }}</p>
-      {% else %}
-        <p class="text__bold text_large">¥ 0</p>
+      <p class="text__bold text_large">
+        {% if request.session.total_price %}
+          ¥ {{ request.session.total_price | intcomma }}
+        {% else %}
+          ¥ 0
+      </p>
       {% endif %}
     </div>
 

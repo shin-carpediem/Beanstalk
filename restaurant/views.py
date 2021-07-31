@@ -341,10 +341,8 @@ def history(request):
     else:
         # デフォルトは昨日から今日の範囲
         dt_now = datetime.datetime.now()
-        start = datetime.datetime(
-            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour, dt_now.minute)
-        end = datetime.datetime(
-            dt_now.year, dt_now.month, dt_now.day, dt_now.hour, dt_now.minute)
+        start = dt_now - datetime.timedelta(days=1)
+        end = dt_now
 
         for active_user in active_users:
             active_user_order = customer.models.Order.objects.filter(
