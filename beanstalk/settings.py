@@ -56,11 +56,13 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     client = secretmanager.SecretManagerServiceClient()
     settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+    payload = client.access_secret_version(
+        name=name).payload.data.decode("UTF-8")
 
     env.read_env(io.StringIO(payload))
 else:
-    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+    raise Exception(
+        "No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
 # [END gaestd_py_django_secret_config]
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -92,8 +94,6 @@ INSTALLED_APPS = [
     'account',
     'customer',
     'restaurant',
-    'fcm_django',
-    'webpush',
     'mathfilters',
 ]
 
@@ -227,9 +227,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 WEBPUSH_SETTINGS = {
-   "VAPID_PUBLIC_KEY": env("VAPID_PUBLIC_KEY"),
-   "VAPID_PRIVATE_KEY": env("VAPID_PRIVATE_KEY"),
-   "VAPID_ADMIN_EMAIL": env("EMAIL_HOST_USER")
+    "VAPID_PUBLIC_KEY": env("VAPID_PUBLIC_KEY"),
+    "VAPID_PRIVATE_KEY": env("VAPID_PRIVATE_KEY"),
+    "VAPID_ADMIN_EMAIL": env("EMAIL_HOST_USER")
 }
 
 # FIREBASE_CERTIFICATE = os.path.join(BASE_DIR, env("FIREBASE_CERTIFICATE"))
@@ -325,3 +325,5 @@ LOGGING = {
         },
     }
 }
+
+ONE_SIGNAL_REST_API_KEY = env("ONE_SIGNAL_REST_API_KEY")

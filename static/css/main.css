@@ -410,18 +410,6 @@ body .nomiho-limit {
   border-radius: 10px;
 }
 
-.wrapper .inner__wrapper .board .webpush-btn button {
-  background-color: transparent;
-  border: transparent;
-  width: 100%;
-  text-align: center;
-  font-size: larger;
-}
-
-.wrapper .inner__wrapper .board .webpush-btn button:hover {
-  text-decoration: underline;
-}
-
 .restaurant section.header {
   min-width: 400px;
   position: fixed;

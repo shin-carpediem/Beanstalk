@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-<!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
-{% load webpush_notifications %}
 
 {% block custom__header %}
   <title>注文管理</title>
-  <!-- webpush用のmetaタグとスクリプトの読み込み -->
-  {% webpush_header %}
 {% endblock %}
 
 {% block content %}
@@ -49,29 +45,22 @@
           <!-- hidden -->
           <input type="hidden" name="filter-type" value="login">
           <button type="submit" class="px-5 py-3 btn btn__blue shadow" id="loginBtn">
-            <!-- 認証コードを受け取る -->
             ログイン
           </button>
         </div>
       </form>
 
-      <div class="row mt-5 mb-3">
-        <div class="col-sm-6 col-12 webpush-btn">
-          {% webpush_button %}  <!-- push通知の購読ボタン -->
-        </div>
-        <form class="d-sm-flex align-items-center mt-sm-0 mt-5 col-sm-6 col-12" action="{% url 'restaurant:send_code' %}" method="POST" onclick="loading_show(); style.display='none';">{% csrf_token %}
-          <!-- hidden -->
-          {% if email %}
-            <input type="hidden" name="username" value="{{ email }}">
-          {% else %}
-            <input type="hidden" name="username">
-          {% endif %}
-          <button type="submit" class="btn btn__grey text__small">
-            暗証番号をメールで確認する
-          </button>
-        </form>
-      </div>
-
+      <form class="pt-5 pb-3 d-sm-flex justify-content-center align-items-center mt-sm-0 mt-5" action="{% url 'restaurant:send_code' %}" method="POST" onclick="loading_show(); style.display='none';">{% csrf_token %}
+        <!-- hidden -->
+        {% if email %}
+          <input type="hidden" name="username" value="{{ email }}">
+        {% else %}
+          <input type="hidden" name="username">
+        {% endif %}
+        <button type="submit" class="shadow btn btn__grey text__small">
+          暗証番号をメールで確認する
+        </button>
+      </form>
     </div>
 
     <div class="pt-3 admin row">

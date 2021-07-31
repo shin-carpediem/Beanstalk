@@ -4,14 +4,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Sum
+from django.shortcuts import resolve_url
 from itertools import chain
 import time
+import requests
 import customer.models
-from webpush import send_user_notification
-from firebase_admin.messaging import Message, Notification
-from fcm_django.models import FCMDevice
 from account.models import User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
+from beanstalk.settings import ONE_SIGNAL_REST_API_KEY
 
 
 # Create your views here.
@@ -419,33 +419,24 @@ def order(request):
                 messages.info(request, f"注文を先ほど承っております。")
                 return redirect('customer:cart')
 
-        # You can still use .filter() or any methods that return QuerySet (from the chain)
-        # device = FCMDevice.objects.all().first()
-        user = User.objects.get(id=1)
+        # 記事をブラウザ通知
         try:
-            user = User.objects.get(id=2)
+            data = {
+                'app_id': 'cebff79b-a399-438a-81fb-fa4c72364762',
+                'included_segments': ['All'],
+                'contents': {'ja': str(table_num) + '番テーブル'},
+                'headings': {'ja': '注文がきました'},
+                'url': resolve_url('restaurant:order_manage'),
+            }
+            requests.post(
+                "https://onesignal.com/api/v1/notifications",
+                headers={
+                    'Authorization': ONE_SIGNAL_REST_API_KEY},
+                json=data,
+            )
+            print(data)
         except Exception:
-            pass
-        try:
-            user = User.objects.get(id=3)
-        except Exception:
-            pass
-
-        payload = {"head": "注文が来ました", "body": "確認してください"}
-        send_user_notification(user=user, payload=payload, ttl=1000)
-
-        # device = FCMDevice.objects.filter(user=user_id).first()
-        # print("ok")
-
-        # title = 'title'
-        # message = 'mess'
-        # data = None
-
-        # send_message parameters include: message, dry_run, app
-        # device.send_message(notification=Notification(title='title', body='message'))
-        # result = device.send_message(title=title, body=message, data=data, sound=True)
-        # print(result)
-        print("ok")
+            print("false..")
 
     except Exception:
         pass
