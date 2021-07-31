@@ -5,7 +5,7 @@
     <div class="d-flex px-3">
       <div class="m-auto logo shadow d-flex align-items-center">
         {% if request.path == '/order_manage/' %}
-          {% if request.user.logo.url %}
+          {% if request.user.logo %}
             <img src="{{ request.user.logo.url }}" alt="Restaurant Logo">
           {% else %}
             <img src="{% static 'img/logo.png' %}" alt="Default Logo">
