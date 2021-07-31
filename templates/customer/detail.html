@@ -23,5 +23,11 @@
       </form>
     {% endif %}
   </div>
+
+  {% if user.is_authenticated %}
+    <div>
+      {% include 'components/restaurant/modal/menu_del.html' %}
+    </div>
+  {% endif %}
 </section>
 {% endblock %}

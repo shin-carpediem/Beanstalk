@@ -653,11 +653,11 @@ def menu_add(request):
 
 @login_required
 @require_POST
-def menu_del(request):
-    required_menu = request.POST.get('menu')
-    menu = Menu.objects.get(name=required_menu)
+def menu_del(request, menu_id):
+    menu = Menu.objects.get(id=menu_id)
     menu.delete()
-    messages.success(request, f"{required_menu}をメニューから削除しました。")
+    name = menu.name
+    messages.success(request, f"{name}をメニューから削除しました。")
 
     return redirect('customer:menu')
 

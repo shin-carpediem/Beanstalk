@@ -71,7 +71,7 @@ SECRET_KEY = env("SECRET_KEY")
 # TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
@@ -231,31 +231,6 @@ WEBPUSH_SETTINGS = {
     "VAPID_PRIVATE_KEY": env("VAPID_PRIVATE_KEY"),
     "VAPID_ADMIN_EMAIL": env("EMAIL_HOST_USER")
 }
-
-# FIREBASE_CERTIFICATE = os.path.join(BASE_DIR, env("FIREBASE_CERTIFICATE"))
-
-# Optional ONLY IF you have initialized a firebase app already:
-# Visit https://firebase.google.com/docs/admin/setup/#python
-# for more options for the following:
-# Store an environment variable called GOOGLE_APPLICATION_CREDENTIALS
-# which is a path that point to a json file with your credentials.
-# Additional arguments are available: credentials, options, name
-# FIREBASE_APP = initialize_app()
-# To learn more, visit the docs here:
-# https://cloud.google.com/docs/authentication/getting-started>
-
-# FCM_DJANGO_SETTINGS = {
-#     "FCM_SERVER_KEY": "[your api key]",
-#      # default: _('FCM Django')
-#     "APP_VERBOSE_NAME": "beanstalk",
-#      # true if you want to have only one active device per registered user at a time
-#      # default: False
-#     "ONE_DEVICE_PER_USER": False,
-#      # devices to which notifications cannot be sent,
-#      # are deleted upon receiving error response from FCM
-#      # default: False
-#     "DELETE_INACTIVE_DEVICES": False,
-# }
 
 # Internationalization
 

@@ -25,11 +25,11 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_add' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__orange py-1">追加</p>
-            <div class="col-4">
+            <div class="col-5">
               <input name="add_category_form" type="text" required>
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-3 btn btn__orange" onclick="loading_show()">
+            <button type="submit" class="col-2 btn btn__orange" onclick="loading_show()">
               保存
             </button>
           </form>
@@ -37,7 +37,7 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_ch' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__light-orange py-1">変更</p>
-            <div class="col-4">
+            <div class="col-5">
               <p class="mb-1">変更前の名前</p>
               <select name="category_name" class="w-100 py-2 mb-3">
                 {% for category in categories %}
@@ -48,7 +48,7 @@
               <input type="text" name="ch_category_form" required>
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-3 btn btn__light-orange" onclick="loading_show()">
+            <button type="submit" class="col-2 btn btn__light-orange" onclick="loading_show()">
               更新
             </button>
           </form>
@@ -56,12 +56,12 @@
 
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_del' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__grey py-1">削除</p>
-            <select name="del_category_form" class="col-4 mt-3 py-2 mb-3">
+            <select name="del_category_form" class="col-5 mt-3 py-2 mb-3">
               {% for category in categories %}
                 <option value="{{ category.name }}">{{ category.name }}</option>
               {% endfor %}
             </select>
-            <button type="submit" class="col-3 btn btn__grey" onclick="loading_show(); style.display='none';">
+            <button type="submit" class="col-2 btn btn__grey" onclick="loading_show(); style.display='none';">
               実行
             </button>
           </form>
@@ -71,18 +71,18 @@
             <p class="badge__blue py-1 mx-5">メニューの属するカテゴリーを変更</p>
             <div class="py-2 d-flex align-items-center justify-content-around">
               <div class="py-3">
-                <label>メニュー</label>
-                <select name="menu_id" class="w-100 my-3 py-2">
-                  {% for menu in menus %}
-                    <option value="{{ menu.id }}">{{ menu.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="py-3">
                 <label>カテゴリー</label>
                 <select name="category_id" class="w-100 my-3 py-2">
                   {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="py-3">
+                <label>メニュー</label>
+                <select name="menu_id" class="w-100 my-3 py-2">
+                  {% for menu in menus %}
+                    <option value="{{ menu.id }}">{{ menu.name }}</option>
                   {% endfor %}
                 </select>
               </div>
