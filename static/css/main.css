@@ -797,6 +797,12 @@ section.table .choose-table input {
   left: 120px;
 }
 
+@media (max-width: 600px) {
+  .board__customer section.menu-detail .menu-allergy .menu-allergy-manage-btn {
+    left: 80px;
+  }
+}
+
 .board__customer section.menu-detail .menu-allergy .menu_allergy_handle_btn button {
   border-color: transparent;
   -webkit-transform: scale(0.7);

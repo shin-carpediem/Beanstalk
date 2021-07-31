@@ -677,6 +677,9 @@ section.table {
         z-index: 2;
         top: 5px;
         left: 120px;
+        @media (max-width: 600px) {
+          left: 80px;
+        }
       }
       .menu_allergy_handle_btn {
         button {
