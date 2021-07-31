@@ -20,7 +20,7 @@
             <input type="hidden" name="menu_id" value="{{ menu.id }}">
             <input type="hidden" name="cart_id" value="{{ cart_id }}">
             <input type="hidden" name="type" value="change">
-            <button type="submit" class="px-5 btn btn__blue shadow" onclick="loading_show()">
+            <button type="submit" class="px-5 btn btn__blue shadow" onclick="loading_show(); style.display='none';">
               注文する個数の変更
             </button>
           </form>
@@ -30,7 +30,7 @@
             <input type="hidden" name="menu_id" value="{{ menu.id }}">
             <input type="hidden" name="cart_id" value="{{ cart_id }}">
             <input type="hidden" name="type" value="delete">
-            <button type="submit" class="btn btn__grey shadow" onclick="loading_show()">
+            <button type="submit" class="btn btn__grey shadow" onclick="loading_show(); style.display='none';">
               注文予定からキャンセル
             </button>
           </form>

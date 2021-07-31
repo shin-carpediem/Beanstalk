@@ -29,7 +29,7 @@
               <input name="add_category_form" type="text" required>
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-3 btn btn__orange" onclick="loading_show()">
+            <button type="submit" class="col-3 btn btn__orange" onclick="loading_show(); style.display='none';">
               保存
             </button>
           </form>
@@ -48,8 +48,8 @@
               <input type="text" name="ch_category_form" required>
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-3 btn btn__light-orange" onclick="loading_show()">
-              実行
+            <button type="submit" class="col-3 btn btn__light-orange" onclick="loading_show(); style.display='none';">
+              更新
             </button>
           </form>
           <hr>
@@ -61,7 +61,7 @@
                 <option value="{{ category.name }}">{{ category.name }}</option>
               {% endfor %}
             </select>
-            <button type="submit" class="col-3 btn btn__grey" onclick="loading_show()">
+            <button type="submit" class="col-3 btn btn__grey" onclick="loading_show(); style.display='none';">
               実行
             </button>
           </form>
@@ -87,8 +87,8 @@
                 </select>
               </div>
             </div>
-            <button type="submit" class="w-50 btn btn__blue" onclick="loading_show()">
-              実行
+            <button type="submit" class="w-50 btn btn__blue" onclick="loading_show(); style.display='none';">
+              更新
             </button>
           </form>
         </div>

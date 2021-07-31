@@ -10,11 +10,13 @@
   <div class="img">
     <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
   </div>
-  <form class="revert_from_index" method="GET" action="{% url 'customer:revert' %}">
-    <button type="submit" class="btn__glass btn shadow" onclick="loading_show()">
-      オーダーストップの取消
-    </button>
-  </form>
+  {% if request.session.session_key %}
+    <form class="revert_from_index" method="GET" action="{% url 'customer:revert' %}">
+      <button type="submit" class="btn__glass btn shadow" onclick="loading_show()">
+        オーダーストップの取消
+      </button>
+    </form>
+  {% endif %}
   <div class="forms text-center">
     <h3 class="pb-5">ご利用ありがとう<br>ございました</h3>
     <h3>またのお越しを<br>お待ちしております</h3>

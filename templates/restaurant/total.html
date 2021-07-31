@@ -24,7 +24,7 @@
         <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
           {% for active_table in active_table_list %}
             <form action="{% url 'restaurant:stop_user_order' %}" class="mx-3" method="POST">{% csrf_token %}
-              <button class="badge__red badge-table my-sm-0 mx-3 my-3 p-3 shadow text__bold">
+              <button class="badge__red badge-table my-sm-0 mx-3 my-3 p-3 shadow text__bold" onclick="loading_show(); style.display='none';">
                 {{ active_table }} 番
                 <!-- hidden -->
                 <input type="hidden" name="active_table" value="{{ active_table }}">
@@ -84,8 +84,6 @@
                 </tr>
               {% endfor %}
             </table>
-            <!-- <p class="text__bold text__large text-right pt-3">合計：　
-            </p> -->
           </div>
         <hr />
         {% endfor %}
