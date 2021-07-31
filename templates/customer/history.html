@@ -1,13 +1,9 @@
 {% extends 'customer/base__next.html' %}
 {% load static %}
 {% load humanize %}
-<!-- webpush_notificationsのカスタムテンプレートタグの読み込み -->
-{% load webpush_notifications %}
 
 {% block custom__header %}
   <title>注文履歴</title>
-  <!-- webpush用のmetaタグとスクリプトの読み込み -->
-  {% webpush_header %}
 {% endblock %}
 
 {% block inner__content %}

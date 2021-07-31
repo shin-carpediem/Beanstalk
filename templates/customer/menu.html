@@ -77,7 +77,7 @@
           {% endif %}
           <div class="text-box">
             <p class="text-left pl-2">{{ menu.name }}</p>
-            {% if menu.category.nomiho == False %}
+            {% if not menu.category.nomiho == True %}
               <p class="text-right pr-2">¥ {{ menu.price | intcomma }}</p>
             {% endif %}
           </div>

@@ -3,7 +3,7 @@
 <section class="pt-3 px-2 header__customer row">
   <div class="col-2">
     <div class="m-auto logo shadow d-flex align-items-center">
-      {% if request.path == '/' or request.path == '/menu/' or request.path == '/manage/menu/' %}
+      {% if request.path == '/filter/' or request.path == '/menu/' or request.path == '/manage/menu/' %}
         {% if request.session.restaurant_logo %}
           <img src="{{ request.session.restaurant_logo }}" alt="Restaurant Logo">
         {% else %}

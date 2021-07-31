@@ -50,6 +50,8 @@
               <div class="d-flex align-items-center">
                 {% for allergy in allergies %}
                   <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}" class="mr-2 ml-3">{{ allergy }}
+                {% empty %}
+                  <p>後で、今回作成するメニューをタップして、アレルギー項目を追加してください（次回メニュー作成時、アレルギーに該当する項目を選択できるようになります）。</p>
                 {% endfor %}
               </div>
             </div>

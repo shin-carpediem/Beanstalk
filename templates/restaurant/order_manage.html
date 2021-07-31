@@ -4,16 +4,7 @@
 {% block custom__header %}
   <meta http-equiv="refresh" content="10; URL=">
   <title>注文管理</title>
-  <!-- <link rel="manifest" href="/manifest.json" /> -->
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-  <script>
-    window.OneSignal = window.OneSignal || [];
-    OneSignal.push(function() {
-      OneSignal.init({
-        appId: "cebff79b-a399-438a-81fb-fa4c72364762",
-      });
-    });
-  </script>
+  {% include 'components/restaurant/onesignal.html' %}
 {% endblock %}
 
 {% block content %}
