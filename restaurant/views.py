@@ -360,6 +360,7 @@ def history(request):
     return render(request, 'restaurant/history.html', ctx)
 
 
+# TODO:
 @login_required
 def total(request):
     orders = ''
@@ -394,8 +395,7 @@ def total(request):
 
 @login_required
 @require_POST
-def stop_user_order(request):
-    active_table = request.POST.get('active_table')
+def stop_user_order(request, active_table):
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=active_table, active=True)
 
