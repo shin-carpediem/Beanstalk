@@ -5,9 +5,9 @@
     <div class="m-auto logo shadow d-flex align-items-center">
       {% if request.path == '/filter/' or request.path == '/menu/' or request.path == '/manage/menu/' %}
         {% if request.session.restaurant_logo %}
-          <img src="{{ request.session.restaurant_logo }}" alt="Restaurant Logo">
+          <img class="lazyload" data-src="{{ request.session.restaurant_logo }}" alt="Restaurant Logo">
         {% else %}
-          <img src="{% static 'img/logo.png' %}" alt="Default Logo">
+          <img class="lazyload" data-src="{% static 'img/logo.png' %}" alt="Default Logo">
         {% endif %}
       {% else %}
         <form action="{% url 'customer:menu' %}" method="GET" class="el__pointer m-auto">

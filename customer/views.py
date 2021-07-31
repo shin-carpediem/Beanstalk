@@ -54,6 +54,8 @@ def menu(request):
 
     restaurant_name = None
     restaurant_logo = None
+    user_uuid = None
+    nomiho_is_started = False
     try:
         restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
@@ -75,7 +77,6 @@ def menu(request):
 
     if user.is_authenticated:
         table_num = '管理者'
-        user_uuid = None
     else:
 
         # 新規の客かどうかをセッションで判断する
@@ -103,6 +104,7 @@ def menu(request):
             request.session['nonloginuser_uuid'] = uuid
 
             user_uuid = newuser
+
         # 既存
         else:
 
@@ -115,6 +117,20 @@ def menu(request):
 
             if user_uuid.active == False:
                 return redirect('customer:thanks')
+
+            table_num = request.session['table']
+
+        # 後からやってきた客よりも先に飲み放題を開始していた場合、
+        # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
+        # 兼メニューを選択できるようにする
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True, nomiho=True)
+
+        if same_user_table_list.count() != 0:
+            user_uuid.nomiho = True
+            user_uuid.save()
+
+            nomiho_is_started = True
 
     if 'category_name' in request.session:
         category = request.session['category_name']
@@ -137,6 +153,7 @@ def menu(request):
         'menus': menus,
         'allergies': allergies,
         'user_uuid': user_uuid,
+        'nomiho_is_started': nomiho_is_started,
     }
 
     return render(request, 'customer/menu.html', ctx)
@@ -144,6 +161,8 @@ def menu(request):
 
 def filter(request):
     user = request.user
+    nomiho_is_started = False
+
     # 店側から
     if user.is_authenticated:
         None
@@ -172,6 +191,19 @@ def filter(request):
         if user_uuid.active == False:
             return redirect('customer:thanks')
 
+        # 後からやってきた客よりも先に飲み放題を開始していた場合、
+        # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
+        # 兼メニューを選択できるようにする
+        table_num = request.session['table']
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True, nomiho=True)
+
+        if same_user_table_list.count() != 0:
+            user_uuid.nomiho = True
+            user_uuid.save()
+
+            nomiho_is_started = True
+
     # まだ1人もお客さんが使用していない初期設定時を想定
     except Exception:
         user_uuid = None
@@ -184,6 +216,7 @@ def filter(request):
         'menus': menus,
         'allergies': allergies,
         'user_uuid': user_uuid,
+        'nomiho_is_started': nomiho_is_started,
     }
 
     # 飲み放題のカテゴリーを選択した場合
@@ -191,7 +224,9 @@ def filter(request):
         nomihos = Nomiho.objects.defer('created_at').order_by('-id')
         ctx['nomihos'] = nomihos
         ctx['nomiho_category'] = "Yes"
-        messages.info(request, f'このページのメニューは飲み放題を開始すると注文できます')
+
+        if user_uuid.nomiho == False:
+            messages.info(request, f'このページのメニューは飲み放題を開始すると注文できます')
     else:
         ctx['nomiho_category'] = "No"
 
@@ -588,7 +623,7 @@ def stop(request):
     orders = ''
     for same_user in same_user_table_list:
         same_user_orders = customer.models.Order.objects.defer('created_at').filter(status='済',
-            customer=same_user.uuid, curr=True).order_by('-id')
+                                                                                    customer=same_user.uuid, curr=True).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
 
