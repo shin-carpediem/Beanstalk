@@ -799,6 +799,8 @@ section.table .choose-table input {
 
 .board__customer section.menu-detail .menu-allergy section.chef-wrapper .chef {
   border-radius: 1000px;
+  width: 10rem;
+  height: 10rem;
 }
 
 .board__customer section.menu-detail .menu-allergy section.chef-wrapper .chef img {
@@ -812,7 +814,7 @@ section.table .choose-table input {
 .board__customer section.menu-detail .menu-allergy section.chef-wrapper .comment {
   border-radius: 4px;
   overflow: auto;
-  height: 10em;
+  overflow-wrap: break-word;
 }
 
 .board__customer section.menu-detail .menu-allergy section.chef-wrapper .comment textarea {

@@ -479,7 +479,7 @@ def nomiho(request):
 
             table_num = request.session['table']
             same_user_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=table_num, active=True)
+                'created_at').filter(table=table_num, nomiho=False, active=True)
 
             for same_user in same_user_table_list:
                 same_user.price += int(nomiho_query.price)
@@ -493,13 +493,15 @@ def nomiho(request):
 
                 # TODO:
                 duration = nomiho_query.duration
-                stop_nomiho(request, duration)
+                # stop_nomiho(request, duration)
 
                 messages.info(
                     request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
 
         except Exception:
             nomiho_query = None
+
+        nomiho_is_started = True
 
         ctx = {
             'categories': categories,
@@ -585,7 +587,7 @@ def stop(request):
 
     orders = ''
     for same_user in same_user_table_list:
-        same_user_orders = customer.models.Order.objects.defer('created_at').filter(
+        same_user_orders = customer.models.Order.objects.defer('created_at').filter(status='済',
             customer=same_user.uuid, curr=True).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))

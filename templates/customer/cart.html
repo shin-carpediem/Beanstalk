@@ -4,6 +4,7 @@
 
 {% block custom__header %}
   <title>注文予定</title>
+  {% include 'components/restaurant/onesignal.html' %}
 {% endblock %}
 
 {% block inner__content %}
@@ -15,7 +16,9 @@
           <img class="lazyload" data-src="{{ cart.menu.img.url }}" alt="Menu">
           <div class="text-box">
             <p class="text-left pl-2">{{ cart.menu.name }}</p>
-            <p class="text-right pr-2">¥ {{ cart.menu.price | intcomma }}</p>
+            {% if not cart.menu.category.nomiho == True %}
+              <p class="text-right pr-2">¥ {{ cart.menu.price | intcomma }}</p>
+            {% endif %}
           </div>
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
           <!-- hidden -->
