@@ -406,7 +406,7 @@ def total(request):
 @require_POST
 def stop_user_order(request, active_table):
     same_user_table_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=active_table, active=True)
+        'created_at').filter(table=str(active_table), active=True)
 
     for same_user in same_user_table_list:
         same_user.active = False
