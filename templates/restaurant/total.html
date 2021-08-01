@@ -53,7 +53,7 @@
       </div>
 
       <div>
-        <p class="text__bold text__large text-center pt-5 pb-3">テーブル毎詳細</p>
+        <p class="text__bold text__large text-center pt-5 pb-3">テーブル毎単品詳細（飲み放題メニュー抜き）</p>
         <hr>
         {% regroup orders by customer.table as table_list %}
         {% for table in table_list %}
@@ -80,7 +80,7 @@
               {% endfor %}
             </table>
           </div>
-        <hr />
+          <hr />
         {% endfor %}
       </div>
     </div>
