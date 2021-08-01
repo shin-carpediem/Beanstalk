@@ -602,7 +602,7 @@ def history(request):
     nomiho_orders = customer.models.NomihoOrder.objects.filter(
         table=table_num, curr=True)
     for nomiho_order in nomiho_orders:
-        nomiho_order_price = nomiho_order.nomiho.price
+        nomiho_order_price = nomiho_order.nomiho.price * nomiho_order.num
         orders_in_order += int(nomiho_order_price)
 
     total_price = int(orders_in_cart) + int(orders_in_order)
