@@ -37,15 +37,18 @@
             </div>
             <!-- hidden -->
             <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
-            {% if user.is_authenticated %}
-              <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
-                *お客様用のボタンです
-              </button>
-            {% else %}
-              <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho" onclick="loading_show(); style.display='none';">
-                開始する
-              </button>
-            {% endif %}
+            <div class="d-sm-flex align-items-center justify-content-around">
+              <input type="number" name="nomiho_num" min="{{ same_num }}" value="{{ same_num }}" class="mt-sm-0 mt-4 mr-sm-0 mr-3 text-center text__bold text__large"> 名で
+              {% if user.is_authenticated %}
+                <button class="btn btn__orange shadow w-50 my-4 el__dactivate">
+                  *お客様用のボタンです
+                </button>
+              {% else %}
+                <button type="submit" class="btn btn__orange shadow w-50 my-4" id="startNomiho" onclick="loading_show(); style.display='none';">
+                  開始する
+                </button>
+              {% endif %}
+            </div>
           </form>
         {% endfor %}
       {% endif %}

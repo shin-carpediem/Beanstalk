@@ -55,6 +55,7 @@ def menu(request):
     restaurant_name = None
     restaurant_logo = None
     user_uuid = None
+    same_num = None
     nomiho_is_started = False
     try:
         restaurant = User.objects.get(id=1)
@@ -120,13 +121,18 @@ def menu(request):
 
             table_num = request.session['table']
 
+        same_user_table = nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True)
+        same_num = same_user_table.count()
+
         # 後からやってきた客よりも先に飲み放題を開始していた場合、
         # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
         # 兼メニューを選択できるようにする
         same_user_table_list = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True, nomiho=True)
 
-        if same_user_table_list.count() != 0:
+        same_table_num = same_user_table_list.count()
+
+        if same_table_num != 0:
             user_uuid.nomiho = True
             user_uuid.save()
 
@@ -157,6 +163,7 @@ def menu(request):
         'menus': menus,
         'allergies': allergies,
         'user_uuid': user_uuid,
+        'same_num': same_num,
         'nomiho_is_started': nomiho_is_started,
     }
 
@@ -165,6 +172,7 @@ def menu(request):
 
 def filter(request, category_id):
     user = request.user
+    same_num = None
     nomiho_is_started = False
 
     # 店側から
@@ -198,10 +206,15 @@ def filter(request, category_id):
         # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
         # 兼メニューを選択できるようにする
         table_num = request.session['table']
+        same_user_table = nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True)
+        same_num = same_user_table.count()
+
         same_user_table_list = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True, nomiho=True)
 
-        if same_user_table_list.count() != 0:
+        same_table_num = same_user_table_list.count()
+
+        if same_table_num != 0:
             user_uuid.nomiho = True
             user_uuid.save()
 
@@ -219,6 +232,7 @@ def filter(request, category_id):
         'menus': menus,
         'allergies': allergies,
         'user_uuid': user_uuid,
+        'same_num': same_num,
         'nomiho_is_started': nomiho_is_started,
     }
 
@@ -444,16 +458,18 @@ def order(request):
             # 同時に同じテーブルの人が注文した際は後者を弾く為
             if not same_user_carts == None:
 
-                cart_price = 0
-
+                # ひとつひとつ、カートからオーダーに移行
                 for each in same_user_carts:
                     order = customer.models.Order(status='調理中', menu=each.menu,
                                                   num=each.num, customer=each.customer, curr=True)
                     order.save()
-                    cart_price = cart_price + (each.menu.price * each.num)
+                    price = (order.menu.price * order.num)
 
-                same_user.price += int(cart_price)
+                    # TODO: データに反映されない
+                    same_user.price += int(price)
 
+                same_user.save()
+                # MEMO: be careful not to switch save and delete
                 same_user_carts.delete()
             else:
                 messages.info(request, f"注文を先ほど承っております。")
@@ -497,7 +513,6 @@ def nomiho(request):
         try:
             uuid = request.session['nonloginuser_uuid']
         except Exception:
-            # messages.info(request, f'アカウントの有効期限が切れました。新規登録してください。')
             return redirect('customer:thanks')
 
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -507,12 +522,6 @@ def nomiho(request):
 
         nomiho_type = request.GET.get('nomiho_type')
 
-        category_id = request.session['category_name']
-        # categories = Category.objects.defer('created_at').order_by('id')
-        # menus = Menu.objects.defer('created_at').filter(
-        #     category=category_id).order_by('-id')
-        # allergies = Allergy.objects.defer('created_at').order_by('id')
-
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
         try:
             nomiho_query = Nomiho.objects.get(id=nomiho_type)
@@ -521,9 +530,11 @@ def nomiho(request):
             same_user_table_list = nonLoginUser.objects.defer(
                 'created_at').filter(table=table_num, nomiho=False, active=True)
 
+            nomiho_num = request.GET.get('nomiho_num')
+
             # 飲み放題の内容を店側に伝えるデータを作成
             nomiho_order = customer.models.NomihoOrder(status='開始中', nomiho=nomiho_query, table=table_num,
-                                                       num=same_user_table_list.count(), customer=user_uuid, curr=True)
+                                                       num=nomiho_num, customer=user_uuid, curr=True)
             nomiho_order.save()
 
             for same_user in same_user_table_list:
@@ -532,9 +543,9 @@ def nomiho(request):
                 same_user.nomiho = True
                 same_user.nomiho_name = nomiho_query.name
                 same_user.nomiho_price += int(nomiho_query.price)
+                # 合計金額に飲み放題の金額を足す
+                same_user.price += same_user.nomiho_price
                 same_user.save()
-
-                # nomiho_is_started = same_user.nomiho
 
                 # TODO:
                 duration = nomiho_query.duration
@@ -544,19 +555,7 @@ def nomiho(request):
                     request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
 
         except Exception:
-            # nomiho_query = None
             pass
-
-        # nomiho_is_started = True
-
-        # ctx = {
-        #     'categories': categories,
-        #     'menus': menus,
-        #     'allergies': allergies,
-        #     'nomiho_query': nomiho_query,
-        #     'user_uuid': user_uuid,
-        #     'nomiho_is_started': nomiho_is_started,
-        # }
 
         return redirect('customer:menu')
 
