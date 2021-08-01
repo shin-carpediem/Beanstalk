@@ -27,3 +27,16 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.status)
+
+
+class NomihoOrder(models.Model):
+    status = models.CharField("ステータス", max_length=256, blank=True, null=True)
+    nomiho = models.CharField("飲み放題プラン名", max_length=256, blank=True, null=True)
+    table =  models.PositiveIntegerField("テーブル番号", blank=True, null=True)
+    num = models.PositiveIntegerField("人数", blank=True, null=True)
+    customer = models.ForeignKey(nonLoginUser, on_delete=models.CASCADE)
+    curr = models.BooleanField("今回分か否か", default=False, blank=True, null=True)
+    created_at = models.DateTimeField("飲み放題開始時刻", auto_now=True)
+
+    def __str__(self):
+        return str(self.status)

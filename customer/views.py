@@ -149,7 +149,8 @@ def menu(request):
         menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
             category=category).order_by('-id')
     else:
-        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').order_by('-id')
+        menus = Menu.objects.defer(
+            'chef_img', 'comment', 'created_at').order_by('-id')
 
     ctx = {
         'categories': categories,
@@ -519,6 +520,11 @@ def nomiho(request):
             table_num = request.session['table']
             same_user_table_list = nonLoginUser.objects.defer(
                 'created_at').filter(table=table_num, nomiho=False, active=True)
+
+            # 飲み放題の内容を店側に伝えるデータを作成
+            nomiho_order = customer.models.NomihoOrder(status='開始', nomiho=nomiho_query, table=table_num,
+                                        num=same_user_table_list.count(), customer=user_uuid, curr=True)
+            nomiho_order.save()
 
             for same_user in same_user_table_list:
                 same_user.price += int(nomiho_query.price)
