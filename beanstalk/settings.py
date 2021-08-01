@@ -14,7 +14,6 @@
 
 import io
 import os
-from re import T
 from firebase_admin import initialize_app
 
 import environ

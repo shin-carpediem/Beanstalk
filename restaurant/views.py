@@ -370,7 +370,6 @@ def total(request):
     active_table_price_list = {}
     # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
     orders = ''
-    price = 0
 
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
@@ -378,10 +377,10 @@ def total(request):
 
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
+        price = 0
         table_int = active_non_login_user.table
         table = str(table_int)
 
-        # 飲み放題カテゴリに属する全てのメニューは0円なので計算から省く。単品リストからも省く。
         active_non_login_user_orders = customer.models.Order.objects.defer(
             'created_at').filter(status='済', customer=active_non_login_user.uuid).order_by('-id')
         orders = list(chain(orders, active_non_login_user_orders))
@@ -415,6 +414,7 @@ def total(request):
         'orders': orders,
         'nomiho_orders': nomiho_orders,
     }
+    print(active_table_price_list)
 
     return render(request, 'restaurant/total.html', ctx)
 
