@@ -508,10 +508,10 @@ def nomiho(request):
         nomiho_type = request.GET.get('nomiho_type')
 
         category_id = request.session['category_name']
-        categories = Category.objects.defer('created_at').order_by('id')
-        menus = Menu.objects.defer('created_at').filter(
-            category=category_id).order_by('-id')
-        allergies = Allergy.objects.defer('created_at').order_by('id')
+        # categories = Category.objects.defer('created_at').order_by('id')
+        # menus = Menu.objects.defer('created_at').filter(
+        #     category=category_id).order_by('-id')
+        # allergies = Allergy.objects.defer('created_at').order_by('id')
 
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
         try:
@@ -522,7 +522,7 @@ def nomiho(request):
                 'created_at').filter(table=table_num, nomiho=False, active=True)
 
             # 飲み放題の内容を店側に伝えるデータを作成
-            nomiho_order = customer.models.NomihoOrder(status='開始', nomiho=nomiho_query, table=table_num,
+            nomiho_order = customer.models.NomihoOrder(status='開始中', nomiho=nomiho_query, table=table_num,
                                         num=same_user_table_list.count(), customer=user_uuid, curr=True)
             nomiho_order.save()
 
@@ -534,7 +534,7 @@ def nomiho(request):
                 same_user.nomiho_price += int(nomiho_query.price)
                 same_user.save()
 
-                nomiho_is_started = same_user.nomiho
+                # nomiho_is_started = same_user.nomiho
 
                 # TODO:
                 duration = nomiho_query.duration
@@ -544,20 +544,21 @@ def nomiho(request):
                     request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
 
         except Exception:
-            nomiho_query = None
+            # nomiho_query = None
+            pass
 
-        nomiho_is_started = True
+        # nomiho_is_started = True
 
-        ctx = {
-            'categories': categories,
-            'menus': menus,
-            'allergies': allergies,
-            'nomiho_query': nomiho_query,
-            'user_uuid': user_uuid,
-            'nomiho_is_started': nomiho_is_started,
-        }
+        # ctx = {
+        #     'categories': categories,
+        #     'menus': menus,
+        #     'allergies': allergies,
+        #     'nomiho_query': nomiho_query,
+        #     'user_uuid': user_uuid,
+        #     'nomiho_is_started': nomiho_is_started,
+        # }
 
-        return render(request, 'customer/menu.html', ctx)
+        return redirect('customer:menu')
 
 
 def history(request):
@@ -593,18 +594,24 @@ def history(request):
         for each in same_user_orders:
             same_user.price = 0
             same_user.price += int(each.menu.price) * int(each.num)
-            same_user.price += same_user.nomiho_price
             same_user.save()
             orders_in_order += same_user.price
 
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
 
-    total_price = orders_in_cart + orders_in_order
+    try:
+        nomiho_order = customer.models.NomihoOrder.objects.get(table=table_num, curr=True)
+        nomiho_order_price = nomiho_order.nomiho.price
+        orders_in_order += int(nomiho_order_price)
+    except Exception:
+        pass
 
-    request.session['orders_in_cart'] = orders_in_cart
-    request.session['orders_in_order'] = orders_in_order
-    request.session['total_price'] = total_price
+    total_price = int(orders_in_cart) + int(orders_in_order)
+
+    request.session['orders_in_cart'] = str(orders_in_cart)
+    request.session['orders_in_order'] = str(orders_in_order)
+    request.session['total_price'] = str(total_price)
 
     ctx = {
         'categories': categories,

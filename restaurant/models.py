@@ -25,7 +25,7 @@ class Allergy(models.Model):
 
 class Menu(models.Model):
     name = models.CharField("表示名", max_length=256, blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.PositiveIntegerField("価格", blank=True, null=True)
     img = models.ImageField("イメージ画像", upload_to="img",
                             max_length=100, blank=True, null=True)

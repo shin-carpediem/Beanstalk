@@ -49,14 +49,12 @@
     {{ request.session.table }}
   </p>
 
-  {% if request.path == '/filter/' or request.path == '/cart/static/' or request.path == '/menu/' or request.path == '/order/' or request.path == '/nomiho/' %}
-    {% if not user.is_authenticated %}
-      <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="GET">
-        <button class="focus" type="submit" style="padding:0;border:0" onclick="loading_show()">
-          <i class="clipboard fas fa-clipboard-list"></i>
-        </button>
-      </form>
-    {% endif %}
+  {% if not user.is_authenticated %}
+    <form action="{% url 'customer:history' %}" class="col-2 my-auto el__pointer" method="GET">
+      <button class="focus" type="submit" style="padding:0;border:0" onclick="loading_show()">
+        <i class="clipboard fas fa-clipboard-list"></i>
+      </button>
+    </form>
   {% endif %}
 </section>
 <hr class="mb-2" />

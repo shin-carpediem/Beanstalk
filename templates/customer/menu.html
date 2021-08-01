@@ -26,7 +26,7 @@
   <section class="nomiho">
     <!-- もしそもそも飲み放題プランがある場合 -->
     {% if nomihos %}
-      {% if user_uuid.nomiho == False and nomiho_category == 'Yes' %}
+      {% if user.is_authenticated and nomiho_category == 'Yes' or user_uuid.nomiho == False and nomiho_category == 'Yes' %}
         {% for nomiho in nomihos %}
           <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="GET">
             <div>

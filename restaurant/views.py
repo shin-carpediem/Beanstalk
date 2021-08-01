@@ -376,6 +376,7 @@ def total(request):
         'created_at').filter(nomiho=True)
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
+    nomiho_orders = customer.models.NomihoOrder.objects.order_by('created_at')
 
     # 除くべき、飲み放題メニューのリストを作成
     for nomiho_category in nomiho_categories:
@@ -404,6 +405,7 @@ def total(request):
         'active_table_list': active_table_list,
         'active_table_price_list': active_table_price_list,
         'orders': orders,
+        'nomiho_orders': nomiho_orders,
     }
 
     return render(request, 'restaurant/total.html', ctx)
