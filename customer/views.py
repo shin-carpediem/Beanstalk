@@ -38,6 +38,7 @@ def table(request):
     if not 'nonloginuser_uuid' in request.session:
 
         if user.is_authenticated:
+            request.session.flush()
             return redirect('restaurant:logout')
         else:
             return render(request, 'customer/table.html')
@@ -112,11 +113,13 @@ def menu(request):
             try:
                 uuid = request.session['nonloginuser_uuid']
             except Exception:
+                request.session.flush()
                 return redirect('customer:thanks')
 
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
             if user_uuid.active == False:
+                request.session.flush()
                 return redirect('customer:thanks')
 
             table_num = request.session['table']
@@ -184,6 +187,7 @@ def filter(request, category_id):
         try:
             uuid = request.session['nonloginuser_uuid']
         except Exception:
+            request.session.flush()
             return redirect('customer:thanks')
 
     try:
@@ -200,6 +204,7 @@ def filter(request, category_id):
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         if user_uuid.active == False:
+            request.session.flush()
             return redirect('customer:thanks')
 
         # 後からやってきた客よりも先に飲み放題を開始していた場合、
@@ -283,6 +288,7 @@ def cart(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
@@ -298,6 +304,7 @@ def cart(request):
             chain(same_table_cart_list, same_table_cart))
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     # Cartデータの保存
@@ -322,11 +329,13 @@ def cart_static(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     carts = ''
@@ -353,11 +362,13 @@ def cart_detail(request, menu_id):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     num = request.GET.get('num')
@@ -388,11 +399,13 @@ def cart_ch(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     cart_id = request.GET.get('cart_id')
@@ -437,11 +450,13 @@ def order(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     try:
@@ -464,8 +479,6 @@ def order(request):
                                                   num=each.num, customer=each.customer, curr=True)
                     order.save()
                     price = (order.menu.price * order.num)
-
-                    # TODO: データに反映されない
                     same_user.price += int(price)
 
                 same_user.save()
@@ -507,17 +520,20 @@ def order(request):
 def nomiho(request):
     user = request.user
     if user.is_authenticated:
+        request.session.flush()
         return redirect('customer:index')
     else:
 
         try:
             uuid = request.session['nonloginuser_uuid']
         except Exception:
+            request.session.flush()
             return redirect('customer:thanks')
 
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         if user_uuid.active == False:
+            request.session.flush()
             return redirect('customer:thanks')
 
         nomiho_type = request.GET.get('nomiho_type')
@@ -564,11 +580,13 @@ def history(request):
     try:
         uuid = request.session['nonloginuser_uuid']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
     if user_uuid.active == False:
+        request.session.flush()
         return redirect('customer:thanks')
 
     carts = ''
@@ -628,6 +646,7 @@ def stop(request):
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         table_num = request.session['table']
     except Exception:
+        request.session.flush()
         return redirect('customer:thanks')
 
     same_user_table_list = nonLoginUser.objects.defer(
@@ -651,24 +670,6 @@ def stop(request):
     messages.info(request, f'この画面をスクリーンショットしてお会計の際に表示してください。')
 
     return render(request, 'customer/stop.html', ctx)
-
-
-def revert(request):
-    try:
-        uuid = request.session['nonloginuser_uuid']
-    except Exception:
-        return redirect('customer:thanks')
-
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
-    if user_uuid.active == False:
-        user_uuid.active = True
-        user_uuid.save()
-
-        messages.info(
-            request, f'あなたのアカウントのオーダーストップを取り消しました。同じテーブルの他の方も注文をする場合は、同様に先ほどのページの「オーダーストップの取消」をタップして、アカウントを復帰させてください。')
-
-    return redirect('customer:menu')
 
 
 def thanks(request):

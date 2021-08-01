@@ -18,5 +18,4 @@ urlpatterns = [
     path('history/', views.history, name='history'),
     path('thanks/', views.thanks, name='thanks'),
     path('stop/', views.stop, name='stop'),
-    path('revert/', views.revert, name='revert'),
 ]

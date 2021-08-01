@@ -561,18 +561,6 @@ section.table img {
   position: relative;
 }
 
-section.top-view .revert_from_index,
-section.table .revert_from_index {
-  position: absolute;
-  top: 2%;
-  right: 2%;
-}
-
-section.top-view .revert_from_index button,
-section.table .revert_from_index button {
-  font-size: 8px;
-}
-
 section.table .choose-table label {
   color: #fff;
 }
