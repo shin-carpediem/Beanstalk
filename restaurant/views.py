@@ -464,18 +464,29 @@ def daily(request):
     for pointed_order in pointed_orders:
         pointed_total_price += (pointed_order.menu.price * pointed_order.num)
 
+    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        status='終了', created_at__range=(start, end)).order_by('-id')
+    for pointed_nomiho_order in pointed_nomiho_orders:
+        pointed_total_price += (pointed_nomiho_order.nomiho.price * pointed_nomiho_order.num)
+
     # トータルの売上
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
     total_price = 0
     for order in orders:
         total_price += (order.menu.price * order.num)
 
+    nomiho_orders = customer.models.NomihoOrder.objects.filter(status='終了').order_by('-id')
+    for nomiho_order in nomiho_orders:
+        total_price += (nomiho_order.nomiho.price * nomiho_order.num)
+
     ctx = {
         'start': start,
         'end': end,
         'pointed_orders': pointed_orders,
+        'pointed_nomiho_orders': pointed_nomiho_orders,
         'pointed_total_price': pointed_total_price,
         'orders': orders,
+        'nomiho_orders': nomiho_orders,
         'total_price': total_price,
     }
 

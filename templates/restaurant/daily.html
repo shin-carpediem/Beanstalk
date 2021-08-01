@@ -33,22 +33,46 @@
             </div>
           </form>
         </div>
-        <table border="1" class="w-100">
-          <tr class="text-center">
-            <th>料理名</th>
-            <th>単価（円）</th>
-            <th>個数</th>
-            <th>テーブル番号</th>
-          </tr>
-          {% for order in pointed_orders %}
-            <tr>
-              <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
-              <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
-              <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
-              <td class="px-sm-3 px-2">{{ order.customer.table }}</td>
-            </tr>
-          {% endfor %}
-        </table>
+
+        <div class="row">
+          <div class="col-sm-6 col-12">
+            <p>テーブル毎単品詳細（飲み放題メニュー抜き）</p>
+            <table border="1" class="w-100">
+              <tr class="text-center">
+                <th>料理名</th>
+                <th>単価（円）</th>
+                <th>個数</th>
+              </tr>
+              {% for order in pointed_orders %}
+                {% if not order.menu.price == 0 %}
+                  <tr>
+                    <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
+                      <td class="px-sm-3 px-2 text-right">{{ order.menu.price | intcomma }}</td>
+                    <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </table>
+          </div>
+          <div class="col-sm-6 col-12">
+            <p>飲み放題</p>
+            <table border="1" class="w-100">
+              <tr class="text-center">
+                <th>プラン名</th>
+                <th>単価（円）</th>
+                <th>人数</th>
+              </tr>
+              {% for pointed_nomiho_order in pointed_nomiho_orders %}
+                <tr>
+                  <td class="px-sm-3 px-2">{{ pointed_nomiho_order.nomiho.name }}</td>
+                  <td class="px-sm-3 px-2 text-right">{{ pointed_nomiho_order.nomiho.price }}</td>
+                  <td class="px-sm-3 px-2 text-right">{{ pointed_nomiho_order.num }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+
       </div>
 
       <div class="total-interest p-2 mt-5 m-2">
@@ -56,22 +80,45 @@
         <div class="py-3">
           <p class="text-center text__bold text__large">{{ total_price }}　円</p>
         </div>
-        <table border="1" class="w-100">
-          <tr class="text-center">
-            <th>料理名</th>
-            <th>単価（円）</th>
-            <th>個数</th>
-            <th>テーブル番号</th>
-          </tr>
-          {% for order in orders %}
-            <tr>
-              <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
-              <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
-              <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
-              <td class="px-sm-3 px-2">{{ order.customer.table }}</td>
-            </tr>
-          {% endfor %}
-        </table>
+        <div class="row">
+          <div class="col-sm-6 col-12">
+            <p>テーブル毎単品詳細（飲み放題メニュー抜き）</p>
+            <table border="1" class="w-100">
+              <tr class="text-center">
+                <th>料理名</th>
+                <th>単価（円）</th>
+                <th>個数</th>
+              </tr>
+              {% for order in orders %}
+                {% if not order.menu.price == 0 %}
+                  <tr>
+                    <td class="px-sm-3 px-2">{{ order.menu.name }}</td>
+                    <td class="px-sm-3 px-2 text-right">{{ order.menu.price }}</td>
+                    <td class="px-sm-3 px-2 text-right">{{ order.num }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </table>
+          </div>
+
+          <div class="col-sm-6 col-12">
+            <p>飲み放題</p>
+            <table border="1" class="w-100">
+              <tr class="text-center">
+                <th>料理名</th>
+                <th>単価（円）</th>
+                <th>個数</th>
+              </tr>
+              {% for nomiho_order in nomiho_orders %}
+                <tr>
+                  <td class="px-sm-3 px-2">{{ nomiho_order.nomiho.name }}</td>
+                  <td class="px-sm-3 px-2 text-right">{{ nomiho_order.nomiho.price }}</td>
+                  <td class="px-sm-3 px-2 text-right">{{ nomiho_order.num }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </section>
