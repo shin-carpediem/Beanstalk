@@ -465,7 +465,8 @@ section.table {
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    h1, h3 {
+    h1,
+    h3 {
       color: $white;
     }
     form {
@@ -548,7 +549,12 @@ section.table {
         }
       }
       .focused {
-        background-color: $light-orange;
+        background: linear-gradient(
+          180.27723547917037deg,
+          rgba(245, 202, 181, 1) 6.210392902408117%,
+          rgba(242, 217, 221, 1) 84.79087452471484%,
+          rgba(242, 218, 222, 1) 84.79087452471484%
+        );
       }
       .blighten {
         background-color: $light-orange;

@@ -431,10 +431,8 @@ def daily(request):
     else:
         # デフォルトは昨日から今日の範囲
         dt_now = datetime.datetime.now()
-        start = datetime.datetime(
-            dt_now.year, dt_now.month, (dt_now.day)-1, dt_now.hour)
-        end = datetime.datetime(
-            dt_now.year, dt_now.month, dt_now.day, dt_now.hour)
+        start = dt_now - datetime.timedelta(days=1)
+        end = dt_now
 
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')

@@ -544,7 +544,8 @@ section.table .forms {
   -ms-transform: translate(-50%, -50%);
 }
 
-section.top-view .forms h1, section.top-view .forms h3,
+section.top-view .forms h1,
+section.top-view .forms h3,
 section.table .forms h1,
 section.table .forms h3 {
   color: #fff;
@@ -642,7 +643,7 @@ section.table .choose-table input {
 }
 
 .board__customer section.menu-list .category .focused {
-  background-color: #ffd79a;
+  background: linear-gradient(180.27724deg, #f5cab5 6.21039%, #f2d9dd 84.79087%, #f2dade 84.79087%);
 }
 
 .board__customer section.menu-list .category .blighten {
