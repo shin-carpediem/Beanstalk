@@ -394,12 +394,23 @@ def total(request):
             active_table_list.append(table)
 
         # アクティブ客のテーブル毎の合計金額を算出
-        for table in active_table_list:
-            active_user_same_table_list = nonLoginUser.objects.defer('created_at').filter(table=int(table), active=True)
-            for active_user_same_table in active_user_same_table_list:
-                price += int(active_user_same_table.price)
+        active_user_same_table_list = nonLoginUser.objects.defer('created_at').filter(table=int(table), active=True)
+        # まずは飲み放題分を加算
+        nomiho_order_list = customer.models.NomihoOrder.objects.defer('created_at').filter(table=table, curr=True)
 
-            active_table_price_list[str(table)] = price
+        for nomiho_order in nomiho_order_list:
+            price += nomiho_order.nomiho.price
+
+        # 次に注文（済）のメニューの金額を加算
+        for active_user_same_table in active_user_same_table_list:
+            user_order = customer.models.Order.objects.defer('created_at').filter(customer=active_user_same_table, curr=True)
+
+            for each in user_order:
+                user_order_price = each.menu.price
+                user_order_num = each.num
+                price += int(user_order_price * user_order_num)
+
+        active_table_price_list[str(table)] = price
 
         # 飲み放題カテゴリに属する全てのメニューは0円なので計算から省く。単品リストからも省く。
         for nomiho_menu in nomiho_menus:
@@ -470,8 +481,7 @@ def daily(request):
     for pointed_order in pointed_orders:
         pointed_total_price += (pointed_order.menu.price * pointed_order.num)
 
-    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
-        status='終了', created_at__range=(start, end)).order_by('-id')
+    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(created_at__range=(start, end)).order_by('-id')
     for pointed_nomiho_order in pointed_nomiho_orders:
         pointed_total_price += (pointed_nomiho_order.nomiho.price * pointed_nomiho_order.num)
 
@@ -481,7 +491,7 @@ def daily(request):
     for order in orders:
         total_price += (order.menu.price * order.num)
 
-    nomiho_orders = customer.models.NomihoOrder.objects.filter(status='終了').order_by('-id')
+    nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
     for nomiho_order in nomiho_orders:
         total_price += (nomiho_order.nomiho.price * nomiho_order.num)
 
