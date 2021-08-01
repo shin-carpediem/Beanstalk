@@ -376,7 +376,7 @@ def total(request):
         'created_at').filter(nomiho=True)
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
-    nomiho_orders = customer.models.NomihoOrder.objects.order_by('created_at')
+    nomiho_orders = customer.models.NomihoOrder.objects.filter(curr=True).order_by('created_at')
 
     # 除くべき、飲み放題メニューのリストを作成
     for nomiho_category in nomiho_categories:
@@ -432,6 +432,12 @@ def stop_user_order(request, active_table):
         for same_user_order in same_user_orders:
             same_user_order.curr = False
             same_user_order.save()
+
+    nomiho_orders = customer.models.NomihoOrder.objects.defer('created_at').filter(table=str(active_table), curr=True)
+    for nomiho_order in nomiho_orders:
+        nomiho_order.status = '終了'
+        nomiho_order.curr = False
+        nomiho_order.save()
 
     messages.info(request, f'{active_table}テーブルのお会計完了を保存しました。')
 
