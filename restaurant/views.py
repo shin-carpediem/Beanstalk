@@ -559,14 +559,20 @@ def category_add(request):
 def category_ch(request):
     name = request.POST.get('category_name')
     required_name = request.POST.get('ch_category_form')
-    try:
-        nomiho = request.POST.get('nomiho')
-    except Exception:
-        nomiho = False
 
     category = Category.objects.get(name=name)
     category.name = required_name
-    category.nomiho = nomiho
+
+    try:
+        nomiho = request.POST.get('nomiho')
+        category.nomiho = nomiho
+        # 飲み放題ではないカテゴリから飲み放題カテゴリにした場合、その中にある全てのメニューの金額を0にする
+        menus_in_this_category = Menu.objects.defer('created_at').filter(category=category)
+        menus_in_this_category.price = 0
+        menus_in_this_category.save()
+    except Exception:
+        pass
+
     category.save()
     messages.success(request, f"カテゴリー{name}を変更しました。")
 

@@ -26,10 +26,10 @@
           <form class="row py-2 d-flex align-items-center justify-content-around" action="{% url 'restaurant:category_add' %}" method="POST">{% csrf_token %}
             <p class="col-2 badge__orange py-1">追加</p>
             <div class="col-5">
-              <input name="add_category_form" type="text" required>
+              <input name="add_category_form" type="text" required><br />
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-2 btn btn__orange" onclick="loading_show()">
+            <button type="submit" class="col-2 btn btn__orange" onclick="loading_show(); style.display='none';">
               保存
             </button>
           </form>
@@ -45,10 +45,10 @@
                 {% endfor %}
               </select>
               <p class="mb-1">変更後の名前</p>
-              <input type="text" name="ch_category_form" required>
+              <input type="text" name="ch_category_form" required><br />
               <input class="mt-3" name="nomiho" type="checkbox" value="True">飲み放題用
             </div>
-            <button type="submit" class="col-2 btn btn__light-orange" onclick="loading_show()">
+            <button type="submit" class="col-2 btn btn__light-orange">
               更新
             </button>
           </form>
