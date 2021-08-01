@@ -360,7 +360,6 @@ def history(request):
     return render(request, 'restaurant/history.html', ctx)
 
 
-# TODO:
 @login_required
 def total(request):
     # 利用中のテーブルお会計終了ボタンのためのリスト
@@ -414,7 +413,6 @@ def total(request):
         'orders': orders,
         'nomiho_orders': nomiho_orders,
     }
-    print(active_table_price_list)
 
     return render(request, 'restaurant/total.html', ctx)
 

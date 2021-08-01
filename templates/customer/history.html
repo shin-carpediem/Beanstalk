@@ -64,11 +64,11 @@
   <hr/>
   <div class="row">
     <div class="col-4">
-      <p class="py-2 px-3 badge badge__orange">注文予定</p>
+      <p class="py-2 px-3 badge badge__orange shadow mb-3">注文予定</p>
       <p>¥ {{ request.session.orders_in_cart | intcomma }}</p>
     </div>
     <div class="col-4">
-      <p class="py-2 px-3 badge badge__grey">注文済</p>
+      <p class="py-2 px-3 badge badge__grey shadow mb-3">注文済</p>
       {% if request.session.orders_in_order %}
         <p>¥ {{ request.session.orders_in_order | intcomma }}</p>
       {% else %}
@@ -79,7 +79,7 @@
       {% endif %}
     </div>
     <div class="col-4">
-      <p class="py-2 px-3 badge badge__yellow">合計</p>
+      <p class="py-2 px-3 badge badge__yellow shadow mb-3">合計</p>
       <p class="text__bold text_large">
         {% if request.session.total_price %}
           ¥ {{ request.session.total_price | intcomma }}
@@ -94,7 +94,7 @@
         <!-- hidden -->
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         {% if carts %}
-          <button class="btn btn__orange shadow px-5 text__bold" id="orderConfirm" onclick="loading_show(); style.display='none';">
+          <button class="btn btn__red shadow px-5 text__bold" id="orderConfirm" onclick="loading_show(); style.display='none';">
         {% else %}
           <button class="btn btn__grey shadow px-5 text__bold" id="orderConfirm" disabled>
         {% endif %}
