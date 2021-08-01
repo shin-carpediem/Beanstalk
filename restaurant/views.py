@@ -363,18 +363,24 @@ def history(request):
 # TODO:
 @login_required
 def total(request):
+    # 利用中のテーブルお会計終了ボタンのためのリスト
+    active_table_list = []
+    # テーブル番号と、すでに調理・提供済みのメニュー（飲み放題含む）の合計金額が
+    # セットになったjson
+    active_table_price_list = {}
+    # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
     nomiho_menus = ''
     orders = ''
-    active_table_list = []
-    active_table_price_list = {}
 
+    nomiho_categories = Category.objects.defer(
+        'created_at').filter(nomiho=True)
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
-    nomiho_categories = Category.objects.defer('created_at').filter(nomiho=True)
 
     # 除くべき、飲み放題メニューのリストを作成
     for nomiho_category in nomiho_categories:
-        menus = Menu.objects.defer('created_at').filter(category=nomiho_category)
+        menus = Menu.objects.defer('created_at').filter(
+            category=nomiho_category)
         nomiho_menus = list(chain(nomiho_menus, menus))
 
     for active_non_login_user in active_non_login_user_list:
@@ -387,6 +393,7 @@ def total(request):
                 'created_at').exclude(menu=nomiho_menu).filter(customer=active_non_login_user.uuid).order_by('-id')
             orders = list(chain(orders, active_non_login_user_orders))
 
+        # アクティブ客の番号をリスト化
         if not table in active_table_list:
             active_table_list.append(table)
 
@@ -394,9 +401,9 @@ def total(request):
             active_table_price_list[table] = str(price)
 
     ctx = {
-        'orders': orders,
         'active_table_list': active_table_list,
         'active_table_price_list': active_table_price_list,
+        'orders': orders,
     }
 
     return render(request, 'restaurant/total.html', ctx)
@@ -570,15 +577,17 @@ def category_ch(request):
     category = Category.objects.get(name=name)
     category.name = required_name
 
-    try:
-        nomiho = request.POST.get('nomiho')
-        category.nomiho = nomiho
+    if request.POST.get('nomiho') != None:
+        category.nomiho = True
         # 飲み放題ではないカテゴリから飲み放題カテゴリにした場合、その中にある全てのメニューの金額を0にする
-        menus_in_this_category = Menu.objects.defer('created_at').filter(category=category)
-        menus_in_this_category.price = 0
-        menus_in_this_category.save()
-    except Exception:
-        pass
+        menus_in_this_categories = Menu.objects.defer(
+            'created_at').filter(category=category)
+
+        for menus_in_this_category in menus_in_this_categories:
+            menus_in_this_category.price = 0
+            menus_in_this_category.save()
+    else:
+        category.nomiho = False
 
     category.save()
     messages.success(request, f"カテゴリー{name}を変更しました。")
