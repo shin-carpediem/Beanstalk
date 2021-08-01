@@ -360,6 +360,7 @@ def history(request):
     return render(request, 'restaurant/history.html', ctx)
 
 
+# TODO:
 @login_required
 def total(request):
     # 利用中のテーブルお会計終了ボタンのためのリスト
@@ -368,40 +369,36 @@ def total(request):
     # セットになったjson
     active_table_price_list = {}
     # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
-    nomiho_menus = ''
     orders = ''
     price = 0
 
-    nomiho_categories = Category.objects.defer(
-        'created_at').filter(nomiho=True)
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
     nomiho_orders = customer.models.NomihoOrder.objects.filter(curr=True).order_by('created_at')
-
-    # 除くべき、飲み放題メニューのリストを作成
-    for nomiho_category in nomiho_categories:
-        menus = Menu.objects.defer('created_at').filter(
-            category=nomiho_category)
-        nomiho_menus = list(chain(nomiho_menus, menus))
 
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
         table_int = active_non_login_user.table
         table = str(table_int)
 
+        # 飲み放題カテゴリに属する全てのメニューは0円なので計算から省く。単品リストからも省く。
+        active_non_login_user_orders = customer.models.Order.objects.defer(
+            'created_at').filter(status='済', customer=active_non_login_user.uuid).order_by('-id')
+        orders = list(chain(orders, active_non_login_user_orders))
+
         # アクティブ客のテーブル番号をリスト化
         if not table in active_table_list:
             active_table_list.append(table)
 
-        # アクティブ客のテーブル毎の合計金額を算出
+        # アクティブ客のテーブル毎の合計金額を算出するため
         active_user_same_table_list = nonLoginUser.objects.defer('created_at').filter(table=int(table), active=True)
-        # まずは飲み放題分を加算
+        # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
         nomiho_order_list = customer.models.NomihoOrder.objects.defer('created_at').filter(table=table, curr=True)
 
         for nomiho_order in nomiho_order_list:
-            price += nomiho_order.nomiho.price
+            price += nomiho_order.nomiho.price * nomiho_order.num
 
-        # 次に注文（済）のメニューの金額を加算
+        # 次に注文（済）のメニューの金額を加算するため、アクティブ客のテーブル毎のオーダーリストを作成
         for active_user_same_table in active_user_same_table_list:
             user_order = customer.models.Order.objects.defer('created_at').filter(customer=active_user_same_table, curr=True)
 
@@ -411,12 +408,6 @@ def total(request):
                 price += int(user_order_price * user_order_num)
 
         active_table_price_list[str(table)] = price
-
-        # 飲み放題カテゴリに属する全てのメニューは0円なので計算から省く。単品リストからも省く。
-        for nomiho_menu in nomiho_menus:
-            active_non_login_user_orders = customer.models.Order.objects.defer(
-                'created_at').exclude(menu=nomiho_menu).filter(status='済', customer=active_non_login_user.uuid).order_by('-id')
-            orders = list(chain(orders, active_non_login_user_orders))
 
     ctx = {
         'active_table_list': active_table_list,

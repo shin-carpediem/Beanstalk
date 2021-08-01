@@ -5,7 +5,7 @@
 {% block inner__content %}
 <section class="menu-list">
   <div class="category mb-3">
-    <div class="d-flex ml-3">
+    <div class="d-flex flex-wrap category-wrapper">
       {% for category in categories %}
         <form action="{% url 'customer:filter' category.id %}" method="GET">
           {% if category.id == request.session.category_name %}

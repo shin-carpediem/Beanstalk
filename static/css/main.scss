@@ -537,27 +537,26 @@ section.table {
     .category {
       border-bottom: 1px solid $grey;
       position: relative;
-      .category-btn {
-        border-top: 1px solid $grey;
-        border-left: 1px solid $grey;
-        border-right: 1px solid $grey;
-        border-bottom: 0;
-        border-radius: 4px 4px 0 0;
-        background-color: $white;
-        p {
-          color: $grey;
+      .category-wrapper {
+        .category-btn {
+          border-top: 1px solid $grey;
+          border-left: 1px solid $grey;
+          border-right: 1px solid $grey;
+          border-bottom: 0;
+          border-radius: 4px 4px 0 0;
+          background-color: $white;
+          p {
+            color: $grey;
+          }
         }
-      }
-      .focused {
-        background: linear-gradient(
-          180.27723547917037deg,
-          rgba(245, 202, 181, 1) 6.210392902408117%,
-          rgba(242, 217, 221, 1) 84.79087452471484%,
-          rgba(242, 218, 222, 1) 84.79087452471484%
-        );
-      }
-      .blighten {
-        background-color: $light-orange;
+        .focused {
+          background: linear-gradient(
+            180.1687646945927deg,
+            rgba(245, 227, 184, 1) 4.496197718631179%,
+            rgba(245, 227, 184, 1) 8.619824672581327%,
+            rgba(255, 238, 224, 1) 90.55449936628644%
+          );
+        }
       }
       .category-manage-btn {
         position: absolute;

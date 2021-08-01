@@ -71,13 +71,15 @@
                   <th>小計（円）</th>
                 </tr>
                 {% for order in table.list %}
-                  <tr>
-                    <td class="px-sm-3 px-2">{{ order.menu }}</td>
-                    <td class="text-right px-sm-3 px-2">{{ order.menu.price | intcomma }}</td>
-                    <td class="text-right px-sm-3 px-2">{{ order.num }}</td>
-                    <td class="px-sm-3 px-2">{{ order.status }}</td>
-                    <td class="text-right px-sm-3 px-2">{{ order.menu.price|mul:order.num | intcomma }}</td>
-                  </tr>
+                  {% if not order.menu.price == 0 %}
+                    <tr>
+                      <td class="px-sm-3 px-2">{{ order.menu }}</td>
+                      <td class="text-right px-sm-3 px-2">{{ order.menu.price | intcomma }}</td>
+                      <td class="text-right px-sm-3 px-2">{{ order.num }}</td>
+                      <td class="px-sm-3 px-2">{{ order.status }}</td>
+                      <td class="text-right px-sm-3 px-2">{{ order.menu.price|mul:order.num | intcomma }}</td>
+                    </tr>
+                  {% endif %}
                 {% endfor %}
               </table>
             </div>

@@ -629,7 +629,7 @@ section.table .choose-table input {
   position: relative;
 }
 
-.board__customer section.menu-list .category .category-btn {
+.board__customer section.menu-list .category .category-wrapper .category-btn {
   border-top: 1px solid #9c9c9c;
   border-left: 1px solid #9c9c9c;
   border-right: 1px solid #9c9c9c;
@@ -638,16 +638,12 @@ section.table .choose-table input {
   background-color: #fff;
 }
 
-.board__customer section.menu-list .category .category-btn p {
+.board__customer section.menu-list .category .category-wrapper .category-btn p {
   color: #9c9c9c;
 }
 
-.board__customer section.menu-list .category .focused {
-  background: linear-gradient(180.27724deg, #f5cab5 6.21039%, #f2d9dd 84.79087%, #f2dade 84.79087%);
-}
-
-.board__customer section.menu-list .category .blighten {
-  background-color: #ffd79a;
+.board__customer section.menu-list .category .category-wrapper .focused {
+  background: linear-gradient(180.16876deg, #f5e3b8 4.4962%, #f5e3b8 8.61982%, #ffeee0 90.5545%);
 }
 
 .board__customer section.menu-list .category .category-manage-btn {
