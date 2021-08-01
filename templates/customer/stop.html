@@ -8,31 +8,56 @@
     <h4 class="text__bold"><span style="color: red;">{{ request.session.table }}</span>番テーブル お会計金額</h4>
     <h4 class="text__bold ml-3 text__underline">
       {% if request.session.orders_in_order %}
-        {{ request.session.orders_in_order }}
+        {{ request.session.orders_in_order | intcomma }}
       {% else %}
         0
       {% endif %}
         円
     </h4>
   </div>
-  <hr>
-  <div class="p-2 m-2 text__bold text__large">
-    <!-- <p>飲み放題</p>
-    <p></p> -->
-    <table class="w-100">
-      <tr class="row pb-3">
-        <th class="col-6">料理名</th>
-        <th class="col-3">単価</th>
-        <th class="col-3">個数</th>
-      </tr>
-      {% for order in orders %}
-        <tr class="row">
-          <td class="col-6">{{ order.menu.name }}</td>
-          <td class="col-3">{{ order.menu.price }}</td>
-          <td class="col-3">{{ order.num }}</td>
+
+  <div class="p-2 m-2">
+    <div class="pb-5">
+      <p>飲み放題</p>
+      <table class="w-100 mt-3">
+        <tr class="row pb-3">
+          <th class="col-6">プラン名</th>
+          <th class="col-2">状況</th>
+          <th class="col-2">人数</th>
+          <th class="col-2">円/人</th>
         </tr>
-      {% endfor %}
-    </table>
+        <hr>
+        {% for nomiho_order in nomiho_orders %}
+          <tr class="row">
+            <td class="col-6">{{ nomiho_order.nomiho.name }}</td>
+            <td class="col-2">{{ nomiho_order.status }}</td>
+            <td class="col-2">{{ nomiho_order.num }}</td>
+            <td class="col-2">{{ nomiho_order.nomiho.price | intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div>
+      <p>単品</p>
+      <table class="w-100 text__large mt-3">
+        <tr class="row pb-3">
+          <th class="col-6">料理名</th>
+          <th class="col-3">単価</th>
+          <th class="col-3">個数</th>
+        </tr>
+        <hr>
+        {% for order in orders %}
+          {% if not order.menu.price == 0 %}
+            <tr class="row">
+              <td class="col-6">{{ order.menu.name }}</td>
+              <td class="col-3">{{ order.menu.price | intcomma }}</td>
+              <td class="col-3">{{ order.num }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </table>
+    </div>
   </div>
 </section>
 {% endblock %}

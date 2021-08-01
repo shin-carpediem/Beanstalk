@@ -523,7 +523,7 @@ def nomiho(request):
 
             # 飲み放題の内容を店側に伝えるデータを作成
             nomiho_order = customer.models.NomihoOrder(status='開始中', nomiho=nomiho_query, table=table_num,
-                                        num=same_user_table_list.count(), customer=user_uuid, curr=True)
+                                                       num=same_user_table_list.count(), customer=user_uuid, curr=True)
             nomiho_order.save()
 
             for same_user in same_user_table_list:
@@ -600,12 +600,11 @@ def history(request):
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
 
-    try:
-        nomiho_order = customer.models.NomihoOrder.objects.get(table=table_num, curr=True)
+    nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        table=table_num, curr=True)
+    for nomiho_order in nomiho_orders:
         nomiho_order_price = nomiho_order.nomiho.price
         orders_in_order += int(nomiho_order_price)
-    except Exception:
-        pass
 
     total_price = int(orders_in_cart) + int(orders_in_order)
 
@@ -627,7 +626,6 @@ def history(request):
 def stop(request):
     try:
         request.session['nonloginuser_uuid']
-        orders_in_order = request.session['orders_in_order']
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
         table_num = request.session['table']
     except Exception:
@@ -636,14 +634,18 @@ def stop(request):
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
 
+    nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        table=table_num, curr=True)
+
     orders = ''
     for same_user in same_user_table_list:
-        same_user_orders = customer.models.Order.objects.defer('created_at').filter(status='済',
-                                                                                    customer=same_user.uuid, curr=True).order_by('-id')
+        same_user_orders = customer.models.Order.objects.defer('created_at').exclude(status='キャンセル').filter(
+            customer=same_user.uuid, curr=True).order_by('-id')
 
         orders = list(chain(orders, same_user_orders))
 
     ctx = {
+        'nomiho_orders': nomiho_orders,
         'orders': orders,
     }
 
