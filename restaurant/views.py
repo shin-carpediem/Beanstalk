@@ -372,7 +372,8 @@ def total(request):
 
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
-    nomiho_orders = customer.models.NomihoOrder.objects.filter(curr=True).order_by('created_at')
+    nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        curr=True).order_by('created_at')
 
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
@@ -389,16 +390,19 @@ def total(request):
             active_table_list.append(table)
 
         # アクティブ客のテーブル毎の合計金額を算出するため
-        active_user_same_table_list = nonLoginUser.objects.defer('created_at').filter(table=int(table), active=True)
+        active_user_same_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=int(table), active=True)
         # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
-        nomiho_order_list = customer.models.NomihoOrder.objects.defer('created_at').filter(table=table, curr=True)
+        nomiho_order_list = customer.models.NomihoOrder.objects.defer(
+            'created_at').filter(table=table, curr=True)
 
         for nomiho_order in nomiho_order_list:
             price += nomiho_order.nomiho.price * nomiho_order.num
 
         # 次に注文（済）のメニューの金額を加算するため、アクティブ客のテーブル毎のオーダーリストを作成
         for active_user_same_table in active_user_same_table_list:
-            user_order = customer.models.Order.objects.defer('created_at').filter(customer=active_user_same_table, curr=True)
+            user_order = customer.models.Order.objects.defer(
+                'created_at').filter(customer=active_user_same_table, curr=True)
 
             for each in user_order:
                 user_order_price = each.menu.price
@@ -439,7 +443,8 @@ def stop_user_order(request, active_table):
             same_user_order.curr = False
             same_user_order.save()
 
-    nomiho_orders = customer.models.NomihoOrder.objects.defer('created_at').filter(table=str(active_table), curr=True)
+    nomiho_orders = customer.models.NomihoOrder.objects.defer(
+        'created_at').filter(table=str(active_table), curr=True)
     for nomiho_order in nomiho_orders:
         nomiho_order.status = '終了'
         nomiho_order.curr = False
@@ -470,9 +475,11 @@ def daily(request):
     for pointed_order in pointed_orders:
         pointed_total_price += (pointed_order.menu.price * pointed_order.num)
 
-    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(created_at__range=(start, end)).order_by('-id')
+    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        created_at__range=(start, end)).order_by('-id')
     for pointed_nomiho_order in pointed_nomiho_orders:
-        pointed_total_price += (pointed_nomiho_order.nomiho.price * pointed_nomiho_order.num)
+        pointed_total_price += (pointed_nomiho_order.nomiho.price *
+                                pointed_nomiho_order.num)
 
     # トータルの売上
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
@@ -786,9 +793,14 @@ def allergy_add(request):
     get_allergy = request.POST.get('allergy')
     menu_id = request.POST.get('menu_id')
     menu = Menu.objects.get(id=menu_id)
-    menu.allergies.create(ingredient=get_allergy)
-    menu.save()
-    messages.success(request, f"{get_allergy}をアレルギー項目一覧に追加しました。")
+    get_allergy_query = Allergy.objects.filter(ingredient=get_allergy)
+
+    if get_allergy_query.count() == 0:
+        menu.allergies.create(ingredient=get_allergy)
+        menu.save()
+        messages.success(request, f"{get_allergy}をアレルギー項目一覧に追加しました。")
+    else:
+        messages.info(request, f"同一の名前のアレルギーを項目に追加はできません。")
 
     return redirect('customer:menu_detail', menu_id=menu.id)
 
