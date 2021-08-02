@@ -594,7 +594,7 @@ def category_add(request):
         category.save()
         messages.success(request, f"カテゴリーに{name}を追加しました。")
     else:
-        messages.warning(request, f"同じ名前のカテゴリは作成できません。")
+        messages.warning(request, f"同一の名前のカテゴリーは作成できません。")
 
     return redirect('customer:menu')
 
