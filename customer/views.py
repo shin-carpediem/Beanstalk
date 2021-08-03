@@ -517,7 +517,7 @@ def order(request):
 
 # 飲み放題開始用のボタン
 @require_GET
-def nomiho(request):
+def nomiho(request, nomiho_id):
     user = request.user
     if user.is_authenticated:
         request.session.flush()
@@ -536,11 +536,9 @@ def nomiho(request):
             request.session.flush()
             return redirect('customer:thanks')
 
-        nomiho_type = request.GET.get('nomiho_type')
-
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
         try:
-            nomiho_query = Nomiho.objects.get(id=nomiho_type)
+            nomiho_query = Nomiho.objects.get(id=nomiho_id)
 
             table_num = request.session['table']
             same_user_table_list = nonLoginUser.objects.defer(
@@ -567,8 +565,8 @@ def nomiho(request):
                 duration = nomiho_query.duration
                 # stop_nomiho(request, duration)
 
-                messages.info(
-                    request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
+            messages.info(
+                request, f'🍺 飲み放題を開始しました！！🍶  制限時間は{duration}分です！')
 
         except Exception:
             pass

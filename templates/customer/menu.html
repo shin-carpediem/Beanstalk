@@ -28,15 +28,13 @@
     {% if nomihos %}
       {% if user.is_authenticated and nomiho_category == 'Yes' or user_uuid.nomiho == False and nomiho_category == 'Yes' %}
         {% for nomiho in nomihos %}
-          <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' %}" method="GET">
+          <form class="nomiho--1 shadow px-2 m-3 pt-3" action="{% url 'customer:nomiho' nomiho.id %}" method="GET">
             <div>
               <h3 class="text__bold">プラン名： {{ nomiho.name }}</h3>
               <h4 class="pt-3 pb-1 text__bold">料金：　¥　{{ nomiho.price }}</h4>
               <p class="pt-1 pb-3">制限時間：　{{ nomiho.duration }}分</p>
               <p>{{ nomiho.comment }}</p>
             </div>
-            <!-- hidden -->
-            <input type="hidden" name="nomiho_type" value="{{ nomiho.id }}">
             <div class="d-sm-flex align-items-center justify-content-around">
               <input type="number" name="nomiho_num" min="{{ same_num }}" value="{{ same_num }}" class="mt-sm-0 mt-4 mr-sm-0 mr-3 text-center text__bold text__large"> 名で
               {% if user.is_authenticated %}
