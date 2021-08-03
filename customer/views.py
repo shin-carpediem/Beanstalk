@@ -601,7 +601,7 @@ def history(request):
     for same_user in same_user_table_list:
         same_user_carts = customer.models.Cart.objects.defer('created_at').filter(
             customer=same_user.uuid, curr=True).order_by('-id')
-        same_user_orders = customer.models.Order.objects.defer('created_at').filter(
+        same_user_orders = customer.models.Order.objects.defer('created_at').exclude(status='キャンセル').filter(
             customer=same_user.uuid, curr=True).order_by('-id')
 
         for each in same_user_carts:
