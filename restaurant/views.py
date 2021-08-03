@@ -217,6 +217,7 @@ def order_manage(request):
     table = None
 
     active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
+    menus = Menu.objects.defer('created_at').order_by('id')
 
     # テーブル番号でフィルタした際
     if request.POST.get('table') != None:
@@ -234,6 +235,7 @@ def order_manage(request):
         'name': name,
         'table': table,
         'order_list': order_list,
+        'menus': menus,
     }
 
     return render(request, 'restaurant/order_manage.html', ctx)
@@ -241,11 +243,23 @@ def order_manage(request):
 
 @login_required
 @require_POST
-def order_status_ch(request):
+def order_status_ch(request, order_id):
     order_status = request.POST.get('order_status')
-    order_id = request.POST.get('order_id')
     order = customer.models.Order.objects.get(id=order_id)
     order.status = order_status
+    order.save()
+    return redirect('restaurant:order_manage')
+
+
+@login_required
+@require_POST
+def order_status_ch_menu(request, order_id):
+    required_menu_id = request.POST.get('required_menu_id')
+    required_order_num = request.POST.get('required_order_num')
+    menu = Menu.objects.get(id=required_menu_id)
+    order = customer.models.Order.objects.get(id=order_id)
+    order.menu = menu
+    order.num = required_order_num
     order.save()
     return redirect('restaurant:order_manage')
 

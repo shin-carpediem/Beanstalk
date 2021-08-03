@@ -27,10 +27,38 @@
   </button>
 
   <div class="modal fade" id="order-modal__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="order-modal__ModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <form class="modal-content" action="{% url 'restaurant:order_status_ch' %}" method="POST">{% csrf_token %}
+    <div class="modal-dialog" role="document">
+      <form class="modal-content mb-5" action="{% url 'restaurant:order_status_ch_menu' order.id %}" method="POST">{% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="order-modal__ModalCenterTitle">注文状況を変更</h5>
+          <h5 class="modal-title" id="order-modal__ModalCenterTitle">注文内容を変更</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mx-auto d-block text-center">
+          <div class="py-3">
+            <label>メニュー</label><br />
+            <select name="required_menu_id">
+              {% for menu in menus %}
+                <option value="{{ menu.id }}">カテゴリー：{{ menu.category }}-----メニュー：{{ menu.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="py-3">
+            <label>個数</label><br />
+            <input type="number" name="required_order_num" value="{{ order.num }}" min=1 class="text__large text__bold text-center">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
+          <button type="submit" class="px-4 py-2 btn btn__grey mx-auto w-50" onclick="loading_show()">
+            実行
+          </button>
+        </div>
+      </form>
+      <form class="modal-content mt-5" action="{% url 'restaurant:order_status_ch' order.id %}" method="POST">{% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="order-modal__ModalCenterTitle">注文状況を更新</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -42,10 +70,8 @@
             <input type="radio" name="order_status" value="済" id="doneRadio"><p id="done" class="badge__grey ml-3 px-3 py-2 text__bold">済</p>
           </div>
         </div>
-        <!-- hidden -->
-        <input type="hidden" name="order_id" value='{{ order.id }}'>
         <div class="modal-footer">
-          <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button>
+          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
           <button type="submit" class="px-4 py-2 btn btn__blue mx-auto w-50" onclick="loading_show()">
             実行
           </button>
