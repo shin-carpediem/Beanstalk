@@ -416,7 +416,7 @@ def total(request):
         # 次に注文（済）のメニューの金額を加算するため、アクティブ客のテーブル毎のオーダーリストを作成
         for active_user_same_table in active_user_same_table_list:
             user_order = customer.models.Order.objects.defer(
-                'created_at').filter(customer=active_user_same_table, curr=True)
+                'created_at').filter(status='済', customer=active_user_same_table, curr=True)
 
             for each in user_order:
                 user_order_price = each.menu.price
