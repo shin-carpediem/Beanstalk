@@ -445,7 +445,9 @@ section.top-view {
   }
 }
 section.top-view,
-section.table {
+section.table,
+section.waiting,
+section.judge {
   .img {
     height: 100vh;
     img {
@@ -476,6 +478,13 @@ section.table {
   }
   img {
     position: relative;
+  }
+}
+section.waiting,
+section.judge {
+  h3,
+  p {
+    color: $white;
   }
 }
 section.table {

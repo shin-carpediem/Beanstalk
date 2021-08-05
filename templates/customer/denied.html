@@ -1,0 +1,18 @@
+{% extends 'customer/base__next.html' %}
+{% load static %}
+
+{% block custom__header %}
+  <title>拒否されました</title>
+{% endblock %}
+
+{% block content %}
+<section class="w-100 waiting">
+  <div class="img">
+    <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
+  </div>
+  <div class="forms text-center title">
+    <h3 class="pb-5 mb-5">拒否されました</h3>
+    <p>*テーブルにご自身のみいらっしゃる状態でこの画面が表示されましたら、<br>お手数ですが店員をお呼びください。</p>
+  </div>
+</section>
+{% endblock %}

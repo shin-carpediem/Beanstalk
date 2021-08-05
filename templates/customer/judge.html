@@ -1,0 +1,30 @@
+{% extends 'customer/base__next.html' %}
+{% load static %}
+
+{% block custom__header %}
+  <title>承認待ちです</title>
+  <meta http-equiv="refresh" content="5; URL=">
+{% endblock %}
+
+{% block content %}
+<section class="w-100 judge">
+  <div class="img">
+    <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
+  </div>
+  <div class="forms text-center title">
+    <h3 class="pb-5 mb-5">同テーブルに承認待ちの方がいます</h3>
+    <div class="d-flex justify-content-around align-items-center">
+      <form action="{% url 'customer:allowing' %}" method="GET">
+        <button type="submit" class="btn__glass w-100 btn shadow mb-5 text__bold text__large" onclick="loading_show()">
+          許可する
+        </button>
+      </form>
+      <form action="{% url 'customer:deny' %}" method="GET">
+        <button type="submit" class="btn__glass w-100 btn shadow mb-5 text__bold text__large" onclick="loading_show()">
+          拒否
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
