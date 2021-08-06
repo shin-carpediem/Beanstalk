@@ -403,12 +403,25 @@ def total(request):
         if not table in active_table_list:
             active_table_list.append(table)
 
-        # アクティブ客のテーブル毎の合計金額を算出するため
-        active_user_same_table_list = nonLoginUser.objects.defer(
-            'created_at').filter(table=int(table), active=True)
-        # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
-        nomiho_order_list = customer.models.NomihoOrder.objects.defer(
-            'created_at').filter(table=table, curr=True)
+        if not None in active_table_list:
+            # アクティブ客のテーブル毎の合計金額を算出するため
+            active_user_same_table_list = nonLoginUser.objects.defer(
+                'created_at').filter(table=int(table), active=True)
+            # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
+            nomiho_order_list = customer.models.NomihoOrder.objects.defer(
+                'created_at').filter(table=table, curr=True)
+
+        # セッションが保持されていない状態で入力が通ってしまった場合、
+        # table=Noneのユーザーのテーブル番号を、9999にする
+        else:
+            none_table_list = nonLoginUser.objects.defer(
+                'created_at').filter(table=None)
+
+            for none_table in none_table_list:
+                none_table.table = 9999
+                none_table.save()
+
+            return redirect('restaunrat:stop_user_order', 9999)
 
         for nomiho_order in nomiho_order_list:
             price += nomiho_order.nomiho.price * nomiho_order.num

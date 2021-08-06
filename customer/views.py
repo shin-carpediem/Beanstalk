@@ -225,7 +225,7 @@ def menu(request):
             table_num = request.session['table']
 
             if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num).count() > 0:
-                return redirect('customer:allow')
+                return redirect('customer:judge')
 
         same_user_table = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True)
