@@ -378,15 +378,13 @@ def history(request):
 def total(request):
     # 利用中のテーブルお会計終了ボタンのためのリスト
     active_table_list = []
-    # テーブル番号と、すでに調理・提供済みのメニュー（飲み放題含む）の合計金額が
-    # セットになったjson
-    # active_table_price_list = {}
     # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
     orders = ''
 
     if Table.objects.defer('created_at').filter(active=True).count() > 1:
         table_price = Table.objects.defer('created_at').filter(active=True)
     else:
+
         try:
             table_price = Table.objects.get(active=True)
         except Exception:
@@ -399,7 +397,6 @@ def total(request):
 
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
-        # price = 0
         table_int = active_non_login_user.table
         table = str(table_int)
 
@@ -411,46 +408,9 @@ def total(request):
         if not table in active_table_list:
             active_table_list.append(table)
 
-        # if not None in active_table_list:
-        #     # アクティブ客のテーブル毎の合計金額を算出するため
-        #     active_user_same_table_list = nonLoginUser.objects.defer(
-        #         'created_at').filter(table=int(table), active=True)
-        #     # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
-        #     nomiho_order_list = customer.models.NomihoOrder.objects.defer(
-        #         'created_at').filter(table=table, curr=True)
-
-        # セッションが保持されていない状態で入力が通ってしまった場合、
-        # table=Noneのユーザーのテーブル番号を、9999にする
-        # TODO:
-        # else:
-        #     none_table_list = nonLoginUser.objects.defer(
-        #         'created_at').filter(table=None)
-
-        #     for none_table in none_table_list:
-        #         none_table.table = 9999
-        #         none_table.save()
-
-        #     return redirect('restaurant:stop_user_order', 9999)
-
-        # for nomiho_order in nomiho_order_list:
-        #     price += nomiho_order.nomiho.price * nomiho_order.num
-
-        # 次に注文（済）のメニューの金額を加算するため、アクティブ客のテーブル毎のオーダーリストを作成
-        # for active_user_same_table in active_user_same_table_list:
-        #     user_order = customer.models.Order.objects.defer(
-        #         'created_at').filter(status='済', customer=active_user_same_table, curr=True)
-
-        #     for each in user_order:
-        #         user_order_price = each.menu.price
-        #         user_order_num = each.num
-        #         price += int(user_order_price * user_order_num)
-
-        # active_table_price_list[str(table)] = price
-
     ctx = {
         'table_price': table_price,
         'active_table_list': active_table_list,
-        # 'active_table_price_list': active_table_price_list,
         'orders': orders,
         'nomiho_orders': nomiho_orders,
     }
@@ -524,30 +484,19 @@ def daily(request):
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
     pointed_total_price = 0
-    # for pointed_order in pointed_orders:
-    #     pointed_total_price += (pointed_order.menu.price * pointed_order.num)
-
     pointed_tables = Table.objects.defer('created_at').filter(created_at__range=(start, end)).order_by('-id')
+
     for each in pointed_tables:
         pointed_total_price += each.price
 
     pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
         created_at__range=(start, end)).order_by('-id')
-    # for pointed_nomiho_order in pointed_nomiho_orders:
-    #     pointed_total_price += (pointed_nomiho_order.nomiho.price *
-    #                             pointed_nomiho_order.num)
 
-    # トータルの売上
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
-    # for order in orders:
-    #     total_price += (order.menu.price * order.num)
-
     nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
-    # for nomiho_order in nomiho_orders:
-    #     total_price += (nomiho_order.nomiho.price * nomiho_order.num)
-
     total_price = 0
     tables = Table.objects.defer('created_at')
+
     for each in tables:
         total_price += each.price
 
@@ -568,12 +517,14 @@ def daily(request):
 # for manageing customer screen
 def manage_login(request):
     categories = Category.objects.defer('created_at').order_by('id')
+
     try:
         first_category = categories[0]
         menus = Menu.objects.defer('created_at').filter(
             category=first_category).order_by('-id')
     except:
         menus = None
+
     allergies = Allergy.objects.defer('created_at').order_by('id')
 
     ctx = {
@@ -588,12 +539,14 @@ def manage_login(request):
 @login_required
 def manage_menu(request):
     categories = Category.objects.defer('created_at').order_by('id')
+
     try:
         first_category = categories[0]
         menus = Menu.objects.defer('created_at').filter(
             category=first_category).order_by('-id')
     except:
         menus = None
+
     allergies = Allergy.objects.defer('created_at').order_by('id')
     nomihos = Nomiho.objects.defer('created_at').order_by('-id')
     user = request.user

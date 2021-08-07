@@ -145,6 +145,7 @@ def menu(request):
     user_uuid = None
     same_num = None
     nomiho_is_started = False
+
     try:
         restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
@@ -222,11 +223,8 @@ def menu(request):
         # 既存
         else:
 
-            if not 'nonloginuser_uuid' in request.session:
-                request.session.flush()
-                return redirect('customer:thanks')
-
             uuid = request.session['nonloginuser_uuid']
+
             try:
                 user_uuid = nonLoginUser.objects.get(uuid=uuid)
             except Exception:
@@ -803,14 +801,12 @@ def history(request):
     carts = ''
     orders = ''
     orders_in_cart = 0
-    # orders_in_order = 0
 
     categories = Category.objects.defer('created_at').order_by('id')
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
     table_query = Table.objects.get(table=table_num, active=True)
     orders_in_order = table_query.price
-    print(orders_in_order)
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
@@ -825,21 +821,13 @@ def history(request):
             same_user.price = 0
             same_user.price += int(each.menu.price) * int(each.num)
             same_user.save()
-            # orders_in_order += same_user.price
 
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
 
-    # nomiho_orders = customer.models.NomihoOrder.objects.filter(
-    #     table=table_num, curr=True)
-    # for nomiho_order in nomiho_orders:
-    #     nomiho_order_price = nomiho_order.nomiho.price * nomiho_order.num
-        # orders_in_order += int(nomiho_order_price)
-
     total_price = int(orders_in_cart) + int(orders_in_order)
 
     request.session['orders_in_cart'] = str(orders_in_cart)
-    # request.session['orders_in_order'] = str(orders_in_order)
     request.session['total_price'] = str(total_price)
 
     ctx = {
