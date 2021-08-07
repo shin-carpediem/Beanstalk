@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.db.models import fields
 from django.utils.translation import ugettext_lazy as _
-from .models import User, nonLoginUser
+from .models import User, nonLoginUser, Table
 
 
 # Register your models here.
@@ -47,5 +47,12 @@ class nonLoginUserAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
+class TableAdmin(admin.ModelAdmin):
+    list_display = ('table', 'price', 'active', 'created_at')
+    list_editable = ('price', 'active')
+    ordering = ('-created_at',)
+
+
 admin.site.register(User, MyUserAdmin)
 admin.site.register(nonLoginUser, nonLoginUserAdmin)
+admin.site.register(Table, TableAdmin)

@@ -9,7 +9,7 @@ from itertools import chain
 import time
 import requests
 import customer.models
-from account.models import User, nonLoginUser
+from account.models import Table, User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 from beanstalk.settings import ONE_SIGNAL_REST_API_KEY
 
@@ -49,7 +49,7 @@ def table(request):
 
 def waiting(request):
 
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
@@ -70,36 +70,39 @@ def judge(request):
 
 def allowing(request):
 
-    if request.session['nonloginuser_uuid'] == None:
-        request.session.flush()
-        return redirect('customer:thanks')
+    user = request.user
+    if not user.is_authenticated:
 
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        if not 'nonloginuser_uuid' in request.session:
+            request.session.flush()
+            return redirect('customer:thanks')
 
-    if user_uuid.allowed in ['unknown', 'denied']:
-        return redirect('customer:waiting')
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.active == False:
-        request.session.flush()
-        return redirect('customer:thanks')
+        if user_uuid.allowed in ['unknown', 'denied']:
+            return redirect('customer:waiting')
 
-    # unknownが一人以上いたら、その人たちをallowedにする
-    table_num = request.session['table']
-    unknown_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(allowed='unknown', table=table_num)
+        if user_uuid.active == False:
+            request.session.flush()
+            return redirect('customer:thanks')
 
-    if unknown_user_list.count() > 0:
-        for unknown_user in unknown_user_list:
-            unknown_user.allowed = 'allowed'
-            unknown_user.save()
+        # unknownが一人以上いたら、その人たちをallowedにする
+        table_num = request.session['table']
+        unknown_user_list = nonLoginUser.objects.defer(
+            'created_at').filter(allowed='unknown', table=table_num)
+
+        if unknown_user_list.count() > 0:
+            for unknown_user in unknown_user_list:
+                unknown_user.allowed = 'allowed'
+                unknown_user.save()
 
     return redirect('customer:menu')
 
 
 def deny(request):
 
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
@@ -175,6 +178,8 @@ def menu(request):
                 # adminユーザーか承認を得るユーザーかの分岐点
                 # 現在のテーブルで最初の1人の場合
                 if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
+                    newtable = Table(table=table_num, active=True)
+                    newtable.save()
                     newuser = nonLoginUser(
                         allowed="admin", table=table_num, active=True)
                 # 他に1人以上いる場合
@@ -182,6 +187,10 @@ def menu(request):
                     newuser = nonLoginUser(table=table_num, active=True)
 
                 newuser.save()
+
+                if user.is_authenticated:
+                    newuser.allowed = 'admin'
+                    newuser.save()
 
                 if newuser.allowed == 'unknown':
                     return redirect('customer:waiting')
@@ -213,7 +222,7 @@ def menu(request):
         # 既存
         else:
 
-            if request.session['nonloginuser_uuid'] == None:
+            if not 'nonloginuser_uuid' in request.session:
                 request.session.flush()
                 return redirect('customer:thanks')
 
@@ -222,6 +231,9 @@ def menu(request):
 
             if user_uuid.allowed == 'unknown':
                 return redirect('customer:waiting')
+
+            if user_uuid.allowed == 'denied':
+                return redirect('customer:denied')
 
             if user_uuid.active == False:
                 request.session.flush()
@@ -294,7 +306,7 @@ def filter(request, category_id):
     # 客側から
     else:
 
-        if request.session['nonloginuser_uuid'] == None:
+        if not 'nonloginuser_uuid' in request.session:
             request.session.flush()
             return redirect('customer:thanks')
 
@@ -313,8 +325,11 @@ def filter(request, category_id):
     try:
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-        if user_uuid.allowed in ['unknown', 'denied']:
+        if user_uuid.allowed == 'unknown':
             return redirect('customer:waiting')
+
+        if user_uuid.allowed == 'denied':
+            return redirect('customer:denied')
 
         if user_uuid.active == False:
             request.session.flush()
@@ -381,7 +396,7 @@ def menu_detail(request, menu_id):
         None
     else:
 
-        if request.session['nonloginuser_uuid'] == None:
+        if not 'nonloginuser_uuid' in request.session:
             request.session.flush()
             return redirect('customer:thanks')
 
@@ -407,7 +422,7 @@ def menu_detail(request, menu_id):
 
 @require_POST
 def cart(request):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
@@ -425,8 +440,11 @@ def cart(request):
         same_table_cart_list = list(
             chain(same_table_cart_list, same_table_cart))
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -456,15 +474,18 @@ def cart(request):
 
 
 def cart_static(request):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -495,15 +516,18 @@ def cart_static(request):
 
 
 def cart_detail(request, menu_id):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -538,15 +562,18 @@ def cart_detail(request, menu_id):
 
 @require_GET
 def cart_ch(request):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -594,15 +621,18 @@ def cart_ch(request):
 
 
 def order(request):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -626,13 +656,17 @@ def order(request):
             # 同時に同じテーブルの人が注文した際は後者を弾く為
             if not same_user_carts == None:
 
-                # ひとつひとつ、カートからオーダーに移行
+                # テーブル毎の合計金額をオーダー時に加算する
+                table_query = Table.objects.get(table=table_num, active=True)
+
+                # ひとつひとつ、オブジェクトをカートからオーダーに移行
                 for each in same_user_carts:
                     order = customer.models.Order(status='調理中', menu=each.menu,
                                                   num=each.num, customer=each.customer, curr=True)
                     order.save()
                     price = (order.menu.price * order.num)
                     same_user.price += int(price)
+                    table_query.price += int(price)
 
                 same_user.save()
                 # MEMO: be careful not to switch save and delete
@@ -641,7 +675,7 @@ def order(request):
                 messages.info(request, f"注文を先ほど承っております。")
                 return redirect('customer:cart')
 
-        # 記事をブラウザ通知
+        # オーダーをブラウザ通知
         try:
             data = {
                 'app_id': 'cebff79b-a399-438a-81fb-fa4c72364762',
@@ -677,21 +711,24 @@ def nomiho(request, nomiho_id):
         return redirect('customer:index')
     else:
 
-        if request.session['nonloginuser_uuid'] == None:
+        if not 'nonloginuser_uuid' in request.session:
             request.session.flush()
             return redirect('customer:thanks')
 
         uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        table_num = request.session['table']
 
-        if user_uuid.allowed in ['unknown', 'denied']:
+        if user_uuid.allowed == 'unknown':
             return redirect('customer:waiting')
+
+        if user_uuid.allowed == 'denied':
+            return redirect('customer:denied')
 
         if user_uuid.active == False:
             request.session.flush()
             return redirect('customer:thanks')
 
-        table_num = request.session['table']
         if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num) > 1:
             return redirect('customer:judge')
 
@@ -709,6 +746,8 @@ def nomiho(request, nomiho_id):
                                                        num=nomiho_num, customer=user_uuid, curr=True)
             nomiho_order.save()
 
+            table_query = Table.objects.get(table=table_num, active=True)
+
             for same_user in same_user_table_list:
                 same_user.price += int(nomiho_query.price)
                 # 各々の「飲み放題」ステータス：yes/noをyesにする
@@ -718,6 +757,8 @@ def nomiho(request, nomiho_id):
                 # 合計金額に飲み放題の金額を足す
                 same_user.price += same_user.nomiho_price
                 same_user.save()
+
+                table_query.price += int(nomiho_query.price)
 
                 # TODO:
                 duration = nomiho_query.duration
@@ -733,7 +774,7 @@ def nomiho(request, nomiho_id):
 
 
 def history(request):
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
@@ -741,8 +782,11 @@ def history(request):
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
     table_num = request.session['table']
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -759,6 +803,8 @@ def history(request):
     categories = Category.objects.defer('created_at').order_by('id')
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
+    table_query = Table.objects.get(table=table_num, active=True)
+    orders_in_order = table_query.price
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
@@ -773,7 +819,7 @@ def history(request):
             same_user.price = 0
             same_user.price += int(each.menu.price) * int(each.num)
             same_user.save()
-            orders_in_order += same_user.price
+            # orders_in_order += same_user.price
 
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
@@ -782,12 +828,12 @@ def history(request):
         table=table_num, curr=True)
     for nomiho_order in nomiho_orders:
         nomiho_order_price = nomiho_order.nomiho.price * nomiho_order.num
-        orders_in_order += int(nomiho_order_price)
+        # orders_in_order += int(nomiho_order_price)
 
     total_price = int(orders_in_cart) + int(orders_in_order)
 
     request.session['orders_in_cart'] = str(orders_in_cart)
-    request.session['orders_in_order'] = str(orders_in_order)
+    # request.session['orders_in_order'] = str(orders_in_order)
     request.session['total_price'] = str(total_price)
 
     ctx = {
@@ -803,7 +849,7 @@ def history(request):
 # 伝票はテーブル1つにつき1画面で表示できればいい
 def stop(request):
 
-    if request.session['nonloginuser_uuid'] == None:
+    if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
         return redirect('customer:thanks')
 
@@ -811,9 +857,14 @@ def stop(request):
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
     table_num = request.session['table']
+    table_query = Table.objects.get(table=table_num, active=True)
+    orders = ''
 
-    if user_uuid.allowed in ['unknown', 'denied']:
+    if user_uuid.allowed == 'unknown':
         return redirect('customer:waiting')
+
+    if user_uuid.allowed == 'denied':
+        return redirect('customer:denied')
 
     if user_uuid.active == False:
         request.session.flush()
@@ -822,13 +873,15 @@ def stop(request):
     if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num).count() > 1:
         return redirect('customer:judge')
 
+    table_query.active = False
+    table_query.save()
+
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
 
     nomiho_orders = customer.models.NomihoOrder.objects.filter(
         table=table_num, curr=True)
 
-    orders = ''
     for same_user in same_user_table_list:
         same_user_orders = customer.models.Order.objects.defer('created_at').exclude(status='キャンセル').filter(
             customer=same_user.uuid, curr=True).order_by('-id')
