@@ -14,7 +14,7 @@ import smtplib
 import datetime
 from itertools import groupby
 from .models import Category, Allergy, Menu, Nomiho
-from account.models import User, nonLoginUser
+from account.models import Table, User, nonLoginUser
 import customer.models
 from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
 
@@ -380,9 +380,17 @@ def total(request):
     active_table_list = []
     # テーブル番号と、すでに調理・提供済みのメニュー（飲み放題含む）の合計金額が
     # セットになったjson
-    active_table_price_list = {}
+    # active_table_price_list = {}
     # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
     orders = ''
+
+    if Table.objects.defer('created_at').filter(active=True).count() > 1:
+        table_price = Table.objects.defer('created_at').filter(active=True)
+    else:
+        try:
+            table_price = Table.objects.get(active=True)
+        except Exception:
+            table_price = None
 
     active_non_login_user_list = nonLoginUser.objects.defer(
         'created_at').filter(active=True)
@@ -391,7 +399,7 @@ def total(request):
 
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
-        price = 0
+        # price = 0
         table_int = active_non_login_user.table
         table = str(table_int)
 
@@ -403,44 +411,46 @@ def total(request):
         if not table in active_table_list:
             active_table_list.append(table)
 
-        if not None in active_table_list:
-            # アクティブ客のテーブル毎の合計金額を算出するため
-            active_user_same_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=int(table), active=True)
-            # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
-            nomiho_order_list = customer.models.NomihoOrder.objects.defer(
-                'created_at').filter(table=table, curr=True)
+        # if not None in active_table_list:
+        #     # アクティブ客のテーブル毎の合計金額を算出するため
+        #     active_user_same_table_list = nonLoginUser.objects.defer(
+        #         'created_at').filter(table=int(table), active=True)
+        #     # まずは飲み放題分を加算（2プラン飲み放題をする確率は低いが、一応対応）
+        #     nomiho_order_list = customer.models.NomihoOrder.objects.defer(
+        #         'created_at').filter(table=table, curr=True)
 
         # セッションが保持されていない状態で入力が通ってしまった場合、
         # table=Noneのユーザーのテーブル番号を、9999にする
-        else:
-            none_table_list = nonLoginUser.objects.defer(
-                'created_at').filter(table=None)
+        # TODO:
+        # else:
+        #     none_table_list = nonLoginUser.objects.defer(
+        #         'created_at').filter(table=None)
 
-            for none_table in none_table_list:
-                none_table.table = 9999
-                none_table.save()
+        #     for none_table in none_table_list:
+        #         none_table.table = 9999
+        #         none_table.save()
 
-            return redirect('restaunrat:stop_user_order', 9999)
+        #     return redirect('restaurant:stop_user_order', 9999)
 
-        for nomiho_order in nomiho_order_list:
-            price += nomiho_order.nomiho.price * nomiho_order.num
+        # for nomiho_order in nomiho_order_list:
+        #     price += nomiho_order.nomiho.price * nomiho_order.num
 
         # 次に注文（済）のメニューの金額を加算するため、アクティブ客のテーブル毎のオーダーリストを作成
-        for active_user_same_table in active_user_same_table_list:
-            user_order = customer.models.Order.objects.defer(
-                'created_at').filter(status='済', customer=active_user_same_table, curr=True)
+        # for active_user_same_table in active_user_same_table_list:
+        #     user_order = customer.models.Order.objects.defer(
+        #         'created_at').filter(status='済', customer=active_user_same_table, curr=True)
 
-            for each in user_order:
-                user_order_price = each.menu.price
-                user_order_num = each.num
-                price += int(user_order_price * user_order_num)
+        #     for each in user_order:
+        #         user_order_price = each.menu.price
+        #         user_order_num = each.num
+        #         price += int(user_order_price * user_order_num)
 
-        active_table_price_list[str(table)] = price
+        # active_table_price_list[str(table)] = price
 
     ctx = {
+        'table_price': table_price,
         'active_table_list': active_table_list,
-        'active_table_price_list': active_table_price_list,
+        # 'active_table_price_list': active_table_price_list,
         'orders': orders,
         'nomiho_orders': nomiho_orders,
     }
@@ -477,7 +487,22 @@ def stop_user_order(request, active_table):
         nomiho_order.curr = False
         nomiho_order.save()
 
+    deactivate_table = Table.objects.get(table=active_table)
+    deactivate_table.active = False
+    deactivate_table.save()
+
     messages.info(request, f'{active_table}テーブルのお会計完了を保存しました。')
+
+    return redirect('restaurant:total')
+
+
+@login_required
+@require_POST
+def price_ch(request, active_table):
+    get_table_price = Table.objects.get(id=active_table)
+    required_price = request.POST.get('required_price')
+    get_table_price.price = int(required_price)
+    get_table_price.save()
 
     return redirect('restaurant:total')
 
@@ -499,24 +524,32 @@ def daily(request):
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
     pointed_total_price = 0
-    for pointed_order in pointed_orders:
-        pointed_total_price += (pointed_order.menu.price * pointed_order.num)
+    # for pointed_order in pointed_orders:
+    #     pointed_total_price += (pointed_order.menu.price * pointed_order.num)
+
+    pointed_tables = Table.objects.defer('created_at').filter(created_at__range=(start, end)).order_by('-id')
+    for each in pointed_tables:
+        pointed_total_price += each.price
 
     pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
         created_at__range=(start, end)).order_by('-id')
-    for pointed_nomiho_order in pointed_nomiho_orders:
-        pointed_total_price += (pointed_nomiho_order.nomiho.price *
-                                pointed_nomiho_order.num)
+    # for pointed_nomiho_order in pointed_nomiho_orders:
+    #     pointed_total_price += (pointed_nomiho_order.nomiho.price *
+    #                             pointed_nomiho_order.num)
 
     # トータルの売上
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
-    total_price = 0
-    for order in orders:
-        total_price += (order.menu.price * order.num)
+    # for order in orders:
+    #     total_price += (order.menu.price * order.num)
 
     nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
-    for nomiho_order in nomiho_orders:
-        total_price += (nomiho_order.nomiho.price * nomiho_order.num)
+    # for nomiho_order in nomiho_orders:
+    #     total_price += (nomiho_order.nomiho.price * nomiho_order.num)
+
+    total_price = 0
+    tables = Table.objects.defer('created_at')
+    for each in tables:
+        total_price += each.price
 
     ctx = {
         'start': start,

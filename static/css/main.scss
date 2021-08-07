@@ -414,7 +414,16 @@ body {
   }
   section.total {
     .table-list {
-      background-color: $light-grey;
+      background-color: $white;
+      .table-price {
+        position: relative;
+        .price-change-btn {
+          position: absolute;
+          top: 0px;
+          right: 100px;
+          z-index: 2;
+        }
+      }
     }
   }
   section.daily {

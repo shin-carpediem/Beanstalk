@@ -468,7 +468,18 @@ body .nomiho-limit {
 }
 
 .restaurant section.total .table-list {
-  background-color: #f1f1f1;
+  background-color: #fff;
+}
+
+.restaurant section.total .table-list .table-price {
+  position: relative;
+}
+
+.restaurant section.total .table-list .table-price .price-change-btn {
+  position: absolute;
+  top: 0px;
+  right: 100px;
+  z-index: 2;
 }
 
 .restaurant section.daily .daily-interest,

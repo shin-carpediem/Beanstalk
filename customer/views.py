@@ -227,7 +227,10 @@ def menu(request):
                 return redirect('customer:thanks')
 
             uuid = request.session['nonloginuser_uuid']
-            user_uuid = nonLoginUser.objects.get(uuid=uuid)
+            try:
+                user_uuid = nonLoginUser.objects.get(uuid=uuid)
+            except Exception:
+                return redirect('customer:index')
 
             if user_uuid.allowed == 'unknown':
                 return redirect('customer:waiting')
@@ -669,6 +672,7 @@ def order(request):
                     table_query.price += int(price)
 
                 same_user.save()
+                table_query.save()
                 # MEMO: be careful not to switch save and delete
                 same_user_carts.delete()
             else:
@@ -759,6 +763,7 @@ def nomiho(request, nomiho_id):
                 same_user.save()
 
                 table_query.price += int(nomiho_query.price)
+                table_query.save()
 
                 # TODO:
                 duration = nomiho_query.duration
@@ -798,13 +803,14 @@ def history(request):
     carts = ''
     orders = ''
     orders_in_cart = 0
-    orders_in_order = 0
+    # orders_in_order = 0
 
     categories = Category.objects.defer('created_at').order_by('id')
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
     table_query = Table.objects.get(table=table_num, active=True)
     orders_in_order = table_query.price
+    print(orders_in_order)
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
@@ -824,10 +830,10 @@ def history(request):
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
 
-    nomiho_orders = customer.models.NomihoOrder.objects.filter(
-        table=table_num, curr=True)
-    for nomiho_order in nomiho_orders:
-        nomiho_order_price = nomiho_order.nomiho.price * nomiho_order.num
+    # nomiho_orders = customer.models.NomihoOrder.objects.filter(
+    #     table=table_num, curr=True)
+    # for nomiho_order in nomiho_orders:
+    #     nomiho_order_price = nomiho_order.nomiho.price * nomiho_order.num
         # orders_in_order += int(nomiho_order_price)
 
     total_price = int(orders_in_cart) + int(orders_in_order)
@@ -840,6 +846,7 @@ def history(request):
         'categories': categories,
         'carts': carts,
         'orders': orders,
+        'orders_in_order': orders_in_order,
         'user_uuid': user_uuid,
     }
 

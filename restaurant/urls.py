@@ -14,6 +14,7 @@ urlpatterns = [
     path('order_manage/history/', views.history, name='history'),
     path('order_manage/history/total/', views.total, name='total'),
     path('order_manage/history/total/<int:active_table>/stop/', views.stop_user_order, name='stop_user_order'),
+    path('order_manage/history/total/<int:active_table>/price/change/', views.price_ch, name='price_ch'),
     path('order_manage/history/daily/', views.daily, name='daily'),
     path('manage/login/', views.manage_login, name='manage_login'),
     path('manage/company/logo', views.company_logo, name='company_logo'),
