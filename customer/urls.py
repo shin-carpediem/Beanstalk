@@ -11,7 +11,6 @@ urlpatterns = [
     path('allowing/', views.allowing, name='allowing'),
     path('deny/', views.deny, name='deny'),
     path('denied/', views.denied, name='denied'),
-    path('denied/', views.denied, name='denied'),
     path('menu/', views.menu, name='menu'),
     path('<int:category_id>/filter/', views.filter, name='filter'),
     path('<int:menu_id>/detail/', views.menu_detail, name='menu_detail'),

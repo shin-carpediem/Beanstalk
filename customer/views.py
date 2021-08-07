@@ -172,8 +172,9 @@ def menu(request):
 
             try:
 
+                # adminユーザーか承認を得るユーザーかの分岐点
                 # 現在のテーブルで最初の1人の場合
-                if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 1:
+                if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
                     newuser = nonLoginUser(
                         allowed="admin", table=table_num, active=True)
                 # 他に1人以上いる場合
@@ -181,6 +182,12 @@ def menu(request):
                     newuser = nonLoginUser(table=table_num, active=True)
 
                 newuser.save()
+
+                if newuser.allowed == 'unknown':
+                    return redirect('customer:waiting')
+
+                if newuser.allowed == 'denied':
+                    return redirect('customer:denied')
 
             except Exception:
                 messages.info(request, f'申し訳ございません。エラーが発生しました。')
