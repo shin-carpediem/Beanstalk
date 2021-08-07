@@ -40,7 +40,7 @@
             </div>
             <div class="pt-2 pb-4">
               <label>アレルギー</label><br>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center flex-wrap">
                 {% for allergy in allergies %}
                   <input name="allergy" type="checkbox" value="{{ allergy.ingredient }}" class="mr-2 ml-3">{{ allergy }}
                 {% empty %}
