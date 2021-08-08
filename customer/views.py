@@ -90,7 +90,7 @@ def allowing(request):
         # unknownが一人以上いたら、その人たちをallowedにする
         table_num = request.session['table']
         unknown_user_list = nonLoginUser.objects.defer(
-            'created_at').filter(allowed='unknown', table=table_num)
+            'created_at').filter(allowed='unknown', table=table_num, active=True)
 
         if unknown_user_list.count() > 0:
             for unknown_user in unknown_user_list:
@@ -120,7 +120,7 @@ def deny(request):
     table_num = request.session['table']
 
     unknown_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(allowed='unknown', table=table_num)
+        'created_at').filter(allowed='unknown', table=table_num, active=True)
 
     if unknown_user_list.count() > 0:
         for unknown_user in unknown_user_list:
@@ -146,6 +146,8 @@ def menu(request):
     same_num = None
     nomiho_is_started = False
 
+    # NOTE: be careful this is static
+    # from here
     try:
         restaurant = User.objects.get(id=1)
         restaurant_name = restaurant.name
@@ -164,6 +166,7 @@ def menu(request):
         restaurant_logo = restaurant.logo.url
     except Exception:
         pass
+    # to here
 
     if user.is_authenticated:
         table_num = '管理者'
@@ -227,7 +230,7 @@ def menu(request):
             # unknownを検知したらallow.htmlに遷移させる
             table_num = request.session['table']
 
-            if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num).count() > 1:
+            if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
                 return redirect('customer:judge')
 
         same_user_table = nonLoginUser.objects.defer(
