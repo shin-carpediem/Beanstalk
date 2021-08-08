@@ -59,6 +59,7 @@ def waiting(request):
     if user_uuid.allowed == 'denied':
         return redirect('customer:denied')
     elif user_uuid.allowed == 'allowed':
+        messages.info(request, f'承認されました')
         return redirect('customer:menu')
     else:
         return render(request, 'customer/waiting.html')
