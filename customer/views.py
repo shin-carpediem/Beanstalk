@@ -198,10 +198,6 @@ def menu(request):
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
 
-            if newuser.is_authenticated:
-                newuser.allowed = 'admin'
-                newuser.save()
-
             if newuser.allowed == 'unknown':
                 return redirect('customer:waiting')
 
