@@ -230,7 +230,7 @@ def menu(request):
             # unknownを検知したらallow.htmlに遷移させる
             table_num = request.session['table']
 
-            if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+            if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
                 return redirect('customer:judge')
 
         same_user_table = nonLoginUser.objects.defer(
@@ -325,7 +325,7 @@ def filter(request, category_id):
 
         table_num = request.session['table']
 
-        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
             return redirect('customer:judge')
 
         # 後からやってきた客よりも先に飲み放題を開始していた場合、
@@ -390,7 +390,7 @@ def menu_detail(request, menu_id):
 
     table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     menu = get_object_or_404(Menu, pk=menu_id)
@@ -440,7 +440,7 @@ def cart(request):
 
     table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     # Cartデータの保存
@@ -481,7 +481,7 @@ def cart_static(request):
 
     table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     carts = ''
@@ -522,7 +522,7 @@ def cart_detail(request, menu_id):
         return redirect('customer:thanks')
 
     table_num = request.session['table']
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     num = request.GET.get('num')
@@ -568,7 +568,7 @@ def cart_ch(request):
         return redirect('customer:thanks')
 
     table_num = request.session['table']
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     cart_id = request.GET.get('cart_id')
@@ -628,7 +628,7 @@ def order(request):
 
     table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     try:
@@ -718,7 +718,7 @@ def nomiho(request, nomiho_id):
             request.session.flush()
             return redirect('customer:thanks')
 
-        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True) > 1:
+        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True) > 0:
             return redirect('customer:judge')
 
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
@@ -782,7 +782,7 @@ def history(request):
         request.session.flush()
         return redirect('customer:thanks')
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     carts = ''
@@ -852,7 +852,7 @@ def stop(request):
         request.session.flush()
         return redirect('customer:thanks')
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 1:
+    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
 
     table_query.active = False
