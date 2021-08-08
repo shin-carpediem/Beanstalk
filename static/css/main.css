@@ -467,21 +467,6 @@ body .nomiho-limit {
   }
 }
 
-.restaurant section.total .table-list {
-  background-color: #fff;
-}
-
-.restaurant section.total .table-list .table-price {
-  position: relative;
-}
-
-.restaurant section.total .table-list .table-price .price-change-btn {
-  position: absolute;
-  top: 0px;
-  right: 100px;
-  z-index: 2;
-}
-
 .restaurant section.daily .daily-interest,
 .restaurant section.daily .total-interest {
   border-color: #9c9c9c;
@@ -529,14 +514,16 @@ section.top-view {
 section.top-view .img,
 section.table .img,
 section.waiting .img,
-section.judge .img {
+section.judge .img,
+section.thanks .img {
   height: 100vh;
 }
 
 section.top-view .img img,
 section.table .img img,
 section.waiting .img img,
-section.judge .img img {
+section.judge .img img,
+section.thanks .img img {
   -o-object-fit: cover;
      object-fit: cover;
   width: 100%;
@@ -546,14 +533,16 @@ section.judge .img img {
 section.top-view img,
 section.table img,
 section.waiting img,
-section.judge img {
+section.judge img,
+section.thanks img {
   position: relative;
 }
 
 section.top-view .forms,
 section.table .forms,
 section.waiting .forms,
-section.judge .forms {
+section.judge .forms,
+section.thanks .forms {
   position: absolute;
   z-index: 2;
   top: 50%;
@@ -566,28 +555,33 @@ section.judge .forms {
 section.top-view .forms .title,
 section.table .forms .title,
 section.waiting .forms .title,
-section.judge .forms .title {
+section.judge .forms .title,
+section.thanks .forms .title {
   color: #fff;
 }
 
 section.top-view .forms form p,
 section.table .forms form p,
 section.waiting .forms form p,
-section.judge .forms form p {
+section.judge .forms form p,
+section.thanks .forms form p {
   color: #fff;
 }
 
 section.top-view img,
 section.table img,
 section.waiting img,
-section.judge img {
+section.judge img,
+section.thanks img {
   position: relative;
 }
 
 section.waiting h3,
 section.waiting p,
 section.judge h3,
-section.judge p {
+section.judge p,
+section.thanks h3,
+section.thanks p {
   color: #fff;
 }
 

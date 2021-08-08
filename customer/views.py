@@ -174,36 +174,20 @@ def menu(request):
         if not 'nonloginuser_uuid' in request.session:
             table_num = request.GET.get('table')
 
-            try:
+            # adminユーザーか承認を得るユーザーかの分岐点
+            # 現在のテーブルで最初の1人の場合
+            if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
+                newtable = Table(table=table_num, active=True)
+                newtable.save()
+                newuser = nonLoginUser(
+                    allowed="admin", table=table_num, active=True)
+            # 他に1人以上いる場合
+            else:
+                newuser = nonLoginUser(table=table_num, active=True)
 
-                # adminユーザーか承認を得るユーザーかの分岐点
-                # 現在のテーブルで最初の1人の場合
-                if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
-                    newtable = Table(table=table_num, active=True)
-                    newtable.save()
-                    newuser = nonLoginUser(
-                        allowed="admin", table=table_num, active=True)
-                # 他に1人以上いる場合
-                else:
-                    newuser = nonLoginUser(table=table_num, active=True)
-
-                newuser.save()
-
-                if user.is_authenticated:
-                    newuser.allowed = 'admin'
-                    newuser.save()
-
-                if newuser.allowed == 'unknown':
-                    return redirect('customer:waiting')
-
-                if newuser.allowed == 'denied':
-                    return redirect('customer:denied')
-
-            except Exception:
-                messages.info(request, f'申し訳ございません。エラーが発生しました。')
-                return redirect('customer:index')
-
+            newuser.save()
             uuid = str(newuser.uuid)
+            user_uuid = newuser
 
             # レストラン名のセッションを作成
             request.session['restaurant_name'] = restaurant_name
@@ -214,11 +198,15 @@ def menu(request):
             # uuidのセッションを作成
             request.session['nonloginuser_uuid'] = uuid
 
-            user_uuid = newuser
+            if newuser.is_authenticated:
+                newuser.allowed = 'admin'
+                newuser.save()
 
-            # 現在のテーブルで他に1人以上いる場合、waitingで待機させる
             if newuser.allowed == 'unknown':
                 return redirect('customer:waiting')
+
+            if newuser.allowed == 'denied':
+                return redirect('customer:denied')
 
         # 既存
         else:

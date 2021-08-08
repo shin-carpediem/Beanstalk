@@ -412,20 +412,8 @@ body {
       }
     }
   }
-  section.total {
-    .table-list {
-      background-color: $white;
-      .table-price {
-        position: relative;
-        .price-change-btn {
-          position: absolute;
-          top: 0px;
-          right: 100px;
-          z-index: 2;
-        }
-      }
-    }
-  }
+  // section.total {
+  // }
   section.daily {
     .daily-interest,
     .total-interest {
@@ -456,7 +444,8 @@ section.top-view {
 section.top-view,
 section.table,
 section.waiting,
-section.judge {
+section.judge,
+section.thanks {
   .img {
     height: 100vh;
     img {
@@ -490,7 +479,8 @@ section.judge {
   }
 }
 section.waiting,
-section.judge {
+section.judge,
+section.thanks {
   h3,
   p {
     color: $white;
@@ -772,7 +762,6 @@ section.table {
 }
 .modal-chef {
   .comment-edit {
-    // TODO:
     overflow-wrap: break-word;
     textarea {
       border-color: $light-grey;

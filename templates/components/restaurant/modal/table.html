@@ -1,14 +1,14 @@
-<button type="button" class="price-change-btn btn btn__blue shadow px-3" data-toggle="modal" data-target="#price-change-btn__ModalCenter">
+<button type="button" class="price-change-btn w-100 focus shadow px-3" data-toggle="modal" data-target="#price-change-btn__ModalCenter">
   <i class="fas fa-pencil-alt"></i>
 </button>
 
 <div class="modal fade" id="price-change-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="price-change-btn__ModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    {% if table_price.count > 1 %}
+  {% if table_price.count > 1 %}
     <form class="modal-content" action="{% url 'restaurant:price_ch' each.id %}" method="POST">{% csrf_token %}
-    {% else %}
+  {% else %}
     <form class="modal-content" action="{% url 'restaurant:price_ch' table_price.id %}" method="POST">{% csrf_token %}
-    {% endif %}
+  {% endif %}
       <div class="modal-header">
         <h5 class="modal-title" id="price-change-btn__ModalCenterTitle">合計金額を変更する</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -19,9 +19,9 @@
         <div class="py-2">
           <label>現在</label>
           {% if table_price.count > 1 %}
-            <p class="text__bold text__large">{{ each }} 円</p>
+            <p class="text__bold text__large">{{ each.price }} 円</p>
           {% else %}
-            <p class="text__bold text__large">{{ table_price }} 円</p>
+            <p class="text__bold text__large">{{ table_price.price }} 円</p>
           {% endif %}
         </div>
         <div class="py-2">

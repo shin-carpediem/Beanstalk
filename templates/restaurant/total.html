@@ -35,6 +35,7 @@
             <tr class="text-center">
               <th>テーブル番号</th>
               <th>合計（円）</th>
+              <th>修正</th>
             </tr>
             <!-- {# % for key, value in active_table_price_list.items % #}
               <tr class="text-right">
@@ -45,24 +46,21 @@
               {% for each in table_price %}
                 <tr class="text-right">
                   <td class="px-sm-3 px-2">{{ each }}</td>
-                  <td class="px-sm-3 px-2 table-price">
-                    {{ each.price | intcomma }}
-                    {% include 'components/restaurant/modal/table.html' %}
-                  </td>
+                  <td class="px-sm-3 px-2 table-price">{{ each.price | intcomma }}</td>
+                  <td>{% include 'components/restaurant/modal/table.html' %}</td>
                 </tr>
               {% empty %}
                 <tr class="text-right">
                   <td class="px-sm-3 px-2">なし</td>
                   <td class="px-sm-3 px-2">なし</td>
+                  <td>なし</td>
                 </tr>
               {% endfor %}
             {% else %}
               <tr class="text-right">
                 <td class="px-sm-3 px-2">{{ table_price }}</td>
-                <td class="px-sm-3 px-2 table-price">
-                  {{ table_price.price | intcomma }}
-                  {% include 'components/restaurant/modal/table.html' %}
-                </td>
+                <td class="px-sm-3 px-2 table-price">{{ table_price.price | intcomma }}</td>
+                <td>{% include 'components/restaurant/modal/table.html' %}</td>
               </tr>
             {% endif %}
           </table>
