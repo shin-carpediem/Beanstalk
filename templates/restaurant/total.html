@@ -60,7 +60,9 @@
               <tr class="text-right">
                 <td class="px-sm-3 px-2">{{ table_price }}</td>
                 <td class="px-sm-3 px-2 table-price">{{ table_price.price | intcomma }}</td>
-                <td>{% include 'components/restaurant/modal/table.html' %}</td>
+                {% if table_price %}
+                  <td>{% include 'components/restaurant/modal/table.html' %}</td>
+                {% endif %}
               </tr>
             {% endif %}
           </table>
