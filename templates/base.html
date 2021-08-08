@@ -26,9 +26,10 @@
 </head>
 
 <body>
-  <div class="w-100">
-    <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="el__hide loading_icon" id="loading_icon">
+  <div class="loading-wrapper el__hide" id="loading_icon">
+    <img src="{% static 'loading.gif' %}" alt="Loading Icon" class="loading_icon">
   </div>
+
   {% if user.is_authenticated %}
     {% if request.path == '/manage/menu/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/detail/' %}
       <div class="back-to-order-manage pt-2 pr-2 text-right">
