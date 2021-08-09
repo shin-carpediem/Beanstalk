@@ -719,7 +719,7 @@ def nomiho(request, nomiho_id):
             request.session.flush()
             return redirect('customer:thanks')
 
-        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True) > 0:
+        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
             return redirect('customer:judge')
 
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
