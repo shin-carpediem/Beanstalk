@@ -269,6 +269,7 @@ def history(request):
     user = User.objects.get(id=request.user.id)
     name = user.name
     active_users = nonLoginUser.objects.defer('created_at').filter(active=True)
+    menus = Menu.objects.defer('created_at').order_by('id')
     order_list = ''
     start = None
     end = None
@@ -367,6 +368,7 @@ def history(request):
         'name': name,
         'table': table,
         'order_list': order_list,
+        'menus': menus,
         'start': start,
         'end': end,
     }
