@@ -434,8 +434,9 @@ def stop_user_order(request, active_table):
             'created_at').filter(customer=same_user, curr=True)
 
         for same_user_cart in same_user_carts:
-            same_user_cart.curr = False
-            same_user_cart.save()
+            # same_user_cart.curr = False
+            # same_user_cart.save()
+            same_user_cart.delete()
         for same_user_order in same_user_orders:
             same_user_order.curr = False
             same_user_order.save()
@@ -484,7 +485,8 @@ def daily(request):
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
     pointed_total_price = 0
-    pointed_tables = Table.objects.defer('created_at').filter(created_at__range=(start, end)).order_by('-id')
+    pointed_tables = Table.objects.defer('created_at').filter(
+        created_at__range=(start, end)).order_by('-id')
 
     for each in pointed_tables:
         pointed_total_price += each.price
