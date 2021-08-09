@@ -793,7 +793,13 @@ def history(request):
     categories = Category.objects.defer('created_at').order_by('id')
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
-    table_query = Table.objects.get(table=table_num, active=True)
+
+    try:
+        table_query = Table.objects.get(table=table_num, active=True)
+    except Exception:
+        messages.info(request, f"申し訳ありません。エラーが発生しました。")
+        return redirect('customer:menu')
+
     orders_in_order = table_query.price
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
