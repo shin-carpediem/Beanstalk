@@ -486,23 +486,47 @@ def daily(request):
 
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
-    pointed_total_price = 0
+    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
+        created_at__range=(start, end)).order_by('-id')
+
     pointed_tables = Table.objects.defer('created_at').filter(
         created_at__range=(start, end)).order_by('-id')
+    pointed_total_price = 0
+    pointed_order_sum = 0
+    pointed_nomiho_sum = 0
 
     for each in pointed_tables:
         pointed_total_price += each.price
 
-    pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
-        created_at__range=(start, end)).order_by('-id')
+    for each in pointed_orders:
+        pointed_order_sum += each.menu.price
 
+    for nomiho in pointed_nomiho_orders:
+        pointed_nomiho_sum += each.nomiho.price
+
+    pointed_sum = pointed_order_sum + pointed_nomiho_sum
+    discount_pointed_price = pointed_sum - pointed_total_price
+
+    # 総売上
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
     nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
-    total_price = 0
+
     tables = Table.objects.defer('created_at')
+    total_price = 0
+    order_sum = 0
+    nomiho_sum = 0
 
     for each in tables:
         total_price += each.price
+
+    for order in orders:
+        order_sum += order.menu.price
+
+    for nomiho in nomiho_orders:
+        nomiho_sum += nomiho.nomiho.price
+
+    sum = order_sum + nomiho_sum
+    discount_price = sum - total_price
 
     ctx = {
         'start': start,
@@ -510,9 +534,11 @@ def daily(request):
         'pointed_orders': pointed_orders,
         'pointed_nomiho_orders': pointed_nomiho_orders,
         'pointed_total_price': pointed_total_price,
+        'discount_pointed_price': discount_pointed_price,
         'orders': orders,
         'nomiho_orders': nomiho_orders,
         'total_price': total_price,
+        'discount_price': discount_price,
     }
 
     return render(request, 'restaurant/daily.html', ctx)
