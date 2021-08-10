@@ -151,9 +151,9 @@ WSGI_APPLICATION = 'beanstalk.wsgi.application'
 DATABASES = {"default": env.db()}
 
 # If the flag as been set, configure to use proxy
-# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-#     DATABASES["default"]["HOST"] = "127.0.0.1"
-#     DATABASES["default"]["PORT"] = 5432
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+    DATABASES["default"]["PORT"] = 5432
 
 # [END gaestd_py_django_database_config]
 
@@ -222,12 +222,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa: 501
     },
 ]
-
-WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": env("VAPID_PUBLIC_KEY"),
-    "VAPID_PRIVATE_KEY": env("VAPID_PRIVATE_KEY"),
-    "VAPID_ADMIN_EMAIL": env("EMAIL_HOST_USER")
-}
 
 # Internationalization
 

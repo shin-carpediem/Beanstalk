@@ -25,3 +25,5 @@ env/
 
 prod.env
 dev.env
+
+db.sqlite3
