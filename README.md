@@ -195,3 +195,6 @@ $ gcloud init
 
 - [ ] GCP にプロジェクトの存在を伝える JSON ファイルの取得
       https://cloud.google.com/docs/authentication/getting-started#auth-cloud-implicit-python
+
+- [ ] App Engine Admin API を有効にする
+      https://cloud.google.com/build/docs/deploying-builds/deploy-appengine?authuser=2

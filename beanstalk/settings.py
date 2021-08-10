@@ -68,7 +68,6 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-# DEBUG = False
 DEBUG = env("DEBUG")
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
@@ -168,43 +167,43 @@ if os.getenv("TRAMPOLINE_CI", None):
         }
     }
 
-if os.getenv('GAE_APPLICATION', None):
+# if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': env("DB_HOST"),
-            'USER': env("DB_USERNAME"),
-            'PASSWORD': env("DB_PASSWORD"),
-            'NAME': env("DB_NAME"),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': env("DB_HOST"),
+        'USER': env("DB_USERNAME"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'NAME': env("DB_NAME"),
     }
-else:
+}
+# else:
     # Running locally so connect to either a local MySQL instance or connect to
     # Cloud SQL via the proxy. To start the proxy via command line:
 
     #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
 
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    if DEBUG:
-        DATABASES = {
-            'default': {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-            }
-        }
-    else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'HOST': '127.0.0.1',
-                'PORT': '3306',
-                'NAME': env("DB_NAME"),
-                'USER': env("DB_USERNAME"),
-                'PASSWORD': env("DB_PASSWORD"),
-            }
-        }
+    # if DEBUG:
+    # DATABASES = {
+    #     'default': {
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    #     }
+    # }
+    # else:
+    #     DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.mysql',
+    #             'HOST': '127.0.0.1',
+    #             'PORT': '3306',
+    #             'NAME': env("DB_NAME"),
+    #             'USER': env("DB_USERNAME"),
+    #             'PASSWORD': env("DB_PASSWORD"),
+    #         }
+    #     }
 # [END db_setup]
 
 # Password validation
