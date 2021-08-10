@@ -151,9 +151,9 @@ WSGI_APPLICATION = 'beanstalk.wsgi.application'
 DATABASES = {"default": env.db()}
 
 # If the flag as been set, configure to use proxy
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = 5432
+# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
 
 # [END gaestd_py_django_database_config]
 
@@ -167,19 +167,19 @@ if os.getenv("TRAMPOLINE_CI", None):
         }
     }
 
-# if os.getenv('GAE_APPLICATION', None):
+if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': env("DB_HOST"),
-        'USER': env("DB_USERNAME"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'NAME': env("DB_NAME"),
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': env("DB_HOST"),
+            'USER': env("DB_USERNAME"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'NAME': env("DB_NAME"),
+        }
     }
-}
-# else:
+else:
     # Running locally so connect to either a local MySQL instance or connect to
     # Cloud SQL via the proxy. To start the proxy via command line:
 
@@ -187,12 +187,12 @@ DATABASES = {
 
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
     # if DEBUG:
-    # DATABASES = {
-    #     'default': {
-    #         "ENGINE": "django.db.backends.sqlite3",
-    #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    #     }
-    # }
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
+    }
     # else:
     #     DATABASES = {
     #         'default': {
