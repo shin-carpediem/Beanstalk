@@ -183,7 +183,7 @@ $ sudo lsof -i -P | grep "LISTEN"
 $ sudo kill <PID>
 ```
 
-別のプロジェクトにデプロイ
+### 別プロジェクトにデプロイ
 
 - [ ] Cloud SDK の設定を変更
 
@@ -191,10 +191,7 @@ $ sudo kill <PID>
 $ gcloud init
 ```
 
-- [ ] .env ファイルで読み込む JSON ファイル(GOOGLE_APPLICATION_CREDENTIALS)のパス、Cloud SQL、Cloud Storage の情報を変更
-
-- [ ] GCP にプロジェクトの存在を伝える JSON ファイルの取得
+- [ ] GCP にプロジェクトを定義した JSON ファイルの取得
       https://cloud.google.com/docs/authentication/getting-started#auth-cloud-implicit-python
 
-- [ ] App Engine Admin API を有効にする
-      https://cloud.google.com/build/docs/deploying-builds/deploy-appengine?authuser=2
+- [ ] .env ファイルで読み込む JSON ファイル(GOOGLE_APPLICATION_CREDENTIALS)のパス、Cloud SQL、Cloud Storage の情報を変更
