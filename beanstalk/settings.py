@@ -47,8 +47,7 @@ elif os.getenv("TRAMPOLINE_CI", None):
     )
     env.read_env(io.StringIO(placeholder))
 # [END_EXCLUDE]
-# elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-elif env("GOOGLE_CLOUD_PROJECT"):
+elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     # Pull secrets from Secret Manager
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -169,7 +168,8 @@ if os.getenv("TRAMPOLINE_CI", None):
         }
     }
 
-if os.getenv('GAE_APPLICATION', None):
+# if os.getenv('GAE_APPLICATION', None):
+if env('GAE_APPLICATION'):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
