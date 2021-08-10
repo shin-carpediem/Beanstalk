@@ -2,15 +2,15 @@
 
 # beanstalk
 
-https://beanstalk-test-prod.an.r.appspot.com/
+https://beanstalk-test-prod-322412.an.r.appspot.com/
 
 ##### プライバシー・ポリシー
 
-https://beanstalk-test-prod.an.r.appspot.com/policy/
+https://beanstalk-test-prod-322412.an.r.appspot.com/policy/
 
 ##### 利用規約
 
-https://beanstalk-test-prod.an.r.appspot.com/terms/
+https://beanstalk-test-prod-322412.an.r.appspot.com/terms/
 
 ### 仕様
 
@@ -24,7 +24,6 @@ https://beanstalk-test-prod.an.r.appspot.com/terms/
 - ログインなしで、自分の座っているテーブル番号を入力して使用開始可能です。
 - 同じテーブルで食事中のお客様の全員の画面が、注文内容・伝票等が同期されます。
 - 一度スマートフォンを閉まった場合も、操作後 5\*時間はテーブルの情報が保存されるので、再度ページにアクセスした際には情報が保持されています。
-- 一度オーダーストップをした場合も、操作後 5\*時間は復帰可能です。
 
 ##### 店舗様
 
@@ -42,7 +41,6 @@ https://beanstalk-test-prod.an.r.appspot.com/terms/
 
 ##### お客様
 
-- 同一のお客様が 5 時間以内に 2 度来店された場合の、前回の注文内容のリセットは自動ではできません。
 - 注文がすでに店舗様に到達した後での注文内容の変更はできません。この場合、お客様から口頭で店舗様にお伝えするかつ、店舗様が受注画面から該当メニューの「状況」を「キャンセル」にする事で注文メニュー自体のキャンセルが可能です。その際お客様の注文履歴の該当メニューに「キャンセル」マークが付きます。
 
 ##### 店舗様
@@ -184,3 +182,16 @@ $ sudo lsof -i -P | grep "LISTEN"
 ```
 $ sudo kill <PID>
 ```
+
+別のプロジェクトにデプロイ
+
+- [ ] Cloud SDK の設定を変更
+
+```
+$ gcloud init
+```
+
+- [ ] .env ファイルで読み込む JSON ファイル(GOOGLE_APPLICATION_CREDENTIALS)のパス、Cloud SQL、Cloud Storage の情報を変更
+
+- [ ] GCP にプロジェクトの存在を伝える JSON ファイルの取得
+      https://cloud.google.com/docs/authentication/getting-started#auth-cloud-implicit-python
