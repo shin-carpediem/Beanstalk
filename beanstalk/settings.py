@@ -168,8 +168,7 @@ if os.getenv("TRAMPOLINE_CI", None):
         }
     }
 
-# if os.getenv('GAE_APPLICATION', None):
-if env('GAE_APPLICATION'):
+if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
