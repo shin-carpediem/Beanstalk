@@ -47,7 +47,8 @@ elif os.getenv("TRAMPOLINE_CI", None):
     )
     env.read_env(io.StringIO(placeholder))
 # [END_EXCLUDE]
-elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+# elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+elif env("GOOGLE_CLOUD_PROJECT"):
     # Pull secrets from Secret Manager
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -66,10 +67,10 @@ else:
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# TODO:
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
-DEBUG = False
+# DEBUG = False
+DEBUG = env("DEBUG")
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
