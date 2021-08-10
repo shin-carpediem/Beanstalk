@@ -14,7 +14,6 @@
 
 import io
 import os
-from firebase_admin import initialize_app
 
 import environ
 from google.cloud import secretmanager
