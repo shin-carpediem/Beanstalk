@@ -15,15 +15,14 @@ from beanstalk.settings import ONE_SIGNAL_REST_API_KEY
 
 
 # Create your views here.
-# TODO: 要確認
 def stop_nomiho(request, duration):
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
+    # TODO: sleepだと止まる
     time.sleep(int(duration)*60)
     user_uuid.nomiho = False
     user_uuid.save()
-    print("ok!!")
 
 
 def index(request):
@@ -289,11 +288,7 @@ def filter(request, category_id):
     same_num = None
     nomiho_is_started = False
 
-    # 店側から
-    if user.is_authenticated:
-        None
-    # 客側から
-    else:
+    if not user.is_authenticated:
 
         if not 'nonloginuser_uuid' in request.session:
             request.session.flush()
@@ -381,18 +376,17 @@ def filter(request, category_id):
 
 def menu_detail(request, menu_id):
     user = request.user
-    if user.is_authenticated:
-        None
-    else:
+
+    if not user.is_authenticated:
 
         if not 'nonloginuser_uuid' in request.session:
             request.session.flush()
             return redirect('customer:thanks')
 
-    table_num = request.session['table']
+        table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
-        return redirect('customer:judge')
+        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
+            return redirect('customer:judge')
 
     menu = get_object_or_404(Menu, pk=menu_id)
 
