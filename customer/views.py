@@ -46,6 +46,21 @@ def table(request):
         return redirect('customer:menu')
 
 
+def waiting_admin(request):
+
+    if not 'nonloginuser_uuid' in request.session:
+        request.session.flush()
+        return redirect('customer:thanks')
+
+    uuid = request.session['nonloginuser_uuid']
+    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+
+    if user_uuid.allowed == 'pre_admin':
+        return render(request, 'customer/waiting_admin.html')
+    else:
+        return redirect('customer:menu')
+
+
 def waiting(request):
 
     if not 'nonloginuser_uuid' in request.session:
@@ -177,29 +192,44 @@ def menu(request):
         if not 'nonloginuser_uuid' in request.session:
             table_num = request.GET.get('table')
 
-            # adminユーザーか承認を得るユーザーかの分岐点
+            # 店側から承認を得る1人目のテーブルユーザー（adminユーザー）か、1人目のテーブルユーザーからの承認を得るユーザーかの分岐点
             # 現在のテーブルで最初の1人の場合
             if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
                 newtable = Table(table=table_num, active=True)
                 newtable.save()
                 newuser = nonLoginUser(
-                    allowed="admin", table=table_num, active=True)
+                    allowed="pre_admin", table=table_num, active=True)
+                newuser.save()
+
+                uuid = str(newuser.uuid)
+                user_uuid = newuser
+
+                # レストラン名のセッションを作成
+                request.session['restaurant_name'] = restaurant_name
+                # レストランのロゴのセッションを作成
+                request.session['restaurant_logo'] = restaurant_logo
+                # テーブル番号のセッションを作成
+                request.session['table'] = table_num
+                # uuidのセッションを作成
+                request.session['nonloginuser_uuid'] = uuid
+
+                return redirect('customer:waiting_admin')
             # 他に1人以上いる場合
             else:
                 newuser = nonLoginUser(table=table_num, active=True)
+                newuser.save()
 
-            newuser.save()
-            uuid = str(newuser.uuid)
-            user_uuid = newuser
+                uuid = str(newuser.uuid)
+                user_uuid = newuser
 
-            # レストラン名のセッションを作成
-            request.session['restaurant_name'] = restaurant_name
-            # レストランのロゴのセッションを作成
-            request.session['restaurant_logo'] = restaurant_logo
-            # テーブル番号のセッションを作成
-            request.session['table'] = table_num
-            # uuidのセッションを作成
-            request.session['nonloginuser_uuid'] = uuid
+                # レストラン名のセッションを作成
+                request.session['restaurant_name'] = restaurant_name
+                # レストランのロゴのセッションを作成
+                request.session['restaurant_logo'] = restaurant_logo
+                # テーブル番号のセッションを作成
+                request.session['table'] = table_num
+                # uuidのセッションを作成
+                request.session['nonloginuser_uuid'] = uuid
 
             if newuser.allowed == 'unknown':
                 return redirect('customer:waiting')

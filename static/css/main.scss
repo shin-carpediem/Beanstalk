@@ -451,6 +451,7 @@ section.top-view {
 }
 section.top-view,
 section.table,
+section.waiting-admin,
 section.waiting,
 section.judge,
 section.thanks {
@@ -486,9 +487,11 @@ section.thanks {
     position: relative;
   }
 }
+section.waiting-admin,
 section.waiting,
 section.judge,
 section.thanks {
+  h1,
   h3,
   p {
     color: $white;

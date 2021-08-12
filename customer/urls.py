@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('table/', views.table, name='table'),
     path('waiting/', views.waiting, name='waiting'),
+    path('waiting/admin/', views.waiting_admin, name='waiting_admin'),
     path('judge/', views.judge, name='judge'),
     path('allowing/', views.allowing, name='allowing'),
     path('deny/', views.deny, name='deny'),

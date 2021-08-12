@@ -16,17 +16,33 @@
     <div class="pt-sm-3 pt-5">
       <p class="text-sm-left text-center pt-sm-3 pl-sm-3">＊このページは10秒毎に自動で再読み込みします</p>
       <div class="table-list shadow py-5 mx-4">
+        <div class="row">
+          <div class="col-sm-6 col-12">
+            <div class="pb-4 text__bold text-center">
+              <p class="text__large pb-3">テーブル利用開始申請</p>
+            </div>
+            <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
+              {% for pre_admin_table in pre_admin_table_list %}
+                {% include 'components/restaurant/modal/allowing.html' %}
+                {% empty %}
+                <p>なし</p>
+              {% endfor %}
+            </div>
+          </div>
 
-        <div class="pb-4 text__bold text-center">
-          <p class="text__large pb-3">利用中のテーブルお会計終了ボタン</p>
-          <p class="text__underline">お会計の終了時に必ずタッチしてください</p>
-        </div>
-        <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
-          {% for active_table in active_table_list %}
-            {% include 'components/restaurant/modal/stop.html' %}
-            {% empty %}
-            <p>なし</p>
-          {% endfor %}
+          <div class="col-sm-6 col-12">
+            <div class="pb-4 text__bold text-center">
+              <p class="text__large pb-3">利用中のテーブルお会計終了ボタン</p>
+              <p class="text__underline">お会計の終了時に必ずタッチしてください</p>
+            </div>
+            <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
+              {% for active_table in active_table_list %}
+                {% include 'components/restaurant/modal/stop.html' %}
+                {% empty %}
+                <p>なし</p>
+              {% endfor %}
+            </div>
+          </div>
         </div>
 
         <div class="px-3">
@@ -58,10 +74,13 @@
               {% endfor %}
             {% else %}
               <tr class="text-right">
+                {% if table_price %}
                 <td class="px-sm-3 px-2">{{ table_price }}</td>
                 <td class="px-sm-3 px-2 table-price">{{ table_price.price | intcomma }}</td>
-                {% if table_price %}
                   <td>{% include 'components/restaurant/modal/table.html' %}</td>
+                {% else %}
+                <td class="px-sm-3 px-2">なし</td>
+                <td class="px-sm-3 px-2 table-price">なし</td>
                 {% endif %}
               </tr>
             {% endif %}

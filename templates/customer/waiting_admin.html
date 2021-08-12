@@ -7,13 +7,14 @@
 {% endblock %}
 
 {% block content %}
-<section class="w-100 waiting">
+<section class="w-100 waiting-admin">
   <div class="img">
     <img src="{% static 'img/top-view.jpg' %}" alt="Top View">
   </div>
   <div class="forms text-center title">
-    <h3 class="pb-5 mb-5">同テーブルに最初に入られた方の承認待ちです</h3>
-    <p>*テーブルにご自身のみいらっしゃる状態でこの画面が表示されましたら、<br>お手数ですが店員をお呼びし、画面のリセットを申し付けください。</p>
+    <h1 class="pb-5 mb-5">テーブル番号<br /> {{ request.session.table }}</h1>
+    <h3 class="pb-5 mb-5">お店の承認待ちです</h3>
+    <p>店員をお呼びし、{{ request.session.table }}番テーブルの利用開始をお申し付けください。</p>
   </div>
 </section>
 {% endblock %}
