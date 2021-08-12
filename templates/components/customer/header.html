@@ -22,16 +22,16 @@
   </div>
 
   <h5 class="col-4 my-auto text__bold">
-    {% if request.path == '/' or request.path == '/menu/' or request.path == '/filter/' or request.path == '/nomiho/' or request.path == '/manage/menu/' %}
+    {% if request.path == '/history/' %}
+      ご注文履歴
+    {% elif request.path == '/stop/' %}
+      伝票
+    {% else %}
       {% if user.is_authenticated %}
         {{ request.user.name }}
       {% else %}
         {{ request.session.restaurant_name }}
       {% endif %}
-    {% elif request.path == '/history/' %}
-      ご注文履歴
-    {% elif request.path == '/stop/' %}
-      伝票
     {% endif %}
 
     {% include 'components/restaurant/modal/company-name.html' %}
