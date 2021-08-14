@@ -444,6 +444,13 @@ def menu_detail(request, menu_id):
 
 
 @require_POST
+def request(request, menu_id):
+    menu_request = request.POST.get('request')
+    request.session['menu_request'] = {menu_id: menu_request}
+    return redirect('customer:menu_detail', menu_id=menu_id)
+
+
+@require_POST
 def cart(request):
     if not 'nonloginuser_uuid' in request.session:
         request.session.flush()
@@ -482,16 +489,24 @@ def cart(request):
     menu_id = request.POST.get('menu_id')
     cart_num = request.POST.get('cart_num')
     menu_instance = Menu.objects.get(id=menu_id)
+    menu_request = request.session['menu_request'][menu_id]
 
     # すでにカートに同じ商品が追加されていないかチェック
     try:
         cart = customer.models.Cart.objects.get(menu=menu_instance, curr=True)
         cart.num += int(cart_num)
+        if not menu_request == None:
+            cart.request = menu_request
     except Exception:
-        cart = customer.models.Cart(menu=menu_instance, num=cart_num,
-                                    customer=user_uuid, curr=True)
+        if not menu_request == None:
+            cart = customer.models.Cart(menu=menu_instance, num=cart_num, request=menu_request,
+                                        customer=user_uuid, curr=True)
+        else:
+            cart = customer.models.Cart(menu=menu_instance, num=cart_num,
+                                        customer=user_uuid, curr=True)
 
     cart.save()
+    request.session['menu_request'] = None
 
     return redirect('customer:menu')
 

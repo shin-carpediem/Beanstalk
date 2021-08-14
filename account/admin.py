@@ -48,8 +48,8 @@ class nonLoginUserAdmin(admin.ModelAdmin):
 
 
 class TableAdmin(admin.ModelAdmin):
-    list_display = ('table', 'price', 'active', 'created_at')
-    list_editable = ('price', 'active')
+    list_display = ('table', 'price', 'active', 'user', 'created_at')
+    list_editable = ('price', 'active', 'user')
     ordering = ('-created_at',)
 
 

@@ -9,6 +9,7 @@ from restaurant.models import Menu, Nomiho
 class Cart(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT, blank=True, null=True)
     num = models.PositiveIntegerField("個数", blank=True, null=True)
+    request = models.TextField("リクエスト", max_length=500, blank=True, null=True)
     customer = models.ForeignKey(nonLoginUser, on_delete=models.PROTECT, blank=True, null=True)
     curr = models.BooleanField("今回分か否か", default=False, blank=True, null=True)
     created_at = models.DateTimeField("カート追加時刻", auto_now=True)
@@ -21,6 +22,7 @@ class Order(models.Model):
     status = models.CharField("ステータス", max_length=256, blank=True, null=True)
     menu = models.ForeignKey(Menu, on_delete=models.PROTECT, blank=True, null=True)
     num = models.PositiveIntegerField("個数", blank=True, null=True)
+    request = models.TextField("リクエスト", max_length=500, blank=True, null=True)
     customer = models.ForeignKey(nonLoginUser, on_delete=models.PROTECT, blank=True, null=True)
     curr = models.BooleanField("今回分か否か", default=False, blank=True, null=True)
     created_at = models.DateTimeField("オーダー発生時刻", auto_now=True)

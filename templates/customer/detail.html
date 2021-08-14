@@ -12,8 +12,15 @@
           <p class="text__bold plus-minus el__pointer" id="cartMinus">-</p>
           <input type="number" name="cart_num" class="ml-4 mr-2 text__bold" value="1" id="cartNum" required readonly>
           <p class="pt-2 text__bold text__large">個</p>
-          <p class="ml-4 text__bold plus-minus el__pointer" id="cartPlus">+</p>
+          <p class="ml-4 mr-5 text__bold plus-minus el__pointer" id="cartPlus">+</p>
+
+          {% if not request.session.menu_request %}
+            <button type="button" class="btn btn__orange shadow px-3" data-toggle="modal" data-target="#request-btn-{{ menu.id }}__ModalCenter">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+          {% endif %}
         </div>
+
         <!-- hidden -->
         <input type="hidden" name="menu_id" value="{{ menu.id }}">
         <input type="hidden" name="direct" value="direct">
@@ -21,6 +28,8 @@
           追加
         </button>
       </form>
+
+      {% include 'components/customer/modal/request.html' %}
     {% endif %}
   </div>
 
