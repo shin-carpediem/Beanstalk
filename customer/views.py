@@ -12,7 +12,7 @@ import customer.models
 from .function import permission, judging, expired, make_session
 from account.models import Table, User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
-from beanstalk.settings import DEBUG, ONE_SIGNAL_REST_API_KEY
+from beanstalk.settings import DEBUG, ONE_SIGNAL_APP_ID, ONE_SIGNAL_REST_API_KEY
 
 
 # Create your views here.
@@ -556,7 +556,7 @@ def order(request):
         # オーダーをブラウザ通知
         try:
             data = {
-                'app_id': 'cebff79b-a399-438a-81fb-fa4c72364762',
+                'app_id': ONE_SIGNAL_APP_ID,
                 'included_segments': ['All'],
                 'contents': {'ja': str(table_num) + '番テーブル'},
                 'headings': {'ja': '注文がきました'},
@@ -565,7 +565,7 @@ def order(request):
             requests.post(
                 "https://onesignal.com/api/v1/notifications",
                 headers={
-                    'Authorization': ONE_SIGNAL_REST_API_KEY},
+                    'Authorization': 'Basic' + ONE_SIGNAL_REST_API_KEY},
                 json=data,
             )
             print(data)
