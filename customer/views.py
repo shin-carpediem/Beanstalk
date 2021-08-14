@@ -244,13 +244,13 @@ def menu(request):
 
         # 既存
         else:
+
             uuid = request.session['nonloginuser_uuid']
             try:
                 user_uuid = nonLoginUser.objects.get(uuid=uuid)
             except Exception:
                 return redirect('customer:index')
             permission(user_uuid)
-
             # unknownを検知したらallow.htmlに遷移させる
             table_num = request.session['table']
             judging(table_num)
@@ -311,7 +311,6 @@ def filter(request, category_id):
     nomiho_is_started = False
 
     if not user.is_authenticated:
-
         expired(request)
 
     try:
@@ -325,13 +324,13 @@ def filter(request, category_id):
         menus = None
 
     try:
+
         uuid = request.session['nonloginuser_uuid']
         try:
             user_uuid = nonLoginUser.objects.get(uuid=uuid)
         except Exception:
             return redirect('customer:index')
         permission(user_uuid)
-
         table_num = request.session['table']
         judging(table_num)
 
@@ -391,7 +390,9 @@ def menu_detail(request, menu_id):
     if not user.is_authenticated:
 
         expired(request)
-
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        permission(user_uuid)
         table_num = request.session['table']
         judging(table_num)
 
@@ -420,10 +421,12 @@ def request(request, menu_id):
 @require_POST
 def cart(request):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
-
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    permission(user_uuid)
+    table_num = request.session['table']
+    judging(table_num)
+
     user_table = user_uuid.table
     same_table_user_list = nonLoginUser.objects.defer(
         'created_at').filter(table=user_table, active=True)
@@ -434,11 +437,6 @@ def cart(request):
             'created_at').filter(customer=same_table_user, curr=True).order_by('-id')
         same_table_cart_list = list(
             chain(same_table_cart_list, same_table_cart))
-
-    permission(user_uuid)
-
-    table_num = request.session['table']
-    judging(table_num)
 
     # Cartデータの保存
     menu_id = request.POST.get('menu_id')
@@ -471,12 +469,9 @@ def cart(request):
 
 def cart_static(request):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
     permission(user_uuid)
-
     table_num = request.session['table']
     judging(table_num)
 
@@ -501,12 +496,9 @@ def cart_static(request):
 
 def cart_detail(request, menu_id):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
     permission(user_uuid)
-
     table_num = request.session['table']
     judging(table_num)
 
@@ -536,12 +528,9 @@ def cart_detail(request, menu_id):
 @require_GET
 def cart_ch(request):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
     permission(user_uuid)
-
     table_num = request.session['table']
     judging(table_num)
 
@@ -584,12 +573,9 @@ def cart_ch(request):
 
 def order(request):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
     permission(user_uuid)
-
     table_num = request.session['table']
     judging(table_num)
 
@@ -663,12 +649,10 @@ def nomiho(request, nomiho_id):
     else:
 
         expired(request)
-
         uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        table_num = request.session['table']
-
         permission(user_uuid)
+        table_num = request.session['table']
         judging(table_num)
 
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
@@ -715,12 +699,10 @@ def nomiho(request, nomiho_id):
 
 def history(request):
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    table_num = request.session['table']
-
     permission(user_uuid)
+    table_num = request.session['table']
     judging(table_num)
 
     carts = ''
@@ -776,12 +758,9 @@ def history(request):
 def stop(request):
 
     expired(request)
-
-    # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
     permission(user_uuid)
-
     table_num = request.session['table']
     judging(table_num)
 
