@@ -7,7 +7,7 @@
   {% include 'components/customer/menu_detail.html' %}
 
     {% if not user.is_authenticated %}
-      <form class="cart-form" action="{% url 'customer:cart' %}" method="POST">{% csrf_token %}
+      <form class="cart-form" action="{% url 'customer:cart' menu.id %}" method="POST">{% csrf_token %}
         <div class="d-flex input__fixed justify-content-center align-items-center">
           <p class="text__bold plus-minus el__pointer" id="cartMinus">-</p>
           <input type="number" name="cart_num" class="ml-4 mr-2 text__bold" value="1" id="cartNum" required readonly>
@@ -21,9 +21,6 @@
           {% endif %}
         </div>
 
-        <!-- hidden -->
-        <input type="hidden" name="menu_id" value="{{ menu.id }}">
-        <input type="hidden" name="direct" value="direct">
         <button type="submit" class="btn btn__orange btn__fixed-righter shadow" onclick="loading_show(); style.display='none';">
           追加
         </button>

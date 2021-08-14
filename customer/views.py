@@ -375,7 +375,7 @@ def request(request, menu_id):
 
 
 @require_POST
-def cart(request):
+def cart(request, menu_id):
     expired(request)
     user_uuid = permission(request)
     table_num = judging(request)
@@ -391,7 +391,6 @@ def cart(request):
             chain(same_table_cart_list, same_table_cart))
 
     # Cartデータの保存
-    menu_id = request.POST.get('menu_id')
     cart_num = request.POST.get('cart_num')
     menu_instance = Menu.objects.get(id=menu_id)
     if request.session['menu_request'] != None:
@@ -472,12 +471,11 @@ def cart_detail(request, menu_id):
 
 
 @require_GET
-def cart_ch(request):
+def cart_ch(request, cart_id, type):
     expired(request)
     permission(request)
     table_num = judging(request)
 
-    cart_id = request.GET.get('cart_id')
     type = request.GET.get('type')
 
     # Cartデータの更新
