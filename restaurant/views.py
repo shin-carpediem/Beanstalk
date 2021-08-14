@@ -404,6 +404,8 @@ def total(request):
     # 利用開始申請済みのテーブル番号を抽出
     for pre_admin_table_user in pre_admin_table_user_list:
         table_int = pre_admin_table_user.table
+        if table_int == None:
+            continue
         table = str(table_int)
 
         if not table in pre_admin_table_list:
@@ -412,6 +414,8 @@ def total(request):
     # アクティブ客のテーブル番号を抽出
     for active_non_login_user in active_non_login_user_list:
         table_int = active_non_login_user.table
+        if table_int == None:
+            continue
         table = str(table_int)
 
         active_non_login_user_orders = customer.models.Order.objects.defer(
@@ -436,11 +440,14 @@ def total(request):
 @login_required
 @require_POST
 def allowing(request, pre_admin_table):
-    pre_admin_user = nonLoginUser.objects.get(table=str(pre_admin_table), active=True)
-    pre_admin_user.allowed = 'admin'
-    pre_admin_user.save()
+    try:
+        pre_admin_user = nonLoginUser.objects.get(table=str(pre_admin_table), active=True)
+        pre_admin_user.allowed = 'admin'
+        pre_admin_user.save()
 
-    messages.info(request, f'{pre_admin_table}テーブルの利用を許可しました。')
+        messages.info(request, f'{pre_admin_table}テーブルの利用を許可しました。')
+    except Exception:
+        pass
 
     return redirect('restaurant:total')
 
@@ -499,10 +506,15 @@ def stop_user_order(request, active_table):
 @login_required
 @require_POST
 def price_ch(request, active_table):
-    get_table_price = Table.objects.get(id=active_table)
-    required_price = request.POST.get('required_price')
-    get_table_price.price = int(required_price)
-    get_table_price.save()
+    try:
+        get_table_price = Table.objects.get(id=active_table, active=True)
+        required_price = request.POST.get('required_price')
+        get_table_price.price = int(required_price)
+        get_table_price.save()
+
+        messages.info(request, f'{active_table}テーブルの合計金額を{required_price}円に変更しました。')
+    except Exception:
+        pass
 
     return redirect('restaurant:total')
 

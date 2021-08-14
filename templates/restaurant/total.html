@@ -24,7 +24,7 @@
             <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
               {% for pre_admin_table in pre_admin_table_list %}
                 {% include 'components/restaurant/modal/allowing.html' %}
-                {% empty %}
+              {% empty %}
                 <p>なし</p>
               {% endfor %}
             </div>
@@ -38,7 +38,7 @@
             <div class="d-flex pt-3 pb-5 justify-content-center align-items-center flex-wrap">
               {% for active_table in active_table_list %}
                 {% include 'components/restaurant/modal/stop.html' %}
-                {% empty %}
+              {% empty %}
                 <p>なし</p>
               {% endfor %}
             </div>
@@ -60,11 +60,13 @@
               </tr> -->
             {% if table_price.count > 1 %}
               {% for each in table_price %}
+                {% if each.price != 0 %}
                 <tr class="text-right">
                   <td class="px-sm-3 px-2">{{ each }}</td>
                   <td class="px-sm-3 px-2 table-price">{{ each.price | intcomma }}</td>
                   <td>{% include 'components/restaurant/modal/table.html' %}</td>
                 </tr>
+                {% endif %}
               {% empty %}
                 <tr class="text-right">
                   <td class="px-sm-3 px-2">なし</td>
@@ -72,17 +74,17 @@
                   <td>なし</td>
                 </tr>
               {% endfor %}
-            {% else %}
-              <tr class="text-right">
+            {# % else % #}
+              <!-- <tr class="text-right">
                 {% if table_price %}
-                <td class="px-sm-3 px-2">{{ table_price }}</td>
-                <td class="px-sm-3 px-2 table-price">{{ table_price.price | intcomma }}</td>
+                  <td class="px-sm-3 px-2">{{ table_price }}</td>
+                  <td class="px-sm-3 px-2 table-price">{{ table_price.price | intcomma }}</td>
                   <td>{% include 'components/restaurant/modal/table.html' %}</td>
                 {% else %}
-                <td class="px-sm-3 px-2">なし</td>
-                <td class="px-sm-3 px-2 table-price">なし</td>
+                  <td class="px-sm-3 px-2">なし</td>
+                  <td class="px-sm-3 px-2 table-price">なし</td>
                 {% endif %}
-              </tr>
+              </tr> -->
             {% endif %}
           </table>
         </div>

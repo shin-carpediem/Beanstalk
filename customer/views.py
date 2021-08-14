@@ -11,7 +11,7 @@ import requests
 import customer.models
 from account.models import Table, User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
-from beanstalk.settings import ONE_SIGNAL_REST_API_KEY
+from beanstalk.settings import DEBUG, ONE_SIGNAL_REST_API_KEY
 
 
 # Create your views here.
@@ -197,8 +197,14 @@ def menu(request):
             if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
                 newtable = Table(table=table_num, active=True)
                 newtable.save()
-                newuser = nonLoginUser(
-                    allowed="pre_admin", table=table_num, active=True)
+
+                # 開発する時は不便なのでadminにしてしまう
+                if DEBUG:
+                    newuser = nonLoginUser(
+                        allowed="admin", table=table_num, active=True)
+                else:
+                    newuser = nonLoginUser(
+                        allowed="pre_admin", table=table_num, active=True)
                 newuser.save()
 
                 uuid = str(newuser.uuid)
