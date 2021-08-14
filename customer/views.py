@@ -9,7 +9,7 @@ from itertools import chain
 import time
 import requests
 import customer.models
-from .function import permission, judging, expired
+from .function import permission, judging, expired, make_session
 from account.models import Table, User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
 from beanstalk.settings import DEBUG, ONE_SIGNAL_REST_API_KEY
@@ -86,16 +86,9 @@ def allowing(request):
     if not user.is_authenticated:
 
         expired(request)
-
         uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
-        if user_uuid.allowed in ['unknown', 'denied']:
-            return redirect('customer:waiting')
-
-        if user_uuid.active == False:
-            request.session.flush()
-            return redirect('customer:thanks')
+        permission(user_uuid)
 
         # unknownが一人以上いたら、その人たちをallowedにする
         table_num = request.session['table']
@@ -113,16 +106,9 @@ def allowing(request):
 def deny(request):
 
     expired(request)
-
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
-
-    if user_uuid.allowed in ['unknown', 'denied']:
-        return redirect('customer:waiting')
-
-    if user_uuid.active == False:
-        request.session.flush()
-        return redirect('customer:thanks')
+    permission(user_uuid)
 
     # unknownが一人以上いたら、その人たちをdeniedにする
     table_num = request.session['table']
@@ -205,14 +191,8 @@ def menu(request):
                 uuid = str(newuser.uuid)
                 user_uuid = newuser
 
-                # レストラン名のセッションを作成
-                request.session['restaurant_name'] = restaurant_name
-                # レストランのロゴのセッションを作成
-                request.session['restaurant_logo'] = restaurant_logo
-                # テーブル番号のセッションを作成
-                request.session['table'] = table_num
-                # uuidのセッションを作成
-                request.session['nonloginuser_uuid'] = uuid
+                make_session(request, restaurant_name,
+                             restaurant_logo, table_num, uuid)
 
                 return redirect('customer:waiting_admin')
             # 他に1人以上いる場合
@@ -227,33 +207,17 @@ def menu(request):
                 uuid = str(newuser.uuid)
                 user_uuid = newuser
 
-                # レストラン名のセッションを作成
-                request.session['restaurant_name'] = restaurant_name
-                # レストランのロゴのセッションを作成
-                request.session['restaurant_logo'] = restaurant_logo
-                # テーブル番号のセッションを作成
-                request.session['table'] = table_num
-                # uuidのセッションを作成
-                request.session['nonloginuser_uuid'] = uuid
+                make_session(request, restaurant_name,
+                             restaurant_logo, table_num, uuid)
 
-            if newuser.allowed == 'unknown':
-                return redirect('customer:waiting')
-
-            if newuser.allowed == 'denied':
-                return redirect('customer:denied')
+            permission(request)
 
         # 既存
         else:
 
-            uuid = request.session['nonloginuser_uuid']
-            try:
-                user_uuid = nonLoginUser.objects.get(uuid=uuid)
-            except Exception:
-                return redirect('customer:index')
-            permission(user_uuid)
+            user_uuid = permission(request)
             # unknownを検知したらallow.htmlに遷移させる
-            table_num = request.session['table']
-            judging(table_num)
+            table_num = judging(request)
 
         same_user_table = nonLoginUser.objects.defer(
             'created_at').filter(table=table_num, active=True)
@@ -325,14 +289,8 @@ def filter(request, category_id):
 
     try:
 
-        uuid = request.session['nonloginuser_uuid']
-        try:
-            user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        except Exception:
-            return redirect('customer:index')
-        permission(user_uuid)
-        table_num = request.session['table']
-        judging(table_num)
+        user_uuid = permission(request)
+        table_num = judging(request)
 
         # 後からやってきた客よりも先に飲み放題を開始していた場合、
         # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
@@ -390,11 +348,8 @@ def menu_detail(request, menu_id):
     if not user.is_authenticated:
 
         expired(request)
-        uuid = request.session['nonloginuser_uuid']
-        user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        permission(user_uuid)
-        table_num = request.session['table']
-        judging(table_num)
+        permission(request)
+        judging(request)
 
     menu = get_object_or_404(Menu, pk=menu_id)
 
@@ -415,21 +370,18 @@ def menu_detail(request, menu_id):
 def request(request, menu_id):
     menu_request = request.POST.get('request')
     request.session['menu_request'] = {menu_id: menu_request}
+
     return redirect('customer:menu_detail', menu_id=menu_id)
 
 
 @require_POST
 def cart(request):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    user_uuid = permission(request)
+    table_num = judging(request)
 
-    user_table = user_uuid.table
     same_table_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=user_table, active=True)
+        'created_at').filter(table=table_num, active=True)
     same_table_cart_list = ''
 
     for same_table_user in same_table_user_list:
@@ -469,11 +421,8 @@ def cart(request):
 
 def cart_static(request):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    permission(request)
+    table_num = judging(request)
 
     carts = ''
     # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -496,11 +445,8 @@ def cart_static(request):
 
 def cart_detail(request, menu_id):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    permission(request)
+    judging(request)
 
     num = request.GET.get('num')
     cart_id = request.GET.get('id')
@@ -528,11 +474,8 @@ def cart_detail(request, menu_id):
 @require_GET
 def cart_ch(request):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    permission(request)
+    table_num = judging(request)
 
     cart_id = request.GET.get('cart_id')
     type = request.GET.get('type')
@@ -573,11 +516,8 @@ def cart_ch(request):
 
 def order(request):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    permission(request)
+    table_num = judging(request)
 
     try:
         # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -649,11 +589,8 @@ def nomiho(request, nomiho_id):
     else:
 
         expired(request)
-        uuid = request.session['nonloginuser_uuid']
-        user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        permission(user_uuid)
-        table_num = request.session['table']
-        judging(table_num)
+        user_uuid = permission(request)
+        table_num = judging(request)
 
         # 同じテーブルのそれぞれのお客さんの合計金額に加算する。また、飲み放題に関する情報を記述する。
         try:
@@ -699,11 +636,8 @@ def nomiho(request, nomiho_id):
 
 def history(request):
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    user_uuid = permission(request)
+    table_num = judging(request)
 
     carts = ''
     orders = ''
@@ -758,11 +692,8 @@ def history(request):
 def stop(request):
 
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
-    table_num = request.session['table']
-    judging(table_num)
+    permission(request)
+    table_num = judging(request)
 
     orders = ''
 
