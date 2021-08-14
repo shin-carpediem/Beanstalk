@@ -393,10 +393,13 @@ def cart(request, menu_id):
     # Cartデータの保存
     cart_num = request.POST.get('cart_num')
     menu_instance = Menu.objects.get(id=menu_id)
-    if request.session['menu_request'] != None:
-        menu_request = request.session['menu_request'][menu_id]
-    else:
+    if not 'menu_request' in request.session:
         menu_request = None
+    else:
+        if not request.session['menu_request'] == None:
+            menu_request = request.session['menu_request'][menu_id]
+        else:
+            menu_request = None
 
     # すでにカートに同じ商品が追加されていないかチェック
     try:
