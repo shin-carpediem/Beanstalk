@@ -4,16 +4,12 @@
 
 {% block inner__content %}
 <section class="menu-list">
-  <div class="d-flex justify-content-center align-items-center my-5">
-    <h4 class="text__bold"><span style="color: red;">{{ request.session.table }}</span>番テーブル お会計金額</h4>
-    <h4 class="text__bold ml-3 text__underline">
-      {% if request.session.orders_in_order %}
-        {{ request.session.orders_in_order | intcomma }}
-      {% else %}
-        0
-      {% endif %}
-        円
-    </h4>
+  <!-- <a href="#" target="_blank" rel="noopener noreferrer" class="mt-5 btn btn__turquoise shadow px-3">
+    アンケートに回答いただけますと幸いです
+  </a> -->
+
+  <div class="p-2 m-2">
+    <p>{{ table.user }}名様</p>
   </div>
 
   <div class="p-2 m-2">
@@ -60,8 +56,16 @@
     </div>
   </div>
 
-  <!-- <a href="#" target="_blank" rel="noopener noreferrer" class="mt-5 btn btn__turquoise shadow px-3">
-    アンケートに回答いただけますと幸いです
-  </a> -->
+  <div class="d-flex justify-content-center align-items-center my-5">
+    <h4 class="text__bold"><span style="color: red;">{{ request.session.table }}</span>番テーブル 合計</h4>
+    <h4 class="text__bold ml-3 text__underline">
+      {% if request.session.orders_in_order %}
+        {{ request.session.orders_in_order | intcomma }}
+      {% else %}
+        0
+      {% endif %}
+        円
+    </h4>
+  </div>
 </section>
 {% endblock %}

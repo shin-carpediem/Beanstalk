@@ -88,6 +88,7 @@ class Table(models.Model):
     price = models.PositiveIntegerField(
         "テーブル毎合計", default=0, blank=True, null=True)
     active = models.BooleanField("現在", default=False, blank=True, null=True)
+    user = models.PositiveIntegerField("利用人数", default=1, blank=True, null=True)
     created_at = models.DateTimeField("日付", auto_now=True)
 
     def __str__(self):

@@ -225,6 +225,10 @@ def menu(request):
                 newuser = nonLoginUser(table=table_num, active=True)
                 newuser.save()
 
+                same_table = Table.objects.get(table=table_num, active=True)
+                same_table.user += 1
+                same_table.save()
+
                 uuid = str(newuser.uuid)
                 user_uuid = newuser
 
@@ -876,7 +880,6 @@ def stop(request):
     uuid = request.session['nonloginuser_uuid']
     user_uuid = nonLoginUser.objects.get(uuid=uuid)
     table_num = request.session['table']
-    table_query = Table.objects.get(table=table_num, active=True)
     orders = ''
 
     if user_uuid.allowed == 'unknown':
@@ -889,11 +892,10 @@ def stop(request):
         request.session.flush()
         return redirect('customer:thanks')
 
+    table = Table.objects.get(table=int(table_num), active=True)
+
     if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')
-
-    table_query.active = False
-    table_query.save()
 
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
@@ -908,6 +910,7 @@ def stop(request):
         orders = list(chain(orders, same_user_orders))
 
     ctx = {
+        'table': table,
         'nomiho_orders': nomiho_orders,
         'orders': orders,
     }
