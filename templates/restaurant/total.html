@@ -100,7 +100,7 @@
               <div class="d-flex justify-content-around pb-4">
                 <p class="text__bold pb-3">テーブル番号： {{ table.grouper }}</p>
               </div>
-              <table border="1" class="w-100 shadow">
+              <table border="1" class="w-100">
                 <tr class="text-center">
                   <th>料理名</th>
                   <th>単価（円）</th>
@@ -133,12 +133,13 @@
               <div class="d-flex justify-content-around pb-4">
                 <p class="text__bold pb-3">テーブル番号： {{ nomiho_order.table }}</p>
               </div>
-              <table border="1" class="w-100 shadow">
+              <table border="1" class="w-100">
                 <tr class="text-center">
                   <th>プラン名</th>
                   <th>単価（円）</th>
                   <th>人数</th>
                   <th>状況</th>
+                  <th>開始時刻</th>
                   <th>制限時間</th>
                   <th>小計（円）</th>
                 </tr>
@@ -146,8 +147,9 @@
                     <td class="px-sm-3 px-2">{{ nomiho_order.nomiho.name }}</td>
                     <td class="text-right px-sm-3 px-2">{{ nomiho_order.nomiho.price | intcomma }}</td>
                     <td class="text-right px-sm-3 px-2">{{ nomiho_order.num }}</td>
-                    <td class="px-sm-3 px-2">{{ nomiho_order.status }}</td>
-                    <td class="px-sm-3 px-2">{{ nomiho_order.nomiho.duration }}</td>
+                    <td class="text-center px-sm-3 px-2">{{ nomiho_order.status }}</td>
+                    <td class="text-center px-sm-3 px-2">{{ nomiho_order.created_at | date:"H:i" }}</td>
+                    <td class="text-center px-sm-3 px-2">{{ nomiho_order.nomiho.duration }}</td>
                     <td class="text-right px-sm-3 px-2">{{ nomiho_order.nomiho.price|mul:nomiho_order.num | intcomma }}</td>
                   </tr>
               </table>
