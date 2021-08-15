@@ -574,7 +574,7 @@ def order(request):
                 # ひとつひとつ、オブジェクトをカートからオーダーに移行
                 for each in same_user_carts:
                     order = customer.models.Order(status='調理中', menu=each.menu,
-                                                  num=each.num, customer=each.customer, curr=True)
+                                                  num=each.num, request=each.request, customer=each.customer, curr=True)
                     order.save()
                     price = (order.menu.price * order.num)
                     same_user.price += int(price)

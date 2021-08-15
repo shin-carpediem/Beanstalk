@@ -21,6 +21,12 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mr-sm-5 mr-2">
+      {% if order.request %}
+        <button type="button" class="btn btn__red px-3" data-toggle="modal" data-target="#request-cart-btn-{{ cart.id }}__ModalCenter">
+          <i class="far fa-laugh"></i>
+        </button>
+        {% include 'components/restaurant/modal/request.html' %}
+      {% endif %}
       <p class="num mr-sm-5 mr-3 text__bold text__large icon icon__red">{{ order.num }}</p>
       <p class="created_at text__large text__bold">{{ order.created_at | time }}</p>
     </div>
@@ -50,7 +56,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
           <button type="submit" class="px-4 py-2 btn btn__grey mx-auto w-50" onclick="loading_show()">
             実行
           </button>
@@ -72,7 +77,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <!-- <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button> -->
           <button type="submit" class="px-4 py-2 btn btn__blue mx-auto w-50" onclick="loading_show()">
             実行
           </button>
