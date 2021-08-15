@@ -9,10 +9,19 @@ from itertools import chain
 import time
 import requests
 import customer.models
-from .function import permission, judging, expired, make_session
+from .function import (
+    permission,
+    judging,
+    expired,
+    make_session
+)
 from account.models import Table, User, nonLoginUser
 from restaurant.models import Allergy, Category, Menu, Nomiho
-from beanstalk.settings import DEBUG, ONE_SIGNAL_APP_ID, ONE_SIGNAL_REST_API_KEY
+from beanstalk.settings import (
+    DEBUG,
+    ONE_SIGNAL_APP_ID,
+    ONE_SIGNAL_REST_API_KEY
+)
 
 
 # Create your views here.

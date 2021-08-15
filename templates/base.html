@@ -21,6 +21,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- <link rel="manifest" href="/manifest.json" /> -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "{{ ONE_SIGNAL_APP_ID }}",
+      });
+    });
+  </script>
+
   {% block custom__header %}
   {% endblock %}
 </head>
@@ -56,29 +67,29 @@
 
   <script src="{% static 'js/main.min.js' %}"></script>
 
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
 
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
 
-<script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyB2C8EdhXkj1bo7WMsExflznkMvo6R9uGE",
-    authDomain: "beanstalk-test-prod-322412.firebaseapp.com",
-    projectId: "beanstalk-test-prod-322412",
-    storageBucket: "beanstalk-test-prod-322412.appspot.com",
-    messagingSenderId: "231237151714",
-    appId: "1:231237151714:web:255b46a81c4486580ea7bb",
-    measurementId: "G-35GN2J9V7C"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script>
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "{{ FIREBASE_APIKEY }}",
+      authDomain: "{{ FIREBASE_AUTHDOMAIN }}",
+      projectId: "{{ FIREBASE_PROJECTID }}",
+      storageBucket: "{{ FIREBASE_STORAGEBUCKET }}",
+      messagingSenderId: "{{ FIREBASE_MESSAGINGSENDERID }}",
+      appId: "{{ FIREBASE_APPID }}",
+      measurementId: "{{ FIREBASE_MEASUREMENTID }}"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 
   {% block custom__footer %}
   {% endblock %}

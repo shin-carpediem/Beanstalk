@@ -16,7 +16,12 @@ from itertools import groupby
 from .models import Category, Allergy, Menu, Nomiho
 from account.models import Table, User, nonLoginUser
 import customer.models
-from beanstalk.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_HOST, EMAIL_PORT
+from beanstalk.settings import (
+    EMAIL_HOST_USER,
+    EMAIL_HOST_PASSWORD,
+    EMAIL_HOST,
+    EMAIL_PORT
+)
 
 
 # Create your views here.
@@ -397,7 +402,7 @@ def total(request):
     pre_admin_table_user_list = nonLoginUser.objects.defer(
         'created_at').filter(allowed='pre_admin', active=True)
     active_non_login_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(Q(allowed='admin', active=True) |Q(allowed='allowed', active=True))
+        'created_at').filter(Q(allowed='admin', active=True) | Q(allowed='allowed', active=True))
     nomiho_orders = customer.models.NomihoOrder.objects.filter(
         curr=True).order_by('created_at')
 
@@ -441,7 +446,8 @@ def total(request):
 @require_POST
 def allowing(request, pre_admin_table):
     try:
-        pre_admin_user = nonLoginUser.objects.get(table=str(pre_admin_table), active=True)
+        pre_admin_user = nonLoginUser.objects.get(
+            table=str(pre_admin_table), active=True)
         pre_admin_user.allowed = 'admin'
         pre_admin_user.save()
 
@@ -455,7 +461,8 @@ def allowing(request, pre_admin_table):
 @login_required
 @require_POST
 def deny(request, pre_admin_table):
-    pre_admin_user = nonLoginUser.objects.get(table=str(pre_admin_table), active=True)
+    pre_admin_user = nonLoginUser.objects.get(
+        table=str(pre_admin_table), active=True)
     pre_admin_user.allowed = 'denied'
     pre_admin_user.save()
 
@@ -512,7 +519,8 @@ def price_ch(request, active_table):
         get_table_price.price = int(required_price)
         get_table_price.save()
 
-        messages.info(request, f'{active_table}テーブルの合計金額を{required_price}円に変更しました。')
+        messages.info(
+            request, f'{active_table}テーブルの合計金額を{required_price}円に変更しました。')
     except Exception:
         pass
 
@@ -533,46 +541,42 @@ def daily(request):
         start = dt_now - datetime.timedelta(days=1)
         end = dt_now
 
+    pointed_tables = Table.objects.defer('created_at').filter(
+        created_at__range=(start, end)).order_by('-id')
     pointed_orders = customer.models.Order.objects.filter(
         status='済', created_at__range=(start, end)).order_by('-id')
     pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
         created_at__range=(start, end)).order_by('-id')
 
-    pointed_tables = Table.objects.defer('created_at').filter(
-        created_at__range=(start, end)).order_by('-id')
     pointed_total_price = 0
     pointed_order_sum = 0
     pointed_nomiho_sum = 0
 
     for each in pointed_tables:
         pointed_total_price += each.price
-
     for each in pointed_orders:
         pointed_order_sum += each.menu.price
-
-    for nomiho in pointed_nomiho_orders:
+    for each in pointed_nomiho_orders:
         pointed_nomiho_sum += each.nomiho.price
 
     pointed_sum = pointed_order_sum + pointed_nomiho_sum
     discount_pointed_price = pointed_sum - pointed_total_price
 
     # 総売上
+    tables = Table.objects.defer('created_at')
     orders = customer.models.Order.objects.filter(status='済').order_by('-id')
     nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
 
-    tables = Table.objects.defer('created_at')
     total_price = 0
     order_sum = 0
     nomiho_sum = 0
 
     for each in tables:
         total_price += each.price
-
-    for order in orders:
-        order_sum += order.menu.price
-
-    for nomiho in nomiho_orders:
-        nomiho_sum += nomiho.nomiho.price
+    for each in orders:
+        order_sum += each.menu.price
+    for each in nomiho_orders:
+        nomiho_sum += each.nomiho.price
 
     sum = order_sum + nomiho_sum
     discount_price = sum - total_price
@@ -580,14 +584,14 @@ def daily(request):
     ctx = {
         'start': start,
         'end': end,
-        'pointed_orders': pointed_orders,
-        'pointed_nomiho_orders': pointed_nomiho_orders,
         'pointed_total_price': pointed_total_price,
         'discount_pointed_price': discount_pointed_price,
-        'orders': orders,
-        'nomiho_orders': nomiho_orders,
+        'pointed_orders': pointed_orders,
+        'pointed_nomiho_orders': pointed_nomiho_orders,
         'total_price': total_price,
         'discount_price': discount_price,
+        'orders': orders,
+        'nomiho_orders': nomiho_orders,
     }
 
     return render(request, 'restaurant/daily.html', ctx)

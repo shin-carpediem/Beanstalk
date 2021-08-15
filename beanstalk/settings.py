@@ -101,6 +101,14 @@ LOGIN_URL = 'restaurant:login'
 LOGIN_REDIRECT_URL = 'restaurant:order_manage'
 LOGOUT_REDIRECT_URL = 'restaurant:login'
 
+FIREBASE_APIKEY = env("FIREBASE_APIKEY")
+FIREBASE_AUTHDOMAIN = env("FIREBASE_AUTHDOMAIN")
+FIREBASE_PROJECTID = env("FIREBASE_PROJECTID")
+FIREBASE_STORAGEBUCKET = env("FIREBASE_STORAGEBUCKET")
+FIREBASE_MESSAGINGSENDERID = env("FIREBASE_MESSAGINGSENDERID")
+FIREBASE_APPID = env("FIREBASE_APPID")
+FIREBASE_MEASUREMENTID = env("FIREBASE_MEASUREMENTID")
+
 EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
@@ -137,6 +145,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'customer.ctx_processor.firebase',
+                'customer.ctx_processor.onesignal',
+                'restaurant.ctx_processor.firebase',
+                'restaurant.ctx_processor.onesignal',
             ],
         },
     },
