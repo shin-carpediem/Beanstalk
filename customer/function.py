@@ -8,19 +8,20 @@ def permission(request):
 
     try:
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
+
+        if user_uuid.allowed == 'unknown':
+            return redirect('customer:waiting')
+
+        if user_uuid.allowed == 'denied':
+            return redirect('customer:denied')
+
+        if user_uuid.active == False:
+            return redirect('customer:thanks')
+
+        return user_uuid
+
     except Exception:
         return redirect('customer:index')
-
-    if user_uuid.allowed == 'unknown':
-        return redirect('customer:waiting')
-
-    if user_uuid.allowed == 'denied':
-        return redirect('customer:denied')
-
-    if user_uuid.active == False:
-        return redirect('customer:thanks')
-
-    return user_uuid
 
 
 def judging(request):
