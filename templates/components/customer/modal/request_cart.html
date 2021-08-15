@@ -1,9 +1,9 @@
-<div class="modal modal-request fade" id="request-btn-{{ menu.id }}__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="request-btn-{{ menu.id }}__ModalCenterTitle" aria-hidden="true">
+<div class="modal modal-request-cart fade" id="request-cart-btn-{{ cart.id }}__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="request-cart-btn-{{ cart.id }}__ModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <form class="modal-content" action="{% url 'customer:request' menu.id %}" method="POST">{% csrf_token %}
+    <form class="modal-content" action="{% url 'customer:request_cart' cart.id %}" method="POST">{% csrf_token %}
       <div class="modal-header">
-        <h5 class="modal-title" id="request-btn-{{ menu.id }}__ModalCenterTitle">
-          このメニューの注文時にリクエストを追加できます
+        <h5 class="modal-title" id="request-cart-btn-{{ cart.id }}__ModalCenterTitle">
+          記入したリクエストを変更できます
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -11,20 +11,20 @@
       </div>
       <div class="modal-body">
         <div class="py-3">
-          <textarea class="w-100 pl-2" type="text" name="request"></textarea>
+          <textarea class="w-100 pl-2" type="text" name="request">{{ cart.request }}</textarea>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button>
         <button type="submit" class="px-4 py-2 btn btn__orange w-50 mx-auto" onclick="loading_show(); style.display='none';">
-          投稿
+          更新
         </button>
       </div>
     </form>
 
-    <form class="modal-content" action="{% url 'customer:request_del' menu.id %}" method="POST">{% csrf_token %}
+    <form class="modal-content" action="{% url 'customer:request_cart_del' cart.id %}" method="POST">{% csrf_token %}
       <div class="modal-header">
-        <h5 class="modal-title" id="request-btn-{{ menu.id }}__ModalCenterTitle">
+        <h5 class="modal-title" id="request-cart-btn-{{ cart.id }}__ModalCenterTitle">
           リクエストを取り消す
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -32,7 +32,7 @@
         </button>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="px-4 py-2 btn btn__orange w-50 mx-auto" onclick="loading_show(); style.display='none';">
+        <button type="submit" class="px-4 py-2 btn btn__grey w-50 mx-auto" onclick="loading_show(); style.display='none';">
           取り消す
         </button>
       </div>

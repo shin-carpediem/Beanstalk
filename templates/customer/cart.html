@@ -20,6 +20,12 @@
             {% endif %}
           </div>
           <p class="pt-1 cart-num icon icon__red text__bold">{{ cart.num }}</p>
+          {% if cart.request %}
+            <button type="button" class="btn cart-request btn__orange shadow px-3" data-toggle="modal" data-target="#request-cart-btn-{{ cart.id }}__ModalCenter">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            {% include 'components/customer/modal/request_cart.html' %}
+          {% endif %}
           <!-- hidden -->
           <input type="hidden" name="num" value="{{ cart.num }}">
           <input type="hidden" name="id" value="{{ cart.id }}">

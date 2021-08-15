@@ -746,6 +746,13 @@ section.table .choose-table input {
   z-index: 10000;
 }
 
+.board__customer section.menu-list .menu-item .cart-request {
+  position: absolute;
+  top: 5px;
+  left: 25px;
+  z-index: 10000;
+}
+
 .board__customer section.menu-list .menu-item .badge {
   position: absolute;
   top: 8px;
