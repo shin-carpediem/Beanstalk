@@ -619,27 +619,28 @@ section.table {
         position: absolute;
         top: 5px;
         left: 5px;
-        z-index: 10000;
+        z-index: 10;
       }
       .cart-request {
         position: absolute;
         top: 5px;
         left: 25px;
-        z-index: 10000;
+        z-index: 10;
       }
       .badge {
         position: absolute;
         top: 8px;
         left: 40px;
-        z-index: 10000;
+        z-index: 10;
       }
     }
     // 飲み放題コースの装飾
     section.nomiho {
       position: relative;
-      form.nomiho--1 {
+      .nomiho--1 {
         background-color: $yellow;
         border-radius: 10px;
+        border-color: transparent;
       }
       .nomiho-manage-btn {
         position: absolute;

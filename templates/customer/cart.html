@@ -36,15 +36,7 @@
   </div>
 
   {% if not user.is_authenticated %}
-    <form action="{% url 'customer:order' %}" method="GET">
-      {% if carts %}
-        <button class="btn btn__red btn__fixed shadow text__bold text__large" id="orderConfirm" onclick="loading_show(); style.display='none';">
-      {% else %}
-        <button class="btn btn__grey btn__fixed shadow" id="orderConfirm" disabled>
-      {% endif %}
-          注文
-        </button>
-    </form>
+    {% include 'components/customer/modal/order.html' %}
   {% endif %}
 </section>
 {% endblock %}

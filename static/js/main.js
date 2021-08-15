@@ -30,19 +30,6 @@ loading_hide();
 // }
 
 if (path.indexOf("order_manage") > -1) {
-  // const manageMenu = () => {
-  //   const manage = document.getElementById("manageMenu");
-  //   manage.addEventListener("click", () => {
-  //     const answer = confirm(
-  //       "メニューの編集画面に移りますか？（営業時間内の変更はお客様に変更内容が即時反映されますので、極力お避けください）"
-  //     );
-  //     if (answer) {
-  //       window.location.href = "/manage/menu/";
-  //     }
-  //   });
-  // };
-  // manageMenu();
-
   const statusChange = () => {
     try {
       const cooking = document.getElementById("cooking");
@@ -69,17 +56,6 @@ if (path.indexOf("order_manage") > -1) {
   statusChange();
 }
 
-// if (path.indexOf("order_manage/history/total") > -1) {
-//   const total = () => {
-//     const subTotal = document.getElementById("subTotal");
-//     const sumOfTable = document.getElementById("sumOfTable");
-
-//     const subTotalVal = subTotal.value;
-
-//   };
-//   total();
-// }
-
 // customer
 if (path.indexOf("detail") > -1) {
   let cartPlusMinus = () => {
@@ -104,49 +80,3 @@ if (path.indexOf("detail") > -1) {
   };
   cartPlusMinus();
 }
-
-// if ((path.indexOf("cart") > -1) | (path.indexOf("history") > -1)) {
-//   const orderConfirm = () => {
-//     const orderStop = document.getElementById("orderConfirm");
-//     orderStop.addEventListener("click", () => {
-//       const answer = confirm("注文しますか？");
-//       if (answer) {
-//         if (path.indexOf("cart") > -1) {
-//           // orderStop.click();
-//           window.location.href = "/menu/";
-//         }
-//         if (path.indexOf("history") > -1) {
-//           // orderStop.click();
-//           window.location.href = "/history/";
-//         }
-//       }
-//     });
-//   };
-//   orderConfirm();
-// }
-
-// if (path.indexOf("history") > -1) {
-//   const orderStopConfirm = () => {
-//     const orderStop = document.getElementById("orderStopConfirm");
-//     orderStop.addEventListener("click", () => {
-//       const answer = confirm("オーダーストップしてお会計に移りますか？");
-//       if (answer) {
-//         window.location.href = "/stop/";
-//       }
-//     });
-//   };
-//   orderStopConfirm();
-// }
-
-// if (path.indexOf("filter") > -1) {
-//   const startNomihoConfirm = () => {
-//     const startNomiho = document.getElementById("startNomiho");
-//     startNomiho.addEventListener("click", () => {
-//       const answer = confirm("飲み放題を開始しますか？");
-//       if (answer) {
-//         window.location.href = "/nomiho/";
-//       }
-//     });
-//   };
-//   startNomihoConfirm();
-// }

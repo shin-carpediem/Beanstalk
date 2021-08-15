@@ -1,10 +1,10 @@
 {% load static %}
 
-<div class="nav-list px-3 py-3 my-auto d-sm-flex align-items-center">
+<div class="nav-list p-3 py-sm-2 my-auto d-flex justify-content-center align-items-center">
   <a class="back-menu mx-3" href="{% url 'restaurant:history' %}" onclick="loading_show()">履歴修正</a>
   <a class="back-menu mx-3" href="{% url 'restaurant:total' %}" onclick="loading_show()">お客様お会計</a>
   <a class="back-menu mx-3" href="{% url 'restaurant:daily' %}" onclick="loading_show()">売上管理</a>
-  <a class="back-menu mx-3" href="{% url 'restaurant:manage_menu' %}" id="manageMenu" onclick="loading_show()">
+  <button class="back-menu mx-3 btn" data-toggle="modal" data-target="#move-btn__ModalCenter">
     <i class="clipboard fas fa-clipboard-list"></i>
-  </a>
+  </button>
 </div>

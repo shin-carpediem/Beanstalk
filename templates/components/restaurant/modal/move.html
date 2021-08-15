@@ -1,0 +1,21 @@
+<div class="modal fade" id="move-btn__ModalCenter" tabindex="-1" role="dialog" aria-labelledby="move-btn__ModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" action="{% url 'restaurant:manage_menu' %}" method="GET">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="move-btn__ModalCenterTitle">メニューの編集画面に移りますか？*</h5>
+          <p class="text__small">*営業時間内の変更はお客様に変更内容が即時反映されますので、極力お避けください</p>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="px-4 py-2 btn btn__grey" data-dismiss="modal">中止</button>
+        <button type="submit" class="px-4 py-2 btn btn__blue mx-auto w-50 mx-auto" onclick="loading_show(); style.display='none';">
+          移動
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
