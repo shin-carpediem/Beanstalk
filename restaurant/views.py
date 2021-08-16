@@ -501,7 +501,7 @@ def stop_user_order(request, active_table):
         nomiho_order.curr = False
         nomiho_order.save()
 
-    deactivate_table = Table.objects.get(table=active_table)
+    deactivate_table = Table.objects.get(table=active_table, active=True)
     deactivate_table.active = False
     deactivate_table.save()
 
