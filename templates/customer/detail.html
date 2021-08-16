@@ -14,14 +14,14 @@
           <p class="pt-2 text__bold text__large">個</p>
           <p class="ml-4 mr-5 text__bold plus-minus el__pointer" id="cartPlus">+</p>
 
-          {% if not request.session.menu_request %}
+          <!-- {# % if not request.session.menu_request % #}
             <button type="button" class="btn btn__orange shadow px-3" data-toggle="modal" data-target="#request-btn-{{ menu.id }}__ModalCenter">
               <i class="fas fa-pencil-alt"></i>
             </button>
-          {% endif %}
-          <button type="button" class="btn btn__orange shadow px-3" data-toggle="modal" data-target="#request-btn-{{ menu.id }}__ModalCenter">
+          {# % endif % #} -->
+          <!-- <button type="button" class="btn btn__orange shadow px-3" data-toggle="modal" data-target="#request-btn-{{ menu.id }}__ModalCenter">
             <i class="fas fa-pencil-alt"></i>
-          </button>
+          </button> -->
         </div>
 
         <button type="submit" class="btn btn__orange btn__fixed-righter shadow" onclick="loading_show(); style.display='none';">
@@ -29,7 +29,7 @@
         </button>
       </form>
 
-      {% include 'components/customer/modal/request.html' %}
+      <!-- {# % include 'components/customer/modal/request.html' % #} -->
     {% endif %}
   </div>
 

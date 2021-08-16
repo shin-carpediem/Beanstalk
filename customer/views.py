@@ -375,38 +375,38 @@ def menu_detail(request, menu_id):
     return render(request, 'customer/detail.html', ctx)
 
 
-@require_POST
-def request(request, menu_id):
-    menu_request = request.POST.get('request')
-    request.session['menu_request'] = {menu_id: menu_request}
+# @require_POST
+# def request(request, menu_id):
+#     menu_request = request.POST.get('request')
+#     request.session['menu_request'] = {menu_id: menu_request}
 
-    return redirect('customer:menu_detail', menu_id=menu_id)
-
-
-@require_POST
-def request_del(request, menu_id):
-    request.session['menu_request'][menu_id] = None
-
-    return redirect('customer:menu_detail', menu_id=menu_id)
+#     return redirect('customer:menu_detail', menu_id=menu_id)
 
 
-@require_POST
-def request_cart(request, cart_id):
-    menu_request = request.POST.get('request')
-    cart = customer.models.Cart.objects.get(id=cart_id)
-    cart.request = menu_request
-    cart.save()
+# @require_POST
+# def request_del(request, menu_id):
+#     request.session['menu_request'][menu_id] = None
 
-    return redirect('customer:cart_static')
+#     return redirect('customer:menu_detail', menu_id=menu_id)
 
 
-@require_POST
-def request_cart_del(request, cart_id):
-    cart = customer.models.Cart.objects.get(id=cart_id)
-    cart.request = None
-    cart.save()
+# @require_POST
+# def request_cart(request, cart_id):
+#     menu_request = request.POST.get('request')
+#     cart = customer.models.Cart.objects.get(id=cart_id)
+#     cart.request = menu_request
+#     cart.save()
 
-    return redirect('customer:cart_static')
+#     return redirect('customer:cart_static')
+
+
+# @require_POST
+# def request_cart_del(request, cart_id):
+#     cart = customer.models.Cart.objects.get(id=cart_id)
+#     cart.request = None
+#     cart.save()
+
+#     return redirect('customer:cart_static')
 
 
 @require_POST
