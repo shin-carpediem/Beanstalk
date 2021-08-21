@@ -444,11 +444,17 @@ def cart(request, menu_id):
             cart.request = menu_request
     except Exception:
         if not menu_request == None:
-            cart = customer.models.Cart(menu=menu_instance, num=cart_num, request=menu_request,
-                                        customer=user_uuid, curr=True)
+            try:
+                cart = customer.models.Cart(
+                    menu=menu_instance, num=cart_num, request=menu_request, customer=user_uuid, curr=True)
+            except Exception:
+                return redirect('customer:thanks')
         else:
-            cart = customer.models.Cart(menu=menu_instance, num=cart_num,
-                                        customer=user_uuid, curr=True)
+            try:
+                cart = customer.models.Cart(menu=menu_instance, num=cart_num,
+                                            customer=user_uuid, curr=True)
+            except Exception:
+                return redirect('customer:thanks')
 
     cart.save()
     request.session['menu_request'] = None
@@ -528,8 +534,8 @@ def cart_ch(request, cart_id, type):
             cart.delete()
         else:
             None
-    except:
-        pass
+    except Exception:
+        return redirect('customer:thanks')
 
     carts = ''
     # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
@@ -608,7 +614,7 @@ def order(request):
             print("false..")
 
     except Exception:
-        pass
+        return redirect('customer:thanks')
 
     messages.info(request, f"注文を承りました。今しばらくお待ちください")
 
@@ -686,8 +692,7 @@ def history(request):
     try:
         table_query = Table.objects.get(table=table_num, active=True)
     except Exception:
-        messages.info(request, f"申し訳ありません。エラーが発生しました。")
-        return redirect('customer:menu')
+        return redirect('customer:thanks')
 
     orders_in_order = table_query.price
 
