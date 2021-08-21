@@ -543,8 +543,8 @@ def daily(request):
 
     pointed_tables = Table.objects.defer('created_at').filter(
         created_at__range=(start, end)).order_by('-id')
-    pointed_orders = customer.models.Order.objects.filter(
-        status='済', created_at__range=(start, end)).order_by('-id')
+    pointed_orders = customer.models.Order.objects.exclude(
+        status='キャンセル').filter(created_at__range=(start, end)).order_by('-id')
     pointed_nomiho_orders = customer.models.NomihoOrder.objects.filter(
         created_at__range=(start, end)).order_by('-id')
 
@@ -564,7 +564,8 @@ def daily(request):
 
     # 総売上
     tables = Table.objects.defer('created_at')
-    orders = customer.models.Order.objects.filter(status='済').order_by('-id')
+    orders = customer.models.Order.objects.exclude(
+        status='キャンセル').order_by('-id')
     nomiho_orders = customer.models.NomihoOrder.objects.order_by('-id')
 
     total_price = 0
