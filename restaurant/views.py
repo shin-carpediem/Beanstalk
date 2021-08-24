@@ -443,8 +443,8 @@ def total(request):
 @require_POST
 def allowing(request, pre_admin_table):
     try:
-        pre_admin_user = nonLoginUser.objects.get(
-            table=str(pre_admin_table), active=True)
+        pre_admin_user = nonLoginUser.objects.get(allowed='pre_admin',
+                                                  table=str(pre_admin_table), active=True)
         pre_admin_user.allowed = 'admin'
         pre_admin_user.save()
 
@@ -458,8 +458,8 @@ def allowing(request, pre_admin_table):
 @login_required
 @require_POST
 def deny(request, pre_admin_table):
-    pre_admin_user = nonLoginUser.objects.get(
-        table=str(pre_admin_table), active=True)
+    pre_admin_user = nonLoginUser.objects.get(allowed='pre_admin',
+                                              table=str(pre_admin_table), active=True)
     pre_admin_user.allowed = 'denied'
     pre_admin_user.save()
 
