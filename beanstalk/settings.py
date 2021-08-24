@@ -69,6 +69,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
 DEBUG = env("DEBUG")
+TEST = env("TEST")
 
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
@@ -129,8 +130,12 @@ ROOT_URLCONF = 'beanstalk.urls'
 
 CONN_MAX_AGE = 0
 
-# session持続時間を5時間に指定
-SESSION_COOKIE_AGE = 18000
+# テストではsession持続時間を5分に指定
+if TEST:
+    SESSION_COOKIE_AGE = 300
+# 本番ではsession持続時間を5時間に指定
+else:
+    SESSION_COOKIE_AGE = 18000
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 

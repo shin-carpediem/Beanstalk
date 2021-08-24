@@ -43,6 +43,11 @@ class Menu(models.Model):
                                    format="JPEG",
                                    options={"quality": 100}
                                    )
+    formatted_img_list = ImageSpecField(source="img",
+                                   processors=[ResizeToFill(30, 30)],
+                                   format="JPEG",
+                                   options={"quality": 70}
+                                   )
     allergies = models.ManyToManyField(Allergy, blank=True, null=True)
     option = models.ManyToManyField(Option, blank=True, null=True)
     chef_img = models.ImageField("シェフの顔写真", upload_to="chef_img",

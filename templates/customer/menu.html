@@ -45,7 +45,7 @@
         <form class="mx-auto my-1 menu-item shadow el__pointer" action="{% url 'customer:menu_detail' menu.id %}" method="GET">
       {% endif %}
         <button type="submit" class="w-100 h-100 p-0 focus" onclick="loading_show()">
-          {% if menu.formatted_img %}
+          {% if menu.formatted_img_list %}
             <img class="m-0 lazyload" data-src="{{ menu.formatted_img.url }}" alt="Menu">
           {% endif %}
           <div class="text-box">
