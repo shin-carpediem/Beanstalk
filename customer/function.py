@@ -21,11 +21,14 @@ def permission(request):
         return user_uuid
 
     except Exception:
-        return redirect('customer:index')
+        return redirect('customer:thanks')
 
 
 def judging(request):
-    table_num = request.session['table']
+    try:
+       table_num = request.session['table']
+    except Exception:
+        return redirect('customer:thanks')
 
     if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
         return redirect('customer:judge')

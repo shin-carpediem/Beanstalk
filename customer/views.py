@@ -415,8 +415,12 @@ def cart(request, menu_id):
     user_uuid = permission(request)
     table_num = judging(request)
 
-    same_table_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=table_num, active=True)
+    try:
+        same_table_user_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
+    except Exception:
+        return redirect('customer:thanks')
+
     same_table_cart_list = ''
 
     for same_table_user in same_table_user_list:
@@ -469,8 +473,11 @@ def cart_static(request):
 
     carts = ''
     # ユーザーのテーブル番号と同じで、かつactiveステータスのユーザーを抽出
-    same_user_table_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=table_num, active=True)
+    try:
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
+    except Exception:
+        return redirect('customer:thanks')
 
     # そのユーザー毎がオーダーした内容をまとめたCartリストを作成
     for same_user in same_user_table_list:
@@ -686,8 +693,11 @@ def history(request):
     orders_in_cart = 0
 
     categories = Category.objects.defer('created_at').order_by('id')
-    same_user_table_list = nonLoginUser.objects.defer(
-        'created_at').filter(table=table_num, active=True)
+    try:
+        same_user_table_list = nonLoginUser.objects.defer(
+            'created_at').filter(table=table_num, active=True)
+    except Exception:
+        return redirect('customer:thanks')
 
     try:
         table_query = Table.objects.get(table=table_num, active=True)
@@ -738,7 +748,10 @@ def stop(request):
 
     orders = ''
 
-    table = Table.objects.get(table=int(table_num), active=True)
+    try:
+        table = Table.objects.get(table=int(table_num), active=True)
+    except Exception:
+        return redirect('customer:thanks')
 
     same_user_table_list = nonLoginUser.objects.defer(
         'created_at').filter(table=table_num, active=True)
