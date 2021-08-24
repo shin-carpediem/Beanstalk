@@ -156,25 +156,23 @@ def menu(request):
     # from here
     try:
         restaurant = User.objects.get(id=1)
-        restaurant_name = restaurant.name
-        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
-
     try:
         restaurant = User.objects.get(id=2)
-        restaurant_name = restaurant.name
-        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
-
     try:
         restaurant = User.objects.get(id=3)
-        restaurant_name = restaurant.name
-        restaurant_logo = restaurant.logo.url
     except Exception:
         pass
     # to here
+
+    try:
+        restaurant_name = restaurant.name
+        restaurant_logo = restaurant.logo.url
+    except Exception:
+        pass
 
     if user.is_authenticated:
         table_num = '管理者'
@@ -182,57 +180,64 @@ def menu(request):
 
         # 新規の客かどうかをセッションで判断する
         # 新規
-        if not 'nonloginuser_uuid' in request.session:
-            table_num = request.GET.get('table')
+        try:
+            if not 'nonloginuser_uuid' in request.session:
+                table_num = request.GET.get('table')
 
-            # 店側から承認を得る1人目のテーブルユーザー（adminユーザー）か、1人目のテーブルユーザーからの承認を得るユーザーかの分岐点
-            # 現在のテーブルで最初の1人の場合
-            if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
-                newtable = Table(table=table_num, active=True)
-                newtable.save()
+                # 店側から承認を得る1人目のテーブルユーザー（adminユーザー）か、1人目のテーブルユーザーからの承認を得るユーザーかの分岐点
+                # 現在のテーブルで最初の1人目の場合
+                if nonLoginUser.objects.defer('created_at').filter(table=table_num, active=True).count() == 0:
+                    newtable = Table(table=table_num, active=True)
+                    newtable.save()
 
-                # 開発する時は不便なのでadminにしてしまう
-                if DEBUG:
-                    newuser = nonLoginUser(
-                        allowed="admin", table=table_num, active=True)
+                    # 開発する時は不便なのでadminにしてしまう
+                    if DEBUG:
+                        newuser = nonLoginUser(
+                            allowed="admin", table=table_num, active=True)
+                    else:
+                        newuser = nonLoginUser(
+                            allowed="pre_admin", table=table_num, active=True)
+                    newuser.save()
+
+                    uuid = str(newuser.uuid)
+                    user_uuid = newuser
+
+                    make_session(request, restaurant_name,
+                                 restaurant_logo, table_num, uuid)
+
+                    return redirect('customer:waiting_admin')
+                # 現在のテーブルで最初の1人がすでにいる場合
                 else:
-                    newuser = nonLoginUser(
-                        allowed="pre_admin", table=table_num, active=True)
-                newuser.save()
+                    newuser = nonLoginUser(table=table_num, active=True)
+                    newuser.save()
 
-                uuid = str(newuser.uuid)
-                user_uuid = newuser
+                    same_table = Table.objects.get(
+                        table=table_num, active=True)
+                    same_table.user += 1
+                    same_table.save()
 
-                make_session(request, restaurant_name,
-                             restaurant_logo, table_num, uuid)
+                    uuid = str(newuser.uuid)
+                    user_uuid = newuser
 
-                return redirect('customer:waiting_admin')
-            # 現在のテーブルで最初の1人がすでにいる場合
+                    make_session(request, restaurant_name,
+                                 restaurant_logo, table_num, uuid)
+
+                    permission(request)
+
+            # 既存
             else:
-                newuser = nonLoginUser(table=table_num, active=True)
-                newuser.save()
+                user_uuid = permission(request)
+                # unknownを検知したらallow.htmlに遷移させる
+                table_num = judging(request)
+        except Exception:
+            return redirect('customer:thanks')
 
-                same_table = Table.objects.get(table=table_num, active=True)
-                same_table.user += 1
-                same_table.save()
+        try:
+            same_user_table = nonLoginUser.objects.defer(
+                'created_at').filter(table=table_num, active=True)
+        except Exception:
+            return redirect('customer:thanks')
 
-                uuid = str(newuser.uuid)
-                user_uuid = newuser
-
-                make_session(request, restaurant_name,
-                             restaurant_logo, table_num, uuid)
-
-            permission(request)
-
-        # 既存
-        else:
-
-            user_uuid = permission(request)
-            # unknownを検知したらallow.htmlに遷移させる
-            table_num = judging(request)
-
-        same_user_table = nonLoginUser.objects.defer(
-            'created_at').filter(table=table_num, active=True)
         same_num = same_user_table.count()
 
         # 後からやってきた客よりも先に飲み放題を開始していた場合、
@@ -300,7 +305,6 @@ def filter(request, category_id):
         menus = None
 
     try:
-
         user_uuid = permission(request)
         table_num = judging(request)
 
