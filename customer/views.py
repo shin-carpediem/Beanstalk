@@ -44,16 +44,19 @@ def table(request):
 
     # 新規/既存をセッションで判断する
     # 新規
-    if not 'nonloginuser_uuid' in request.session:
+    try:
+        if not 'nonloginuser_uuid' in request.session:
 
-        if user.is_authenticated:
-            request.session.flush()
-            return redirect('restaurant:logout')
+            if user.is_authenticated:
+                request.session.flush()
+                return redirect('restaurant:logout')
+            else:
+                return render(request, 'customer/table.html')
+        # 既存
         else:
-            return render(request, 'customer/table.html')
-    # 既存
-    else:
-        return redirect('customer:menu')
+            return redirect('customer:menu')
+    except Exception:
+        return redirect('customer:thanks')
 
 
 def waiting_admin(request):
@@ -204,7 +207,7 @@ def menu(request):
                              restaurant_logo, table_num, uuid)
 
                 return redirect('customer:waiting_admin')
-            # 他に1人以上いる場合
+            # 現在のテーブルで最初の1人がすでにいる場合
             else:
                 newuser = nonLoginUser(table=table_num, active=True)
                 newuser.save()

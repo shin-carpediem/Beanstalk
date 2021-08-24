@@ -12,7 +12,7 @@ def permission(request):
         if user_uuid.allowed == 'unknown':
             return redirect('customer:waiting')
 
-        if user_uuid.allowed == 'denied':
+        elif user_uuid.allowed == 'denied':
             return redirect('customer:denied')
 
         if user_uuid.active == False:

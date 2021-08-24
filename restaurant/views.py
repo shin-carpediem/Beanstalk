@@ -17,6 +17,7 @@ from .models import Category, Allergy, Menu, Nomiho
 from account.models import Table, User, nonLoginUser
 import customer.models
 from beanstalk.settings import (
+    CODE,
     EMAIL_HOST_USER,
     EMAIL_HOST_PASSWORD,
     EMAIL_HOST,
@@ -119,8 +120,7 @@ def login_as_user(request):
 def send_code(request):
     # メールアドレスを取得
     email = request.POST.get('username')
-    # TODO:
-    code = '1847'
+    code = CODE
 
     if email == None:
         messages.info(request, f"送信対象となるメールアドレスが登録されていません。")
@@ -181,15 +181,12 @@ def order_manage(request):
             user = User.objects.get(email=email)
             code = request.POST.get('code')
 
-            ######## it is okay to change if the process is troublesome ######
-            # TODO: もしやるなら暗証番号を必ず伝える！
-            if code == '1847':
+            if code == CODE:
                 login(request, user)
                 request.session['table'] = '管理者'
             else:
                 messages.info(request, f"暗証番号が異なります。")
                 return redirect('restaurant:login')
-            ######## it is okay to change if the process is troublesome ######
 
         except Exception:
             messages.info(request, f"メールアドレスが異なります。")
