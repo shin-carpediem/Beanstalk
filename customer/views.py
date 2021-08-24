@@ -222,68 +222,66 @@ def menu(request):
                     make_session(request, restaurant_name,
                                  restaurant_logo, table_num, uuid)
 
-                    permission(request)
+                    return redirect('customer:waiting')
 
             # 既存
             else:
                 user_uuid = permission(request)
                 # unknownを検知したらallow.htmlに遷移させる
                 table_num = judging(request)
+
+                same_user_table = nonLoginUser.objects.defer(
+                    'created_at').filter(table=table_num, active=True)
+
+                same_num = same_user_table.count()
+
+                # 後からやってきた客よりも先に飲み放題を開始していた場合、
+                # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
+                # 兼メニューを選択できるようにする
+                same_user_table_list = nonLoginUser.objects.defer(
+                    'created_at').filter(table=table_num, active=True, nomiho=True)
+
+                same_table_num = same_user_table_list.count()
+
+                if same_table_num != 0:
+                    user_uuid.nomiho = True
+                    user_uuid.save()
+
+                    nomiho_is_started = True
+
+                if 'category_name' in request.session:
+                    category = request.session['category_name']
+                # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
+                else:
+
+                    try:
+                        category = categories[0].id
+                    except Exception:
+                        category = None
+
+                    # カテゴリーIDのセッションを作成
+                    request.session['category_name'] = category
+
+                if category != None:
+                    menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
+                        category=category).order_by('-id')
+                else:
+                    menus = Menu.objects.defer(
+                        'chef_img', 'comment', 'created_at').order_by('-id')
+
+                ctx = {
+                    'categories': categories,
+                    'menus': menus,
+                    'allergies': allergies,
+                    'user_uuid': user_uuid,
+                    'same_num': same_num,
+                    'nomiho_is_started': nomiho_is_started,
+                }
+
+                return render(request, 'customer/menu.html', ctx)
+
         except Exception:
             return redirect('customer:thanks')
-
-        try:
-            same_user_table = nonLoginUser.objects.defer(
-                'created_at').filter(table=table_num, active=True)
-        except Exception:
-            return redirect('customer:thanks')
-
-        same_num = same_user_table.count()
-
-        # 後からやってきた客よりも先に飲み放題を開始していた場合、
-        # 後から来た客のメニューにも飲み放題開始ボタンを表示させないようにする
-        # 兼メニューを選択できるようにする
-        same_user_table_list = nonLoginUser.objects.defer(
-            'created_at').filter(table=table_num, active=True, nomiho=True)
-
-        same_table_num = same_user_table_list.count()
-
-        if same_table_num != 0:
-            user_uuid.nomiho = True
-            user_uuid.save()
-
-            nomiho_is_started = True
-
-    if 'category_name' in request.session:
-        category = request.session['category_name']
-    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
-    else:
-
-        try:
-            category = categories[0].id
-        except Exception:
-            category = None
-
-        # カテゴリーIDのセッションを作成
-        request.session['category_name'] = category
-
-    if category != None:
-        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
-            category=category).order_by('-id')
-    else:
-        menus = Menu.objects.defer(
-            'chef_img', 'comment', 'created_at').order_by('-id')
-
-    ctx = {
-        'categories': categories,
-        'menus': menus,
-        'allergies': allergies,
-        'user_uuid': user_uuid,
-        'same_num': same_num,
-        'nomiho_is_started': nomiho_is_started,
-    }
-
-    return render(request, 'customer/menu.html', ctx)
 
 
 def filter(request, category_id):
