@@ -260,9 +260,21 @@ def order_status_ch_menu(request, order_id):
     required_order_num = request.POST.get('required_order_num')
     menu = Menu.objects.get(id=required_menu_id)
     order = customer.models.Order.objects.get(id=order_id)
+
+    curr_menu = order.menu
+    curr_num = order.num
+
     order.menu = menu
     order.num = required_order_num
     order.save()
+
+    # テーブルの合計も変更する
+    table_num = order.customer.table
+    table = Table.objects.get(table=table_num, active=True)
+    table.price -= int(curr_menu.price) * int(curr_num)
+    table.price += int(menu.price) * int(required_order_num)
+    table.save()
+
     return redirect('restaurant:order_manage')
 
 
