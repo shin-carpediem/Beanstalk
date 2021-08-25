@@ -54,6 +54,6 @@ def make_session(request, restaurant_name, restaurant_logo, table_num, uuid):
     # レストランのロゴのセッションを作成
     request.session['restaurant_logo'] = restaurant_logo
     # テーブル番号のセッションを作成
-    request.session['table'] = table_num
+    request.session['table'] = str(table_num)
     # uuidのセッションを作成
     request.session['nonloginuser_uuid'] = uuid
