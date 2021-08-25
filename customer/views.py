@@ -251,39 +251,39 @@ def menu(request):
 
                     nomiho_is_started = True
 
-                if 'category_name' in request.session:
-                    category = request.session['category_name']
-                # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
-                else:
-
-                    try:
-                        category = categories[0].id
-                    except Exception:
-                        category = None
-
-                    # カテゴリーIDのセッションを作成
-                    request.session['category_name'] = category
-
-                if category != None:
-                    menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
-                        category=category).order_by('-id')
-                else:
-                    menus = Menu.objects.defer(
-                        'chef_img', 'comment', 'created_at').order_by('-id')
-
-                ctx = {
-                    'categories': categories,
-                    'menus': menus,
-                    'allergies': allergies,
-                    'user_uuid': user_uuid,
-                    'same_num': same_num,
-                    'nomiho_is_started': nomiho_is_started,
-                }
-
-                return render(request, 'customer/menu.html', ctx)
-
         except Exception:
             return redirect('customer:thanks')
+
+    if 'category_name' in request.session:
+        category = request.session['category_name']
+    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
+    else:
+
+        try:
+            category = categories[0].id
+        except Exception:
+            category = None
+
+        # カテゴリーIDのセッションを作成
+        request.session['category_name'] = category
+
+    if category != None:
+        menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(
+            category=category).order_by('-id')
+    else:
+        menus = Menu.objects.defer(
+            'chef_img', 'comment', 'created_at').order_by('-id')
+
+    ctx = {
+        'categories': categories,
+        'menus': menus,
+        'allergies': allergies,
+        'user_uuid': user_uuid,
+        'same_num': same_num,
+        'nomiho_is_started': nomiho_is_started,
+    }
+
+    return render(request, 'customer/menu.html', ctx)
 
 
 def filter(request, category_id):
