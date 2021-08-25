@@ -498,9 +498,11 @@ def stop_user_order(request, active_table):
         nomiho_order.curr = False
         nomiho_order.save()
 
-    deactivate_table = Table.objects.get(table=active_table, active=True)
-    deactivate_table.active = False
-    deactivate_table.save()
+    deactivate_tables = Table.objects.defer(
+        'created_at').filter(table=active_table, active=True)
+    for deactivate_table in deactivate_tables:
+        deactivate_table.active = False
+        deactivate_table.save()
 
     messages.info(request, f'{active_table}テーブルのお会計完了を保存しました。')
 
@@ -556,8 +558,8 @@ def daily(request):
     for each in pointed_nomiho_orders:
         pointed_nomiho_sum += each.nomiho.price
 
-    pointed_sum = pointed_order_sum + pointed_nomiho_sum
-    discount_pointed_price = pointed_sum - pointed_total_price
+    # pointed_sum = pointed_order_sum + pointed_nomiho_sum
+    # discount_pointed_price = pointed_sum - pointed_total_price
 
     # 総売上
     tables = Table.objects.defer('created_at')
@@ -576,18 +578,18 @@ def daily(request):
     for each in nomiho_orders:
         nomiho_sum += each.nomiho.price
 
-    sum = order_sum + nomiho_sum
-    discount_price = sum - total_price
+    # sum = order_sum + nomiho_sum
+    # discount_price = sum - total_price
 
     ctx = {
         'start': start,
         'end': end,
         'pointed_total_price': pointed_total_price,
-        'discount_pointed_price': discount_pointed_price,
+        # 'discount_pointed_price': discount_pointed_price,
         'pointed_orders': pointed_orders,
         'pointed_nomiho_orders': pointed_nomiho_orders,
         'total_price': total_price,
-        'discount_price': discount_price,
+        # 'discount_price': discount_price,
         'orders': orders,
         'nomiho_orders': nomiho_orders,
     }
