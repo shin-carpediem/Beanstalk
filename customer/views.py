@@ -728,10 +728,10 @@ def history(request):
         carts = list(chain(carts, same_user_carts))
         orders = list(chain(orders, same_user_orders))
 
-    total_price = int(orders_in_cart) + int(orders_in_order)
+    # total_price = int(orders_in_cart) + int(orders_in_order)
 
     request.session['orders_in_cart'] = str(orders_in_cart)
-    request.session['total_price'] = str(total_price)
+    # request.session['total_price'] = str(total_price)
 
     ctx = {
         'categories': categories,
