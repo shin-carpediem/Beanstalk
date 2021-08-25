@@ -131,9 +131,9 @@ ROOT_URLCONF = 'beanstalk.urls'
 
 CONN_MAX_AGE = 0
 
-# テストではsession持続時間を5分に指定
+# テストではsession持続時間を10分に指定
 if TEST:
-    SESSION_COOKIE_AGE = 300
+    SESSION_COOKIE_AGE = 600
 # 本番ではsession持続時間を5時間に指定
 else:
     SESSION_COOKIE_AGE = 18000

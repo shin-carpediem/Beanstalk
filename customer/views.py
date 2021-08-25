@@ -183,6 +183,8 @@ def menu(request):
         try:
             if not 'nonloginuser_uuid' in request.session:
                 table_num = request.GET.get('table')
+                if table_num == 0 or None:
+                    return redirect('customer:thanks')
 
                 # 店側から承認を得る1人目のテーブルユーザー（adminユーザー）か、1人目のテーブルユーザーからの承認を得るユーザーかの分岐点
                 # 現在のテーブルで最初の1人目の場合
