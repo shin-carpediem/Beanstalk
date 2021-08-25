@@ -254,18 +254,23 @@ def menu(request):
         except Exception:
             return redirect('customer:thanks')
 
-    if 'category_name' in request.session:
-        category = request.session['category_name']
-    # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
-    else:
+    try:
+        if 'category_name' in request.session:
+            category = request.session['category_name']
 
-        try:
-            category = categories[0].id
-        except Exception:
-            category = None
+        # カテゴリーセッションがない場合（つまり一番最初に訪れた時）は、一番最初のカテゴリーのページとする
+        else:
 
-        # カテゴリーIDのセッションを作成
-        request.session['category_name'] = category
+            try:
+                category = categories[0].id
+            except Exception:
+                category = None
+
+            # カテゴリーIDのセッションを作成
+            request.session['category_name'] = category
+
+    except Exception:
+        return redirect('customer:thanks')
 
     if category != None:
         menus = Menu.objects.defer('chef_img', 'comment', 'created_at').filter(

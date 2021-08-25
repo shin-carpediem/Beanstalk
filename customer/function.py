@@ -24,6 +24,7 @@ def permission(request):
 
 
 def judging(request):
+
     try:
        table_num = request.session['table']
     except Exception:
