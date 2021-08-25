@@ -65,8 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 class nonLoginUser(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
+    # allowed = models.CharField(
+    #     "アクセス制限", max_length=256, default="unknown", blank=True, null=True)
     allowed = models.CharField(
-        "アクセス制限", max_length=256, default="unknown", blank=True, null=True)
+        "アクセス制限", max_length=256, default="allowed", blank=True, null=True)
     table = models.PositiveIntegerField("テーブルの番号", blank=True, null=True)
     price = models.PositiveIntegerField(
         "お会計金額", default=0, blank=True, null=True)

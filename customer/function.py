@@ -2,6 +2,18 @@ from django.shortcuts import redirect
 from account.models import nonLoginUser
 
 
+def make_session(request, restaurant_name, restaurant_logo, table_num, uuid):
+
+    # レストラン名のセッションを作成
+    request.session['restaurant_name'] = restaurant_name
+    # レストランのロゴのセッションを作成
+    request.session['restaurant_logo'] = restaurant_logo
+    # テーブル番号のセッションを作成
+    request.session['table'] = str(table_num)
+    # uuidのセッションを作成
+    request.session['nonloginuser_uuid'] = uuid
+
+
 def expired(request):
 
     try:
@@ -19,10 +31,10 @@ def permission(request):
         uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-        # if user_uuid.allowed == 'unknown':
-        #     return redirect('customer:waiting')
+        if user_uuid.allowed == 'unknown':
+            return redirect('customer:waiting')
 
-        if user_uuid.allowed == 'denied':
+        elif user_uuid.allowed == 'denied':
             return redirect('customer:denied')
 
         if user_uuid.active == False:
@@ -39,22 +51,10 @@ def judging(request):
     try:
         table_num = request.session['table']
 
-        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=int(table_num), active=True).count() > 0:
-            return redirect('customer:judge')
-
+        # if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=int(table_num), active=True).count() > 0:
+        #     return redirect('customer:judge')
+        # else:
         return table_num
 
     except Exception:
         return redirect('customer:thanks')
-
-
-def make_session(request, restaurant_name, restaurant_logo, table_num, uuid):
-
-    # レストラン名のセッションを作成
-    request.session['restaurant_name'] = restaurant_name
-    # レストランのロゴのセッションを作成
-    request.session['restaurant_logo'] = restaurant_logo
-    # テーブル番号のセッションを作成
-    request.session['table'] = str(table_num)
-    # uuidのセッションを作成
-    request.session['nonloginuser_uuid'] = uuid

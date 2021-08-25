@@ -63,29 +63,37 @@ def waiting_admin(request):
 
     expired(request)
 
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    try:
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed == 'pre_admin':
-        return render(request, 'customer/waiting_admin.html')
-    else:
-        return redirect('customer:menu')
+        if user_uuid.allowed == 'pre_admin':
+            return render(request, 'customer/waiting_admin.html')
+        else:
+            return redirect('customer:menu')
+
+    except Exception:
+        return redirect('customer:thanks')
 
 
 def waiting(request):
 
     expired(request)
 
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
+    try:
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-    if user_uuid.allowed == 'denied':
-        return redirect('customer:denied')
-    elif user_uuid.allowed == 'allowed':
-        messages.info(request, f'承認されました')
-        return redirect('customer:menu')
-    else:
-        return render(request, 'customer/waiting.html')
+        if user_uuid.allowed == 'denied':
+            return redirect('customer:denied')
+        elif user_uuid.allowed == 'allowed':
+            messages.info(request, f'承認されました')
+            return redirect('customer:menu')
+        elif user_uuid.allowed == 'unknown':
+            return render(request, 'customer/waiting.html')
+
+    except Exception:
+        return redirect('customer:thanks')
 
 
 def judge(request):
@@ -98,19 +106,24 @@ def allowing(request):
     if not user.is_authenticated:
 
         expired(request)
-        uuid = request.session['nonloginuser_uuid']
-        user_uuid = nonLoginUser.objects.get(uuid=uuid)
-        permission(user_uuid)
 
-        # unknownが一人以上いたら、その人たちをallowedにする
-        table_num = request.session['table']
-        unknown_user_list = nonLoginUser.objects.defer(
-            'created_at').filter(allowed='unknown', table=table_num, active=True)
+        try:
+            uuid = request.session['nonloginuser_uuid']
+            user_uuid = nonLoginUser.objects.get(uuid=uuid)
+            permission(user_uuid)
 
-        if unknown_user_list.count() > 0:
-            for unknown_user in unknown_user_list:
-                unknown_user.allowed = 'allowed'
-                unknown_user.save()
+            # unknownが一人以上いたら、その人たちをallowedにする
+            table_num = request.session['table']
+            unknown_user_list = nonLoginUser.objects.defer(
+                'created_at').filter(allowed='unknown', table=table_num, active=True)
+
+            if unknown_user_list.count() > 0:
+                for unknown_user in unknown_user_list:
+                    unknown_user.allowed = 'allowed'
+                    unknown_user.save()
+
+        except Exception:
+            return redirect('customer:thanks')
 
     return redirect('customer:menu')
 
@@ -118,22 +131,27 @@ def allowing(request):
 def deny(request):
 
     expired(request)
-    uuid = request.session['nonloginuser_uuid']
-    user_uuid = nonLoginUser.objects.get(uuid=uuid)
-    permission(user_uuid)
 
-    # unknownが一人以上いたら、その人たちをdeniedにする
-    table_num = request.session['table']
+    try:
+        uuid = request.session['nonloginuser_uuid']
+        user_uuid = nonLoginUser.objects.get(uuid=uuid)
+        permission(user_uuid)
 
-    unknown_user_list = nonLoginUser.objects.defer(
-        'created_at').filter(allowed='unknown', table=table_num, active=True)
+        # unknownが一人以上いたら、その人たちをdeniedにする
+        table_num = request.session['table']
 
-    if unknown_user_list.count() > 0:
-        for unknown_user in unknown_user_list:
-            unknown_user.allowed = 'denied'
-            unknown_user.save()
+        unknown_user_list = nonLoginUser.objects.defer(
+            'created_at').filter(allowed='unknown', table=table_num, active=True)
 
-    return redirect('customer:menu')
+        if unknown_user_list.count() > 0:
+            for unknown_user in unknown_user_list:
+                unknown_user.allowed = 'denied'
+                unknown_user.save()
+
+        return redirect('customer:menu')
+
+    except Exception:
+        return redirect('customer:thanks')
 
 
 def denied(request):
