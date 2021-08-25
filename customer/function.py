@@ -2,16 +2,27 @@ from django.shortcuts import redirect
 from account.models import nonLoginUser
 
 
+def expired(request):
+
+    try:
+        if not 'nonloginuser_uuid' in request.session:
+            request.session.flush()
+        return redirect('customer:thanks')
+
+    except Exception:
+        return redirect('customer:thanks')
+
+
 def permission(request):
 
     try:
         uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
-        if user_uuid.allowed == 'unknown':
-            return redirect('customer:waiting')
+        # if user_uuid.allowed == 'unknown':
+        #     return redirect('customer:waiting')
 
-        elif user_uuid.allowed == 'denied':
+        if user_uuid.allowed == 'denied':
             return redirect('customer:denied')
 
         if user_uuid.active == False:
@@ -26,22 +37,12 @@ def permission(request):
 def judging(request):
 
     try:
-       table_num = request.session['table']
-    except Exception:
-        return redirect('customer:thanks')
+        table_num = request.session['table']
 
-    if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=table_num, active=True).count() > 0:
-        return redirect('customer:judge')
+        if nonLoginUser.objects.defer('created_at').filter(allowed='unknown', table=int(table_num), active=True).count() > 0:
+            return redirect('customer:judge')
 
-    return table_num
-
-
-def expired(request):
-
-    try:
-        if not 'nonloginuser_uuid' in request.session:
-            request.session.flush()
-        return redirect('customer:thanks')
+        return table_num
 
     except Exception:
         return redirect('customer:thanks')
