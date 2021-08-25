@@ -4,9 +4,8 @@ from account.models import nonLoginUser
 
 def permission(request):
 
-    uuid = request.session['nonloginuser_uuid']
-
     try:
+        uuid = request.session['nonloginuser_uuid']
         user_uuid = nonLoginUser.objects.get(uuid=uuid)
 
         if user_uuid.allowed == 'unknown':
@@ -38,8 +37,12 @@ def judging(request):
 
 def expired(request):
 
-    if not 'nonloginuser_uuid' in request.session:
-        request.session.flush()
+    try:
+        if not 'nonloginuser_uuid' in request.session:
+            request.session.flush()
+        return redirect('customer:thanks')
+
+    except Exception:
         return redirect('customer:thanks')
 
 
