@@ -46,7 +46,11 @@
             <label>メニュー</label><br />
             <select name="required_menu_id">
               {% for menu in menus %}
-                <option value="{{ menu.id }}">{{ menu.category }}-----{{ menu.name }}</option>
+                {% if order.menu == menu %}
+                  <option value="{{ menu.id }}" selected>{{ menu.category }}-----{{ menu.name }}</option>
+                {% else %}
+                  <option value="{{ menu.id }}">{{ menu.category }}-----{{ menu.name }}</option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
