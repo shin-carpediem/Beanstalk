@@ -57,7 +57,7 @@
                 <td class="px-sm-3 px-2">{{ key }}</td>
                 <td class="px-sm-3 px-2">{{ value | intcomma }}</td>
               </tr> -->
-            {% if table_price.count > 1 %}
+            {% if table_price.count > 0 %}
               {% for each in table_price %}
                 {% if each.price != 0 %}
                 <tr class="text-right">

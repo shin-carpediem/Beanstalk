@@ -398,19 +398,15 @@ def total(request):
     active_table_list = []
     # テーブル毎単品詳細（飲み放題メニュー抜き）のクエリセット
     orders = ''
-    table_price = 0
 
     if Table.objects.defer('created_at').filter(active=True).count() > 1:
-        table_prices = Table.objects.defer('created_at').filter(active=True)
-        for each in table_prices:
-            table_price += each.price
-
+        table_price = Table.objects.defer('created_at').filter(active=True)
     else:
 
         try:
-            table_price = Table.objects.get(active=True).price
+            table_price = Table.objects.get(active=True)
         except Exception:
-            pass
+            table_price = None
 
     pre_admin_table_user_list = nonLoginUser.objects.defer(
         'created_at').filter(allowed='pre_admin', active=True)

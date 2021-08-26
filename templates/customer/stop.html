@@ -59,12 +59,7 @@
   <div class="d-flex justify-content-center align-items-center my-5">
     <h4 class="text__bold"><span style="color: red;">{{ request.session.table }}</span>番テーブル 合計</h4>
     <h4 class="text__bold ml-3 text__underline">
-      {% if request.session.orders_in_order %}
-        {{ request.session.orders_in_order | intcomma }}
-      {% else %}
-        0
-      {% endif %}
-        円
+      {{ table.price }}円
     </h4>
   </div>
 </section>
