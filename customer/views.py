@@ -552,7 +552,7 @@ def cart_detail(request, menu_id):
 
 
 @require_GET
-def cart_ch(request, cart_id, type):
+def cart_ch(request, cart_id):
     expired(request)
     permission(request)
     table_num = judging(request)
