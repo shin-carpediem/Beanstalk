@@ -160,7 +160,7 @@ def send_code(request):
             request, f"メールアドレス宛てに4桁の暗証番号が書かれたメールを送信しました。その数字を入力してください。")
         return redirect('restaurant:login')
     except Exception:
-        messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスの入力からやり直してください。")
+        messages.error(request, f"メール送信に失敗しました。お手数ですがメールアドレスが有効か、ご確認ください。")
         return redirect('restaurant:login')
 
 
@@ -455,12 +455,23 @@ def total(request):
 @require_POST
 def allowing(request, pre_admin_table):
     try:
-        pre_admin_user = nonLoginUser.objects.get(allowed='pre_admin',
-                                                  table=str(pre_admin_table), active=True)
-        pre_admin_user.allowed = 'admin'
-        pre_admin_user.save()
+        pre_admin_users = nonLoginUser.objects.defer('created_at').filter(allowed='pre_admin',
+                                                                          table=str(pre_admin_table), active=True)
+        for each in pre_admin_users:
+            each.allowed = 'admin'
+            each.save()
 
         messages.info(request, f'{pre_admin_table}テーブルの利用を許可しました。')
+    except Exception:
+        pass
+
+    try:
+        pre_users = nonLoginUser.objects.defer('created_at').filter(allowed='waiting',
+                                                                    table=str(pre_admin_table), active=True)
+        for each in pre_users:
+            each.allowed = 'allowed'
+            each.save()
+
     except Exception:
         pass
 

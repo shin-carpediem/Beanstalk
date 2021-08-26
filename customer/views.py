@@ -228,21 +228,39 @@ def menu(request):
                     return redirect('customer:waiting_admin')
                 # 現在のテーブルで最初の1人がすでにいる場合
                 else:
-                    newuser = nonLoginUser(table=table_num, active=True)
-                    newuser.save()
+                    if nonLoginUser.objects.defer('created_at').filter(allowed="pre_admin", table=table_num, active=True).count() > 0:
+                        newuser = nonLoginUser(
+                            allowed="waiting", table=table_num, active=True)
 
-                    same_table = Table.objects.get(
-                        table=table_num, active=True)
-                    same_table.user += 1
-                    same_table.save()
+                        newuser.save()
 
-                    uuid = str(newuser.uuid)
-                    user_uuid = newuser
+                        same_table = Table.objects.get(
+                            table=table_num, active=True)
+                        same_table.user += 1
+                        same_table.save()
 
-                    make_session(request, restaurant_name,
-                                 restaurant_logo, table_num, uuid)
+                        uuid = str(newuser.uuid)
+                        user_uuid = newuser
 
-                    return redirect('customer:waiting')
+                        make_session(request, restaurant_name,
+                                    restaurant_logo, table_num, uuid)
+
+                        return redirect('customer:waiting')
+
+                    else:
+                        newuser = nonLoginUser(table=table_num, active=True)
+                        newuser.save()
+
+                        same_table = Table.objects.get(
+                            table=table_num, active=True)
+                        same_table.user += 1
+                        same_table.save()
+
+                        uuid = str(newuser.uuid)
+                        user_uuid = newuser
+
+                        make_session(request, restaurant_name,
+                                    restaurant_logo, table_num, uuid)
 
             # 既存
             else:
