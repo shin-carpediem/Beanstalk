@@ -1,4 +1,5 @@
-from restaurant.views import order_status_ch
+from typing import KeysView
+from restaurant.views import order_status_ch, send_code
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_POST
@@ -197,8 +198,8 @@ def menu(request):
     else:
 
         # 新規の客かどうかをセッションで判断する
-        # 新規
         try:
+            # 新規
             if not 'nonloginuser_uuid' in request.session:
                 table_num = request.GET.get('table')
                 if table_num == 0 or None:
@@ -228,6 +229,7 @@ def menu(request):
                     return redirect('customer:waiting_admin')
                 # 現在のテーブルで最初の1人がすでにいる場合
                 else:
+                    # 店側側から承認前の1人目以上の客がいる場合
                     if nonLoginUser.objects.defer('created_at').filter(allowed="pre_admin", table=table_num, active=True).count() > 0:
                         newuser = nonLoginUser(
                             allowed="waiting", table=table_num, active=True)
@@ -245,8 +247,9 @@ def menu(request):
                         make_session(request, restaurant_name,
                                     restaurant_logo, table_num, uuid)
 
-                        return redirect('customer:waiting')
+                        return redirect('customer:waiting_admin')
 
+                    # 1人目の客が店からすでに承認を得ている場合
                     else:
                         newuser = nonLoginUser(table=table_num, active=True)
                         newuser.save()
