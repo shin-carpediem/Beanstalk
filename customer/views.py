@@ -234,36 +234,24 @@ def menu(request):
                         newuser = nonLoginUser(
                             allowed="waiting", table=table_num, active=True)
 
-                        newuser.save()
-
-                        same_table = Table.objects.get(
-                            table=table_num, active=True)
-                        same_table.user += 1
-                        same_table.save()
-
-                        uuid = str(newuser.uuid)
-                        user_uuid = newuser
-
-                        make_session(request, restaurant_name,
-                                    restaurant_logo, table_num, uuid)
-
-                        return redirect('customer:waiting_admin')
-
                     # 1人目の客が店からすでに承認を得ている場合
                     else:
                         newuser = nonLoginUser(table=table_num, active=True)
-                        newuser.save()
 
-                        same_table = Table.objects.get(
-                            table=table_num, active=True)
-                        same_table.user += 1
-                        same_table.save()
+                    newuser.save()
 
-                        uuid = str(newuser.uuid)
-                        user_uuid = newuser
+                    same_table = Table.objects.get(
+                        table=table_num, active=True)
+                    same_table.user += 1
+                    same_table.save()
 
-                        make_session(request, restaurant_name,
-                                    restaurant_logo, table_num, uuid)
+                    uuid = str(newuser.uuid)
+                    user_uuid = newuser
+
+                    make_session(request, restaurant_name,
+                                restaurant_logo, table_num, uuid)
+
+                    return redirect('customer:waiting_admin')
 
             # 既存
             else:
