@@ -212,12 +212,14 @@ def menu(request):
                     newtable.save()
 
                     # 開発する時は不便なのでadminにしてしまう
-                    if DEBUG:
-                        newuser = nonLoginUser(
-                            allowed="admin", table=table_num, active=True)
-                    else:
-                        newuser = nonLoginUser(
-                            allowed="pre_admin", table=table_num, active=True)
+                    # if DEBUG:
+                    #     newuser = nonLoginUser(
+                    #         allowed="admin", table=table_num, active=True)
+                    # else:
+                    #     newuser = nonLoginUser(
+                    #         allowed="pre_admin", table=table_num, active=True)
+
+                    newuser = nonLoginUser(table=table_num, active=True)
                     newuser.save()
 
                     uuid = str(newuser.uuid)
@@ -226,17 +228,17 @@ def menu(request):
                     make_session(request, restaurant_name,
                                  restaurant_logo, table_num, uuid)
 
-                    return redirect('customer:waiting_admin')
+                    # return redirect('customer:waiting_admin')
                 # 現在のテーブルで最初の1人がすでにいる場合
                 else:
                     # 店側側から承認前の1人目以上の客がいる場合
-                    if nonLoginUser.objects.defer('created_at').filter(allowed="pre_admin", table=table_num, active=True).count() > 0:
-                        newuser = nonLoginUser(
-                            allowed="pre_admin", table=table_num, active=True)
+                    # if nonLoginUser.objects.defer('created_at').filter(allowed="pre_admin", table=table_num, active=True).count() > 0:
+                    #     newuser = nonLoginUser(
+                    #         allowed="pre_admin", table=table_num, active=True)
 
-                    # 1人目の客が店からすでに承認を得ている場合
-                    else:
-                        newuser = nonLoginUser(table=table_num, active=True)
+                    # # 1人目の客が店からすでに承認を得ている場合
+                    # else:
+                    newuser = nonLoginUser(table=table_num, active=True)
 
                     newuser.save()
 
@@ -251,7 +253,7 @@ def menu(request):
                     make_session(request, restaurant_name,
                                 restaurant_logo, table_num, uuid)
 
-                    return redirect('customer:waiting_admin')
+                    # return redirect('customer:waiting_admin')
 
             # 既存
             else:
