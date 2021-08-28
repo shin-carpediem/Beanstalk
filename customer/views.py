@@ -232,7 +232,7 @@ def menu(request):
                     # 店側側から承認前の1人目以上の客がいる場合
                     if nonLoginUser.objects.defer('created_at').filter(allowed="pre_admin", table=table_num, active=True).count() > 0:
                         newuser = nonLoginUser(
-                            allowed="waiting", table=table_num, active=True)
+                            allowed="pre_admin", table=table_num, active=True)
 
                     # 1人目の客が店からすでに承認を得ている場合
                     else:
