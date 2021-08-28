@@ -250,6 +250,14 @@ def order_status_ch(request, order_id):
     order = customer.models.Order.objects.get(id=order_id)
     order.status = order_status
     order.save()
+
+    # テーブルの合計も変更する
+    if order_status == 'キャンセル':
+        table_num = order.customer.table
+        table = Table.objects.get(table=table_num, active=True)
+        table.price -= int(order.menu.price) * int(order.num)
+        table.save()
+
     return redirect('restaurant:order_manage')
 
 
